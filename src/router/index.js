@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import Services from '../views/Services.vue';
+import Services from '../views/Services/Index.vue';
+import ShowService from '../views/Services/Show.vue';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/servicios',
     name: 'Servicios',
     component: Services,
+  },
+  {
+    path: '/servicios/:id',
+    name: 'ShowService',
+    component: ShowService,
   },
 ];
 
