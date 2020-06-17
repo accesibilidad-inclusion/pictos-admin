@@ -17,80 +17,7 @@
             </v-btn>
           </template>
 
-          <v-card>
-            <v-card-title
-              class="headline grey lighten-2"
-              primary-title
-            >
-            Agregar nuevo servicio
-            </v-card-title>
-
-            <ValidationObserver ref="observer">
-              <v-form>
-                <v-container>
-                  <v-row>
-                    <v-col
-                      cols="12"
-                    >
-                      <ValidationProvider v-slot="{ errors }" name="Nombre" rules="required|max:100">
-                        <v-text-field
-                          v-model="newName"
-                          label="Nombre del servicio"
-                          :error-messages="errors"
-                          required
-                        ></v-text-field>
-                      </ValidationProvider>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <ValidationProvider v-slot="{ errors }" name="Categoria" rules="required">
-                        <v-autocomplete
-                          v-model="newCategory"
-                          :items="categories"
-                          :error-messages="errors"
-                          hide-no-data
-                          hide-selected
-                          item-text="name"
-                          item-value="id"
-                          label="Categoria"
-                          return-object
-                        ></v-autocomplete>
-                      </ValidationProvider>
-                    </v-col>
-                    <v-col
-                      cols="12"
-                    >
-                      <v-text-field
-                        v-model="newTags"
-                        label="Sinónimos de búsqueda (Separados por coma)"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-form>
-            </ValidationObserver>
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="grey"
-                text
-                @click="closeModal"
-              >
-                Cancelar
-              </v-btn>
-              <v-btn
-                color="primary"
-                text
-                @click="addService"
-              >
-                Crear servicio
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <Form v-on:cancel="closeModal" v-on:created="created" :object="newService" name="servicio" url="/api/services/store"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">
@@ -134,36 +61,17 @@
 
 <script>
 import axios from 'axios';
-import { required, max } from 'vee-validate/dist/rules';
-import {
-  extend, ValidationObserver, ValidationProvider, setInteractionMode,
-} from 'vee-validate';
-
-setInteractionMode('eager');
-
-extend('required', {
-  ...required,
-  message: 'El campo {_field_} es obligatorio',
-});
-
-extend('max', {
-  ...max,
-  message: 'El campo {_field_} no puede ser mas largo que {length} caracteres',
-});
-
+import Service from '../../models/Service'
+import Form from '../Utils/Form'
 
 export default {
   name: 'Services',
   components: {
-    ValidationProvider,
-    ValidationObserver,
+    Form
   },
   beforeMount() {
     axios.get('http://pictos-backend.lo/api/services').then((response) => {
       this.entries = response.data;
-    });
-    axios.get('http://pictos-backend.lo/api/categories/list').then((response) => {
-      this.categories = response.data;
     });
   },
   data() {
@@ -194,37 +102,20 @@ export default {
       entries: null,
       pagination: {},
       dialog: false,
-      newName: '',
-      newCategory: null,
-      newTags: '',
-      categories: [],
+      newService: new Service(),
     };
   },
   methods: {
-    addService() {
-      this.$refs.observer.validate();
-      axios.post('http://pictos-backend.lo/api/services/store', {
-        name: this.newName,
-        category_id: this.newCategory.id,
-        tags: this.newTags,
-      }).then((response) => {
-        axios.get('http://pictos-backend.lo/api/services').then((response) => {
-          this.entries = response.data;
-        });
-        this.dialog = false;
-        this.newName = '';
-        this.newCategory = null;
-        this.newTags = '';
-        this.$refs.observer.reset();
-      });
-    },
     closeModal() {
       this.dialog = false;
-      this.$refs.observer.reset();
-      this.newName = '';
-      this.newCategory = null;
-      this.newTags = '';
+      this.newService = new Service();
     },
+    created( service ) {
+      axios.get('http://pictos-backend.lo/api/services').then((response) => {
+        this.entries = response.data;
+      });
+      this.closeModal();
+    }
   },
 };
 </script>

@@ -3,7 +3,6 @@
     <v-navigation-drawer
       v-model="drawer"
       app
-      v-if="isLoggedIn"
     >
       <v-list>
         <!-- <v-list-item link>
@@ -46,21 +45,12 @@
             <v-list-item-title>Usuarios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item @click="logout()">
-          <v-list-item-action>
-            <v-icon>mdi-folder-marker</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Salir</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
     <v-app-bar
       app
       dark
-      v-if="isLoggedIn"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>PICTOS Admin</v-toolbar-title>
@@ -92,11 +82,7 @@ export default {
   props: {
     source: String,
   },
-  computed: {
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn
-    },
-  },
+
   created() {
     this.$http.interceptors.response.use(undefined, ( err ) => {
       return new Promise( ( resolve, reject ) => {
