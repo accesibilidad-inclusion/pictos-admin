@@ -1,3 +1,5 @@
+window._ = require('lodash');
+
 import Vue from 'vue';
 import App from './App.vue';
 import router from './js/router';
@@ -5,6 +7,9 @@ import store from './js/store';
 import vuetify from './plugins/vuetify';
 import Vuex from 'vuex'
 import Axios from 'axios'
+import moment from 'moment'
+
+Vue.prototype.moment = moment
 
 Vue.use(Vuex)
 

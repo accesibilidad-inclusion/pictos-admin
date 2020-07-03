@@ -21,12 +21,24 @@
             class="headline grey lighten-2"
             primary-title
           >
-          Información general
+            Información general 
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn text small v-bind="attrs" v-on="on" color="primary">
+                  Editar
+                </v-btn>
+              </template>
+
+              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editService" name="servicio" url="/api/services/update" method="put"></Form>
+            </v-dialog>
           </v-card-title>
           <v-card-text>
             <ul>
               <li>Nombre: {{ service.name }}</li>
-              <li>Categoria: {{ service.category }}</li>
+              <li>Categoria: {{ service.category.name }}</li>
               <li v-if="service.url != ''">Url: <a target="_blank" :href="service.url">{{ service.url }}</a></li>
               <li>Id: {{ service.id }}</li>
               <li v-if="service.tags.length">Sinonimos: {{ service.tags.join(', ') }}</li>
@@ -44,7 +56,9 @@
           </v-card-title>
           <v-card-text>
             <ul>
-              <li v-for="(venue, index) in service.venues">{{ index+1 }} {{ venue.name }}</li>
+              <li v-for="(venue, index) in service.venues" v-bind:key="index">
+                <router-link :to="'/lugares/'+venue.id">{{ index+1 }} {{ venue.name }}</router-link>
+              </li>
             </ul>
           </v-card-text>
         </v-card>
@@ -59,25 +73,31 @@
 </template>
 
 <script>
-import axios from 'axios';
 import Service from '../../models/Service'
+import Form from '../Utils/Form'
 
 export default {
-  name: 'Services',
+  name: 'ShowService',
+  components: {
+    Form
+  },
   beforeMount() {
-    axios.get('http://pictos-backend.lo/api/services/'+this.$route.params.id).then((response) => {
+    this.$http.get('http://pictos-backend.lo/api/services/'+this.$route.params.id).then((response) => {
       this.service.set(response.data);
+      this.editService = _.clone( this.service  )
     });
   },
   data() {
     return {
       service: new Service(),
+      editService: null,
+      dialog: false
     };
   },
   methods: {
     deleteService() {
       if(confirm('¿Esta seguro de eliminar este servicio?')) {
-        axios.post('http://pictos-backend.lo/api/services/delete', {
+        this.$http.post('http://pictos-backend.lo/api/services/delete', {
           'id': this.$route.params.id
         }).then((response) => {
           this.$router.push('/servicios');
@@ -86,13 +106,24 @@ export default {
     },
     publishService() {
       if(confirm('¿Esta seguro de publicar este servicio?')) {
-        axios.put('http://pictos-backend.lo/api/services/publish', {
+        this.$http.put('http://pictos-backend.lo/api/services/publish', {
           'id': this.$route.params.id
         }).then((response) => {
           if(response.data)
             this.service.status = 'Publicado';
         });
       }
+    },
+    closeModal() {
+      this.dialog = false;
+      this.editService = _.clone( this.service );
+    },
+    updated() {
+      this.$http.get('http://pictos-backend.lo/api/services/'+this.$route.params.id).then((response) => {
+        this.service.set(response.data);
+        this.editService = _.clone( this.service  )
+        this.closeModal();
+      });
     }
   },
 };

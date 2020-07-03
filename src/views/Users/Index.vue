@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12">
-        <h1>Servicios</h1>
+        <h1>Usuarios</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -13,11 +13,11 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary">
-              <v-icon>mdi-plus</v-icon> Agregar nuevo servicio
+              <v-icon>mdi-plus</v-icon> Agregar nuevo usuario
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:created="created" :object="newService" name="servicio" url="/api/services/store" method="post"></Form>
+          <Form v-on:cancel="closeModal" v-on:created="created" :object="newUser" name="usuario" url="/api/users/store" method="post"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">
@@ -45,10 +45,9 @@
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.id">
-                <td><router-link :to="'/servicios/'+item.id">{{ item.name }}</router-link></td>
-                <td>{{ item.category.name }}</td>
-                <td>{{ item.count_venues }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.id }}</td>
+                <td><router-link :to="'/usuarios/'+item.id">{{ item.name }}</router-link></td>
+                <td>{{ item.email }}</td>
               </tr>
             </tbody>
           </template>
@@ -59,16 +58,16 @@
 </template>
 
 <script>
-import Service from '../../models/Service'
+import User from '../../models/User'
 import Form from '../Utils/Form'
 
 export default {
-  name: 'Services',
+  name: 'Users',
   components: {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+    this.$http.get('http://pictos-backend.lo/api/users').then((response) => {
       this.entries = response.data;
     });
   },
@@ -76,35 +75,31 @@ export default {
     return {
       headers: [
         {
-          text: 'Servicio',
+          text: 'Id',
+          value: 'id',
+        },
+        {
+          text: 'Nombre',
           value: 'name',
         },
         {
-          text: 'Categoría',
-          value: 'category.name',
-        },
-        {
-          text: 'Cantidad de lugares',
-          value: 'count_venues',
-        },
-        {
-          text: 'Estado',
-          value: 'status',
+          text: 'E-amil',
+          value: 'email',
         },
       ],
       entries: null,
       pagination: {},
       dialog: false,
-      newService: new Service(),
+      newUser: new User(),
     };
   },
   methods: {
     closeModal() {
       this.dialog = false;
-      this.newService = new Service();
+      this.newUser = new User();
     },
-    created( service ) {
-      this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+    created( user ) {
+      this.$http.get('http://pictos-backend.lo/api/users').then((response) => {
         this.entries = response.data;
       });
       this.closeModal();

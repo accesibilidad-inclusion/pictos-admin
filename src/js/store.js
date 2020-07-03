@@ -7,6 +7,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         categories: [],
+        services: [],
+        venues: [],
+        images: [],
         status: '',
         token: localStorage.getItem('token') || '',
         user: JSON.parse(localStorage.getItem('user')) || {},
@@ -31,6 +34,15 @@ export default new Vuex.Store({
         setCategories( state, categories ) {
             state.categories = categories
         },
+        setServices( state, services ) {
+            state.services = services
+        },
+        setVenues( state, venues ) {
+            state.venues = venues
+        },
+        setImages( state, images ) {
+            state.images = images
+        }
     },
     actions: {
         setCategories( { commit } ){
@@ -43,6 +55,39 @@ export default new Vuex.Store({
                     resolve()
                 })
             })
+        },
+        setServices( { commit } ){
+            return new Promise( ( resolve, reject ) => {
+                axios( {
+                    url: 'http://pictos-backend.lo/api/services/list',
+                    method: 'GET'
+                } ).then( response => {
+                    commit('setServices', response.data)
+                    resolve()
+                })
+            })
+        },
+        setVenues( { commit } ){
+            return new Promise( ( resolve, reject ) => {
+                axios( {
+                    url: 'http://pictos-backend.lo/api/venues/list',
+                    method: 'GET'
+                } ).then( response => {
+                    commit('setVenues', response.data)
+                    resolve()
+                })
+            })
+        },
+        setImages( { commit } ) {
+            return new Promise( ( resolve, reject ) => {
+                axios( {
+                    url: 'http://pictos-backend.lo/api/images',
+                    method: 'GET'
+                } ).then( response => {
+                    commit('setImages', response.data)
+                    resolve()
+                })
+            } )
         },
         login( { commit, dispatch }, user ){
             return new Promise( ( resolve, reject ) => {
@@ -85,5 +130,8 @@ export default new Vuex.Store({
         user: state => state.user,
         authStatus: state => state.status,
         categories: state => state.categories,
+        services: state => state.services,
+        venues: state => state.venues,
+        images: state => state.images,
     }
 })

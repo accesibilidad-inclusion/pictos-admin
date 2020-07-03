@@ -6,14 +6,14 @@
       v-if="isLoggedIn"
     >
       <v-list>
-        <!-- <v-list-item link>
+        <v-list-item link to="/">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Home</v-list-item-title>
+            <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
-        </v-list-item> -->
+        </v-list-item>
         <v-list-item link to="/servicios">
           <v-list-item-action>
             <v-icon>mdi-folder-marker</v-icon>
@@ -22,7 +22,7 @@
             <v-list-item-title>Servicios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="/lugares">
           <v-list-item-action>
             <v-icon>mdi-map-marker</v-icon>
           </v-list-item-action>
@@ -30,7 +30,7 @@
             <v-list-item-title>Lugares</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="/tareas">
           <v-list-item-action>
             <v-icon>mdi-alert-circle-check-outline</v-icon>
           </v-list-item-action>
@@ -38,7 +38,7 @@
             <v-list-item-title>Tareas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="/usuarios">
           <v-list-item-action>
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
@@ -110,6 +110,9 @@ export default {
     } )
     if( this.isLoggedIn ) {
         this.$store.dispatch( 'setCategories' )
+        this.$store.dispatch( 'setServices' )
+        this.$store.dispatch( 'setVenues' )
+        this.$store.dispatch( 'setImages' )
     }
   },
 

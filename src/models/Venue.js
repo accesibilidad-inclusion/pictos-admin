@@ -1,31 +1,35 @@
-class Service {
+class Venue {
 
     constructor() {
         this.id = null
         this.name = ''
-        this.url = ''
-        this.category = {
+        this.service = {
             'id': null,
             'name': ''
         }
-        this.venues = []
+        this.url = ''
+        this.lat = 0
+        this.long = 0
         this.tags_text = ''
         this.tags = []
+        this.tasks = []
         this.status = ''
     }
 
-    set(service) {
-        this.id = service.id
-        this.name = service.name
-        this.url = service.url
-        this.category = {
-            'id': service.category.id,
-            'name': service.category.name
+    set(venue) {
+        this.id = venue.id
+        this.name = venue.name
+        this.service = {
+            'id': venue.service.id,
+            'name': venue.service.name
         }
-        this.venues = service.venues
-        this.tags_text = service.tags.join(', ')
-        this.tags = service.tags
-        this.status = service.status
+        this.url = venue.url
+        this.lat = 0
+        this.long = 0
+        this.tags_text = venue.tags.join(', ')
+        this.tags = venue.tags
+        this.tasks = venue.tasks
+        this.status = venue.status
     }
 
     form() {
@@ -34,18 +38,18 @@ class Service {
                 id: 'name',
                 prefix: 'el',
                 name: 'nombre',
-                label: 'Nombre del servicio',
+                label: 'Nombre del lugar',
                 rules: 'required|max:100',
                 type: 'text'
             },
             {
-                id: 'category',
-                prefix: 'la',
-                name: 'categoria',
-                label: 'Categoria',
+                id: 'service',
+                prefix: 'el',
+                name: 'lugar',
+                label: 'Servicio al que pertenece',
                 rules: 'required',
                 type: 'select',
-                data: 'categories',
+                data: 'services',
                 textOption: ['name']
             },
             {
@@ -61,4 +65,4 @@ class Service {
 
 }
 
-export default Service
+export default Venue

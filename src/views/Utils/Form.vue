@@ -1,7 +1,8 @@
 <template>
     <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-            Agregar nuevo {{ name }}
+            <span v-if="!object.id">Agregar nuevo {{ name }}</span>
+            <span v-else>Editar {{ name }}</span>
         </v-card-title>
 
         <ValidationObserver ref="observer">
@@ -27,6 +28,7 @@
                                     item-text="name"
                                     item-value="id"
                                     :label="field.label"
+                                    return-object
                                 ></v-autocomplete>
                             </ValidationProvider>
                         </v-col>
@@ -42,14 +44,14 @@
                 Cancelar
             </v-btn>
             <v-btn color="primary" text @click="create()">
-                Crear {{ name }}
+                <span v-if="!object.id">Crear {{ name }}</span>
+                <span v-else>Actualizar {{ name }}</span>
             </v-btn>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
-import axios from 'axios';
 import { required, max } from 'vee-validate/dist/rules';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
 import Service from '../../models/Service'
@@ -69,7 +71,7 @@ extend('max', {
 
 export default {
     name: 'Form',
-    props: [ 'object', 'name', 'url' ],
+    props: [ 'object', 'name', 'url', 'method' ],
     components: {
         ValidationProvider,
         ValidationObserver,
@@ -82,10 +84,16 @@ export default {
         create() {
             this.$refs.observer.validate().then( valid => {
                 if(valid) {
-                    axios.post('http://pictos-backend.lo/' + this.url, this.object).then((response) => {
-                        this.$emit( 'created' )
-                        this.$refs.observer.reset();
-                    });
+                    if(this.method == 'post')
+                        this.$http.post('http://pictos-backend.lo/' + this.url, this.object).then((response) => {
+                            this.$emit( 'created' )
+                            this.$refs.observer.reset();
+                        });
+                    else if(this.method == 'put')
+                        this.$http.put('http://pictos-backend.lo/' + this.url, this.object).then((response) => {
+                            this.$emit( 'updated' )
+                            this.$refs.observer.reset();
+                        });
                 }
             });
             

@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12">
-        <h1>Servicios</h1>
+        <h1>Lugares</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -13,11 +13,11 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary">
-              <v-icon>mdi-plus</v-icon> Agregar nuevo servicio
+              <v-icon>mdi-plus</v-icon> Agregar nuevo lugar
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:created="created" :object="newService" name="servicio" url="/api/services/store" method="post"></Form>
+          <Form v-on:cancel="closeModal" v-on:created="created" :object="newVenue" name="lugar" url="/api/venues/store" method="post"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">
@@ -27,6 +27,14 @@
           cache-items
         >
         </v-autocomplete>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')">Todos</a> |
+        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')">Publicados</a> |
+        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')">Borradores</a> |
+        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')">Aportes de usuarios</a>
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center>
@@ -45,9 +53,9 @@
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.id">
-                <td><router-link :to="'/servicios/'+item.id">{{ item.name }}</router-link></td>
-                <td>{{ item.category.name }}</td>
-                <td>{{ item.count_venues }}</td>
+                <td><router-link :to="'/lugares/'+item.id">{{ item.name }}</router-link></td>
+                <td>{{ item.service.name }}</td>
+                <td>{{ item.count_tasks }}</td>
                 <td>{{ item.status }}</td>
               </tr>
             </tbody>
@@ -59,16 +67,18 @@
 </template>
 
 <script>
-import Service from '../../models/Service'
+import Venue from '../../models/Venue'
 import Form from '../Utils/Form'
 
 export default {
-  name: 'Services',
+  name: 'Venues',
   components: {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+    if(this.$route.params.status)
+      this.showStatus = this.$route.params.status
+    this.$http.get('http://pictos-backend.lo/api/venues/' + this.showStatus).then((response) => {
       this.entries = response.data;
     });
   },
@@ -76,16 +86,16 @@ export default {
     return {
       headers: [
         {
-          text: 'Servicio',
+          text: 'Lugar',
           value: 'name',
         },
         {
-          text: 'Categoría',
-          value: 'category.name',
+          text: 'Servicio',
+          value: 'service.name',
         },
         {
-          text: 'Cantidad de lugares',
-          value: 'count_venues',
+          text: 'N° de tareas',
+          value: 'count_tasks',
         },
         {
           text: 'Estado',
@@ -95,19 +105,26 @@ export default {
       entries: null,
       pagination: {},
       dialog: false,
-      newService: new Service(),
+      newVenue: new Venue(),
+      showStatus: ''
     };
   },
   methods: {
     closeModal() {
       this.dialog = false;
-      this.newService = new Service();
+      this.newVenue = new Venue();
     },
     created( service ) {
-      this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+      this.$http.get('http://pictos-backend.lo/api/venues').then((response) => {
         this.entries = response.data;
       });
       this.closeModal();
+    },
+    changeStatus(status) {
+      this.showStatus = status
+      this.$http.get('http://pictos-backend.lo/api/venues/'+status).then((response) => {
+        this.entries = response.data;
+      });
     }
   },
 };
