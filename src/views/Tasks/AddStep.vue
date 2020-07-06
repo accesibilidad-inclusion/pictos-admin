@@ -1,25 +1,79 @@
 <template>
   <div>
     <template v-if="preview">
-      <div class="container">
-        <div class="preview__pictos">
-          <img v-if="context" :src="context.path + '/' + context.filename" />
-          <img v-if="landmark" :src="landmark.path + '/' + landmark.filename" />
-          <img v-if="subject" :src="subject.path + '/' + subject.filename" />
-        </div>
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+          {{ step }}
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <div class="preview__pictos">
+              <img v-if="context" :src="context.path + '/' + context.filename" />
+              <img v-if="landmark" :src="landmark.path + '/' + landmark.filename" />
+              <img v-if="subject" :src="subject.path + '/' + subject.filename" />
+            </div>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col cols="12">
             <v-btn text small @click="preview = false">Volver a editar</v-btn>
             <v-btn text outlined @click="saveStep">Aceptar</v-btn>
           </v-col>
         </v-row>
-      </div>
+      </v-container>
     </template>
     <template v-else>
+      <ValidationObserver ref="observer">
+        <v-form>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
+                  <v-text-field 
+                      v-model="step" 
+                      label="Describe el paso" 
+                      :error-messages="errors" 
+                      required
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-form>
+      </ValidationObserver>
       <div class="slider__container">
         <v-row>
           <v-col cols="12">
             <h3>Espacio</h3>
+            <v-dialog
+              v-model="dialogContext"
+              width="1200"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                  Ver todos
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>
+                  Selecciona un pictograma para espacio
+                </v-card-title>
+                <v-container>
+                  <v-row>
+                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 3)" v-bind:key="image.id">
+                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)" />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-btn text outlined @click="dialogContext = false">Seleccionar pictograma</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+            </v-dialog>
             <vueper-slides
               class="no-shadow"
               :visible-slides="5"
@@ -44,6 +98,33 @@
         <v-row>
           <v-col cols="12">
             <h3>Objeto</h3>
+            <v-dialog
+              v-model="dialogLandmark"
+              width="1200"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                  Ver todos
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>
+                  Selecciona un pictograma para objeto
+                </v-card-title>
+                <v-container>
+                  <v-row>
+                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 2)" v-bind:key="image.id">
+                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-btn text outlined @click="dialogLandmark = false">Seleccionar pictograma</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+            </v-dialog>
             <vueper-slides
               class="no-shadow"
               :visible-slides="5"
@@ -68,6 +149,33 @@
         <v-row>
           <v-col cols="12">
             <h3>Persona</h3>
+            <v-dialog
+              v-model="dialogSubject"
+              width="1200"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                  Ver todos
+                </v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>
+                  Selecciona un pictograma para persona
+                </v-card-title>
+                <v-container>
+                  <v-row>
+                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 1)" v-bind:key="image.id">
+                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': subject && image.id == subject.id }"  @click="setImage('subject', image)" />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-btn text outlined @click="dialogSubject = false">Seleccionar pictograma</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card>
+            </v-dialog>
             <vueper-slides
               class="no-shadow"
               :visible-slides="5"
@@ -91,7 +199,7 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-btn text outlined @click="preview = true">Previsualizar</v-btn>
+            <v-btn text outlined @click="showPreview">Previsualizar</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -102,16 +210,29 @@
 <script>
 import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
+import { required } from 'vee-validate/dist/rules';
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
+
+setInteractionMode('eager');
+
+extend('required', {
+  ...required,
+  message: 'El campo {_field_} es obligatorio',
+});
 
 export default {
   name: 'AddStep',
-  components: { VueperSlides, VueperSlide },
+  components: { VueperSlides, VueperSlide, ValidationProvider, ValidationObserver, },
   data() {
     return {
       subject: null,
       landmark: null,
       context: null,
-      preview: false
+      preview: false,
+      dialogContext: false,
+      dialogLandmark: false,
+      dialogSubject: false,
+      step: ''
     };
   },
   mounted() {
@@ -120,8 +241,29 @@ export default {
     setImage(type, image) {
       this[type] = image
     },
+    showPreview() {
+      this.$refs.observer.validate().then( valid => {
+        if(valid) {
+          this.preview = true
+        }
+      } )
+    },
     saveStep() {
+      let images = []
+      if(this.subject)
+       images.push(this.subject.id)
+      if(this.landmark)
+       images.push(this.landmark.id)
+      if(this.context)
+       images.push(this.context.id)
 
+      this.$http.post('http://pictos-backend.lo/api/steps/store', {
+        images: images,
+        label: this.step,
+        task_id: this.$route.params.task_id
+      }).then((response) => {
+          this.$router.push('/tareas/'+this.$route.params.task_id);
+      });
     }
   },
 };
@@ -132,12 +274,12 @@ export default {
   max-width: 100%;
   margin: auto;
 }
-.slider__container::v-deep .vueperslide__content-wrapper {
+.slider__container::v-deep .vueperslide__content-wrapper, .image__pictogram {
   border: 1px solid lightgray;
   cursor: pointer;
 }
 
-.slider__container::v-deep .vueperslide__content-wrapper.active {
+.slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
   border: 1px solid black;
 }
 .preview__pictos {

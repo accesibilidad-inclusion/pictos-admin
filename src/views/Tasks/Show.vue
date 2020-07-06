@@ -57,14 +57,17 @@
             <span v-else>Esta tarea tiene {{ task.steps.length }} pasos</span>
           </v-card-title>
           <v-card-text>
-            <v-btn v-if="!task.steps.length" color="primary" to="/tareas/nuevo_paso">
+            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'AddStep', params: { task_id: task.id }}">
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
             <ul v-else>
-              <li v-for="(step, index) in task.steps" v-bind:key="index">{{ index+1 }} {{ step.title }}</li>
+              <li v-for="(step, index) in task.steps" v-bind:key="index">{{ index+1 }} {{ step.label }}</li>
             </ul>
           </v-card-text>
         </v-card>
+        <v-btn v-if="task.steps.length" color="primary" small text :to="{ name: 'AddStep', params: { task_id: task.id }}">
+          <v-icon>mdi-plus</v-icon> Agregar nuevo paso
+        </v-btn>
       </v-col>
     </v-row>
     <v-row v-if="task.status == 'Borrador'">
