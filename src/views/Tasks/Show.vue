@@ -93,7 +93,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/tasks/'+this.$route.params.id).then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.$route.params.id).then((response) => {
       this.task.set(response.data);
       this.editTask = _.clone( this.task  )
     });
@@ -108,7 +108,7 @@ export default {
   methods: {
     deleteTask() {
       if(confirm('¿Esta seguro de eliminar este tarea?')) {
-        this.$http.post('http://pictos-backend.lo/api/tasks/delete', {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/tasks/delete', {
           'id': this.$route.params.id
         }).then((response) => {
           this.$router.push('/tareas');
@@ -117,7 +117,7 @@ export default {
     },
     publishTask() {
       if(confirm('¿Esta seguro de publicar este tarea?')) {
-        this.$http.put('http://pictos-backend.lo/api/tasks/publish', {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/tasks/publish', {
           'id': this.$route.params.id
         }).then((response) => {
           if(response.data)
@@ -130,7 +130,7 @@ export default {
       this.editTask = _.clone( this.task );
     },
     updated() {
-      this.$http.get('http://pictos-backend.lo/api/tasks/'+this.$route.params.id).then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.$route.params.id).then((response) => {
         this.task.set(response.data);
         this.editTask = _.clone( this.task  )
         this.closeModal();

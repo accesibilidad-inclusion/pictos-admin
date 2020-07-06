@@ -80,7 +80,7 @@ export default {
   beforeMount() {
     if(this.$route.params.status)
       this.showStatus = this.$route.params.status
-    this.$http.get('http://pictos-backend.lo/api/tasks/'+this.showStatus).then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.showStatus).then((response) => {
       this.entries = response.data;
     });
   },
@@ -125,14 +125,14 @@ export default {
       this.newTask = new Task();
     },
     created( service ) {
-      this.$http.get('http://pictos-backend.lo/api/tasks').then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks').then((response) => {
         this.entries = response.data;
       });
       this.closeModal();
     },
     changeStatus(status) {
       this.showStatus = status
-      this.$http.get('http://pictos-backend.lo/api/tasks/'+status).then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+status).then((response) => {
         this.entries = response.data;
       });
     }

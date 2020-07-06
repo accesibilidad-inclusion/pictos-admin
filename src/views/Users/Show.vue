@@ -82,7 +82,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/users/'+this.$route.params.id).then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users/'+this.$route.params.id).then((response) => {
       this.user.set(response.data);
       this.editUser = _.clone( this.user  )
     });
@@ -97,7 +97,7 @@ export default {
   methods: {
     deleteUser() {
       if(confirm('¿Esta seguro de eliminar este usuario?')) {
-        this.$http.post('http://pictos-backend.lo/api/users/delete', {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/users/delete', {
           'id': this.$route.params.id
         }).then((response) => {
           this.$router.push('/usuarios');
@@ -106,7 +106,7 @@ export default {
     },
     publishUser() {
       if(confirm('¿Esta seguro de publicar este usuario?')) {
-        this.$http.put('http://pictos-backend.lo/api/users/publish', {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/users/publish', {
           'id': this.$route.params.id
         }).then((response) => {
           if(response.data)
@@ -119,7 +119,7 @@ export default {
       this.editUser = _.clone( this.user );
     },
     updated() {
-      this.$http.get('http://pictos-backend.lo/api/users/'+this.$route.params.id).then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users/'+this.$route.params.id).then((response) => {
         this.user.set(response.data);
         this.editUser = _.clone( this.user  )
         this.closeModal();

@@ -48,7 +48,7 @@ export default new Vuex.Store({
         setCategories( { commit } ){
             return new Promise( ( resolve, reject ) => {
                 axios( {
-                    url: 'http://pictos-backend.lo/api/categories/list',
+                    url: process.env.VUE_APP_API_DOMAIN + 'api/categories/list',
                     method: 'GET'
                 } ).then( response => {
                     commit('setCategories', response.data)
@@ -59,7 +59,7 @@ export default new Vuex.Store({
         setServices( { commit } ){
             return new Promise( ( resolve, reject ) => {
                 axios( {
-                    url: 'http://pictos-backend.lo/api/services/list',
+                    url: process.env.VUE_APP_API_DOMAIN + 'api/services/list',
                     method: 'GET'
                 } ).then( response => {
                     commit('setServices', response.data)
@@ -70,7 +70,7 @@ export default new Vuex.Store({
         setVenues( { commit } ){
             return new Promise( ( resolve, reject ) => {
                 axios( {
-                    url: 'http://pictos-backend.lo/api/venues/list',
+                    url: process.env.VUE_APP_API_DOMAIN + 'api/venues/list',
                     method: 'GET'
                 } ).then( response => {
                     commit('setVenues', response.data)
@@ -81,7 +81,7 @@ export default new Vuex.Store({
         setImages( { commit } ) {
             return new Promise( ( resolve, reject ) => {
                 axios( {
-                    url: 'http://pictos-backend.lo/api/images',
+                    url: process.env.VUE_APP_API_DOMAIN + 'api/images',
                     method: 'GET'
                 } ).then( response => {
                     commit('setImages', response.data)
@@ -93,7 +93,7 @@ export default new Vuex.Store({
             return new Promise( ( resolve, reject ) => {
                 commit('auth_request')
                 axios( {
-                    url: 'http://pictos-backend.lo/api/login',
+                    url: process.env.VUE_APP_API_DOMAIN + 'api/login',
                     data: user,
                     method: 'POST'
                 } ).then( response => {

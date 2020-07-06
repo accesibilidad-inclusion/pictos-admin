@@ -85,12 +85,12 @@ export default {
             this.$refs.observer.validate().then( valid => {
                 if(valid) {
                     if(this.method == 'post')
-                        this.$http.post('http://pictos-backend.lo/' + this.url, this.object).then((response) => {
+                        this.$http.post(process.env.VUE_APP_API_DOMAIN + this.url, this.object).then((response) => {
                             this.$emit( 'created' )
                             this.$refs.observer.reset();
                         });
                     else if(this.method == 'put')
-                        this.$http.put('http://pictos-backend.lo/' + this.url, this.object).then((response) => {
+                        this.$http.put(process.env.VUE_APP_API_DOMAIN + this.url, this.object).then((response) => {
                             this.$emit( 'updated' )
                             this.$refs.observer.reset();
                         });

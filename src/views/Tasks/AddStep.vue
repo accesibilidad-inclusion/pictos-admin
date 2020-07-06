@@ -257,7 +257,7 @@ export default {
       if(this.context)
        images.push(this.context.id)
 
-      this.$http.post('http://pictos-backend.lo/api/steps/store', {
+      this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
         images: images,
         label: this.step,
         task_id: this.$route.params.task_id

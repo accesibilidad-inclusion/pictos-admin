@@ -45,10 +45,10 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/venues/by_users').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/by_users').then((response) => {
       this.venues = response.data;
     });
-    this.$http.get('http://pictos-backend.lo/api/tasks/by_users').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users').then((response) => {
       this.tasks = response.data;
     });
   },

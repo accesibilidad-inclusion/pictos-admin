@@ -82,7 +82,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/venues/'+this.$route.params.id).then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+this.$route.params.id).then((response) => {
       this.venue.set(response.data);
       this.editVenue = _.clone( this.venue  )
     });
@@ -97,7 +97,7 @@ export default {
   methods: {
     deleteVenue() {
       if(confirm('¿Esta seguro de eliminar este lugar?')) {
-        this.$http.post('http://pictos-backend.lo/api/venues/delete', {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/venues/delete', {
           'id': this.$route.params.id
         }).then((response) => {
           this.$router.push('/lugares');
@@ -106,7 +106,7 @@ export default {
     },
     publishVenue() {
       if(confirm('¿Esta seguro de publicar este lugar?')) {
-        this.$http.put('http://pictos-backend.lo/api/venues/publish', {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/venues/publish', {
           'id': this.$route.params.id
         }).then((response) => {
           if(response.data)
@@ -119,7 +119,7 @@ export default {
       this.editVenue = _.clone( this.venue );
     },
     updated() {
-      this.$http.get('http://pictos-backend.lo/api/venues/'+this.$route.params.id).then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+this.$route.params.id).then((response) => {
         this.venue.set(response.data);
         this.editVenue = _.clone( this.venue  )
         this.closeModal();

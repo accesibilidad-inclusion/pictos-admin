@@ -82,7 +82,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/services/'+this.$route.params.id).then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/'+this.$route.params.id).then((response) => {
       this.service.set(response.data);
       this.editService = _.clone( this.service  )
     });
@@ -97,7 +97,7 @@ export default {
   methods: {
     deleteService() {
       if(confirm('¿Esta seguro de eliminar este servicio?')) {
-        this.$http.post('http://pictos-backend.lo/api/services/delete', {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/services/delete', {
           'id': this.$route.params.id
         }).then((response) => {
           this.$router.push('/servicios');
@@ -106,7 +106,7 @@ export default {
     },
     publishService() {
       if(confirm('¿Esta seguro de publicar este servicio?')) {
-        this.$http.put('http://pictos-backend.lo/api/services/publish', {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/services/publish', {
           'id': this.$route.params.id
         }).then((response) => {
           if(response.data)
@@ -119,7 +119,7 @@ export default {
       this.editService = _.clone( this.service );
     },
     updated() {
-      this.$http.get('http://pictos-backend.lo/api/services/'+this.$route.params.id).then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/'+this.$route.params.id).then((response) => {
         this.service.set(response.data);
         this.editService = _.clone( this.service  )
         this.closeModal();

@@ -67,7 +67,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/users').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users').then((response) => {
       this.entries = response.data;
     });
   },
@@ -99,7 +99,7 @@ export default {
       this.newUser = new User();
     },
     created( user ) {
-      this.$http.get('http://pictos-backend.lo/api/users').then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users').then((response) => {
         this.entries = response.data;
       });
       this.closeModal();

@@ -68,7 +68,7 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services').then((response) => {
       this.entries = response.data;
     });
   },
@@ -104,7 +104,7 @@ export default {
       this.newService = new Service();
     },
     created( service ) {
-      this.$http.get('http://pictos-backend.lo/api/services').then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services').then((response) => {
         this.entries = response.data;
       });
       this.closeModal();
