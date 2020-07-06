@@ -32,6 +32,19 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <v-col cols="6">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>
+            Pictogramas
+          </v-card-title>
+          <v-card-text>
+            <div v-for="step in steps" v-bind:key="step.id">
+              <span>{{ moment(step.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+              <span> - <router-link :to="'/tareas/'+step.id">{{ step.label }}</router-link></span>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
   </div>
 </template>
@@ -51,11 +64,15 @@ export default {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users').then((response) => {
       this.tasks = response.data;
     });
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/by_users').then((response) => {
+      this.steps = response.data;
+    });
   },
   data() {
     return {
       venues: [],
-      tasks: []
+      tasks: [],
+      steps: []
     };
   },
   methods: {
