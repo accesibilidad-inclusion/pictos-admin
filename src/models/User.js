@@ -43,7 +43,7 @@ class User {
                 prefix: 'los',
                 name: 'correo electronico',
                 label: 'Correo electronico',
-                rules: 'required|email',
+                rules: 'required|email|unique_email',
                 type: 'text'
             }
         ]

@@ -54,6 +54,7 @@
 <script>
 import { required, max } from 'vee-validate/dist/rules';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
+import axios from 'axios';
 import Service from '../../models/Service'
 
 setInteractionMode('eager');
@@ -66,6 +67,17 @@ extend('required', {
 extend('max', {
   ...max,
   message: 'El campo {_field_} no puede ser mas largo que {length} caracteres',
+});
+
+extend('unique_email', {
+    message: 'El campo {_field_} ya esta registrado.',
+    validate: value => {
+        return axios.post( process.env.VUE_APP_API_DOMAIN + 'api/users/email_check', { 'email': value } ).then((exist) => {
+            return {
+                valid: !exist.data
+            }
+        });
+    }
 });
 
 
