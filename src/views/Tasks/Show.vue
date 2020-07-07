@@ -75,7 +75,7 @@
         Este tarea esta en borrador <v-btn text small @click="publishTask()">Publicar</v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="task.status == 'Aporte del usuario'">
+    <v-row v-if="task.status == 'Enviado por usuario'">
       <v-col cols="12">
         Esta tarea es un aporte de un usuario <v-btn text small @click="publishTask()">Publicar</v-btn>
       </v-col>

@@ -69,6 +69,11 @@
         Este lugar esta en borrador <v-btn text small @click="publishVenue()">Publicar</v-btn>
       </v-col>
     </v-row>
+    <v-row v-if="venue.status == 'Enviado por usuario'">
+      <v-col cols="12">
+        Este lugar es un aporte de un usuario <v-btn text small @click="publishVenue()">Publicar</v-btn>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
