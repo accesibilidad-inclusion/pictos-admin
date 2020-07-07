@@ -13,6 +13,7 @@ class Venue {
         this.tags_text = ''
         this.tags = []
         this.tasks = []
+        this.visible = 0
         this.status = ''
     }
 
@@ -30,6 +31,7 @@ class Venue {
         this.tags = venue.tags
         this.tasks = venue.tasks
         this.status = venue.status
+        this.visible = venue.visible
     }
 
     form() {

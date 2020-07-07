@@ -40,6 +40,7 @@
 
         <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn text small color="error" @click="destroy()" v-if="deleteAction">Eliminar</v-btn>
             <v-btn color="grey" text @click="cancel()">
                 Cancelar
             </v-btn>
@@ -83,7 +84,7 @@ extend('unique_email', {
 
 export default {
     name: 'Form',
-    props: [ 'object', 'name', 'url', 'method' ],
+    props: [ 'object', 'name', 'url', 'method', 'deleteAction', 'deleteUrl' ],
     components: {
         ValidationProvider,
         ValidationObserver,
@@ -114,6 +115,15 @@ export default {
             this.$emit( 'cancel' )
             this.$refs.observer.reset();
         },
+        destroy() {
+            if(confirm('¿Esta seguro de eliminarlo?')) {
+                this.$http.post(process.env.VUE_APP_API_DOMAIN + this.deleteUrl, {
+                    'id': this.object.id
+                }).then((response) => {
+                    this.$emit( 'updated' )
+                });
+            }
+        }
     },
 };
 </script>

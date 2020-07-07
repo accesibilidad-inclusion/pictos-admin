@@ -14,7 +14,7 @@
           <v-card-text>
             <div v-for="venue in venues" v-bind:key="venue.id">
               <span>{{ moment(venue.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
-              <span> - <router-link :to="'/lugares/'+venue.id">{{ venue.name }}</router-link></span>
+              <span> - <a @click="setVenueEdit(venue)">{{ venue.name }}</a></span>
             </div>
           </v-card-text>
         </v-card>
@@ -72,10 +72,26 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog
+      v-model="venueDialog"
+      width="500"
+    >
+      <Form 
+        v-on:cancel="closeModalVenue" 
+        v-on:updated="updateVenues" 
+        :object="venueEdit" 
+        name="lugar" 
+        url="/api/venues/update" 
+        method="put" 
+        :deleteAction="true"
+        deleteUrl="/api/venues/delete"
+      ></Form>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import Venue from '../../models/Venue'
 import Form from '../Utils/Form'
 
 export default {
@@ -102,10 +118,26 @@ export default {
       venues: [],
       tasks: [],
       steps: [],
-      reports: []
+      reports: [],
+      venueDialog: false,
+      venueEdit: new Venue()
     };
   },
   methods: {
+    closeModalVenue() {
+      this.venueDialog = false
+    },
+    setVenueEdit(venue) {
+      this.venueEdit.set(venue)
+      this.venueEdit.visible = 1
+      this.venueDialog = true
+    },
+    updateVenues() {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/by_users').then((response) => {
+        this.venues = response.data;
+      });
+      this.venueDialog = false
+    }
   },
 };
 </script>
