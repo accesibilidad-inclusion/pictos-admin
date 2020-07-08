@@ -18,10 +18,10 @@
       <v-col cols="5">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Información general 
+            Información general
             <v-dialog
               v-model="dialog"
               width="500"
@@ -35,7 +35,7 @@
               <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editVenue" name="lugar" url="/api/venues/update" method="put"></Form>
             </v-dialog>
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <ul>
               <li>Nombre: {{ venue.name }}</li>
               <li>Servicio: <router-link :to="'/servicios/'+venue.service.id">{{ venue.service.name }}</router-link></li>
@@ -49,12 +49,12 @@
       <v-col cols="7">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-          Este lugar tiene {{ venue.tasks.length }} tareas 
+          Este lugar tiene {{ venue.tasks.length }} tareas
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <ul>
               <li v-for="(task, index) in venue.tasks" v-bind:key="index">
                 <router-link :to="'/tareas/'+task.id">{{ index + 1 }} {{ task.title }}</router-link>
@@ -133,3 +133,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .v-card {
+    height: 100%;
+  }
+</style>

@@ -18,10 +18,10 @@
       <v-col cols="5">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Información general 
+            Información general
             <v-dialog
               v-model="dialog"
               width="500"
@@ -35,7 +35,7 @@
               <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editTask" name="tarea" url="/api/tasks/update" method="put"></Form>
             </v-dialog>
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <ul>
               <li>Titulo: {{ task.title }}</li>
               <li>Servicio: <router-link :to="'/servicios/'+task.service.id">{{ task.service.name }}</router-link></li>
@@ -50,13 +50,13 @@
       <v-col cols="7">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
             <span v-if="!task.steps.length">Esta tarea no tiene pasos</span>
             <span v-else>Esta tarea tiene {{ task.steps.length }} pasos</span>
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'AddStep', params: { task_id: task.id }}">
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
@@ -139,3 +139,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .v-card {
+    height: 100%;
+  }
+</style>

@@ -18,10 +18,10 @@
       <v-col cols="5">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Información general 
+            Información general
             <v-dialog
               v-model="dialog"
               width="500"
@@ -35,7 +35,7 @@
               <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editUser" name="usuario" url="/api/users/update" method="put"></Form>
             </v-dialog>
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <ul>
               <li>Nombre: {{ user.name }}</li>
               <li>Categoria: {{ user.category.name }}</li>
@@ -49,12 +49,12 @@
       <v-col cols="7">
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-          Este usuario tiene {{ user.venues.length }} lugares 
+          Este usuario tiene {{ user.venues.length }} lugares
           </v-card-title>
-          <v-card-text>
+          <v-card-text class="py-5 px-6">
             <ul>
               <li v-for="(venue, index) in user.venues" v-bind:key="index">
                 <router-link :to="'/lugares/'+venue.id">{{ index+1 }} {{ venue.name }}</router-link>
@@ -128,3 +128,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .v-card {
+    height: 100%;
+  }
+</style>
