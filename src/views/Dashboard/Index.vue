@@ -8,12 +8,13 @@
     <v-row>
       <v-col cols="6">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
-            Lugares <router-link :to="{ name: 'Venues', params: { status: 'contributions' }}">Ver todos</router-link>
+          <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
+            Lugares <router-link :to="{ name: 'Venues', params: { status: 'contributions' }}"
+            class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Ver todos</router-link>
           </v-card-title>
-          <v-card-text>
-            <div v-for="venue in venues" v-bind:key="venue.id">
-              <span>{{ moment(venue.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+          <v-card-text class="py-5 px-6">
+            <div v-for="venue in venues" v-bind:key="venue.id" class="py-1">
+              <span class="grey--text lighten-2">{{ moment(venue.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
               <span> - <a @click="setVenueEdit(venue)">{{ venue.name }}</a></span>
             </div>
           </v-card-text>
@@ -21,12 +22,12 @@
       </v-col>
       <v-col cols="6">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
+          <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Evaluaciones
           </v-card-title>
-          <v-card-text>
-            <div v-for="step in steps" v-bind:key="step.id">
-              <span>{{ moment(step.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+          <v-card-text class="py-5 px-6">
+            <div v-for="step in steps" v-bind:key="step.id" class="py-1">
+              <span class="grey--text lighten-2">{{ moment(step.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
               <span> - <router-link :to="'/tareas/'+step.id">{{ step.label }}</router-link></span>
             </div>
           </v-card-text>
@@ -34,12 +35,13 @@
       </v-col>
       <v-col cols="6">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
-            Tareas <router-link :to="{ name: 'Tasks', params: { status: 'contributions' }}">Ver todos</router-link>
+          <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
+            Tareas <router-link :to="{ name: 'Tasks', params: { status: 'contributions' }}"
+            class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Ver todos</router-link>
           </v-card-title>
-          <v-card-text>
-            <div v-for="task in tasks" v-bind:key="task.id">
-              <span>{{ moment(task.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+          <v-card-text class="py-5 px-6">
+            <div v-for="task in tasks" v-bind:key="task.id" class="py-1">
+              <span class="grey--text lighten-2">{{ moment(task.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
               <span> - <router-link :to="'/tareas/'+task.id">{{ task.title }}</router-link></span>
             </div>
           </v-card-text>
@@ -47,12 +49,12 @@
       </v-col>
       <v-col cols="6">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
+          <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Pictogramas
           </v-card-title>
-          <v-card-text>
-            <div v-for="step in steps" v-bind:key="step.id">
-              <span>{{ moment(step.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+          <v-card-text class="py-5 px-6">
+            <div v-for="step in steps" v-bind:key="step.id" class="py-1">
+              <span class="grey--text lighten-2">{{ moment(step.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
               <span> - <router-link :to="'/tareas/'+step.id">{{ step.label }}</router-link></span>
             </div>
           </v-card-text>
@@ -60,12 +62,12 @@
       </v-col>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>
+          <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Informe de errores
           </v-card-title>
-          <v-card-text>
-            <div v-for="report in reports" v-bind:key="report.id">
-              <span>{{ moment(report.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
+          <v-card-text class="py-5 px-6">
+            <div v-for="report in reports" v-bind:key="report.id" class="py-1">
+              <span class="grey--text lighten-2">{{ moment(report.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
               <span> - {{ report.report }} en <router-link :to="'/tareas/'+report.task.id">{{ report.task.title }}</router-link></span>
             </div>
           </v-card-text>
@@ -76,13 +78,13 @@
       v-model="venueDialog"
       width="500"
     >
-      <Form 
-        v-on:cancel="closeModalVenue" 
-        v-on:updated="updateVenues" 
-        :object="venueEdit" 
-        name="lugar" 
-        url="/api/venues/update" 
-        method="put" 
+      <Form
+        v-on:cancel="closeModalVenue"
+        v-on:updated="updateVenues"
+        :object="venueEdit"
+        name="lugar"
+        url="/api/venues/update"
+        method="put"
         :deleteAction="true"
         deleteUrl="/api/venues/delete"
       ></Form>
@@ -141,3 +143,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .v-card {
+    height: 100%;
+  }
+</style>
