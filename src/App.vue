@@ -58,34 +58,34 @@
         </transition>
         <transition name="bounce-menu">
           <div
-            class="settings"
+            class="settings px-10 py-7"
             v-if="showProfile"
             v-click-outside="closeAvatar"
             tabindex="-1"
             ref="avatarEl"
             @keyup.esc="showProfile = false"
           >
-            <button type="button" @click="showProfile = false" class="close" aria-label="Close">X</button>
+            <button type="button" @click="showProfile = false" class="close grey--text text--darken-4" aria-label="Close"><v-icon class="grey--text text--darken-1">mdi-close</v-icon></button>
             <div class="main">
               <div
-                class="avatar-menu"
+                class="avatar-menu black--text"
               >{{ user.name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'') }}</div>
-              <div class="main-info">
-                <div class="main-info__names">{{ user.name }}</div>
+              <div class="main-info ms-10 ps-4">
+                <div class="main-info__names grey--text text--darken-4">{{ user.name }}</div>
               </div>
             </div>
-            <div class="personal-info">
-              <div>
+            <div class="personal-info ms-10 ps-4">
+              <div class="black--text">
                 <label>E-mail</label>
                 {{ user.email }}
               </div>
             </div>
-            <div class="options">
+            <div class="options ms-10 ps-4">
               <div class="profile-opt">
-                <span @click="showProfile = false">Cambiar contraseña</span>
+                <span @click="showProfile = false" class="blue--text text--darken-2">Cambiar contraseña</span>
               </div>
               <div class="profile-opt">
-                <span @click="logout">Cerrar sesión</span>
+                <span @click="logout" class="blue--text text--darken-2">Cerrar sesión</span>
               </div>
             </div>
           </div>
@@ -189,7 +189,6 @@ export default {
 .profile {
   position: absolute;
   right: 1rem;
-  color:black;
 }
 .avatar {
   border-radius: 50%;
@@ -205,62 +204,86 @@ export default {
   text-transform: uppercase;
   position: absolute;
   cursor: pointer;
+  &:hover:before {
+    content: '';
+    opacity: 0.08;
+    height: 42px;
+    width: 42px;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    /* transition-duration: 0.28s; */
+    /* transition-property: box-shadow, transform, opacity; */
+    /* transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); */
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+  }
 }
 .settings .main {
-  display: flex;
-  //column-gap: 1rem;
+  position: relative;
 }
 .settings .main .avatar-menu {
   border-radius: 50%;
   height: 42px;
   width: 42px;
-  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 400;
   text-transform: uppercase;
-  position: relative;
-  margin-right: 0.5rem;
+  position: absolute;
 }
 .settings {
   background: white;
   border-radius: 13px;
   transform-origin: 100% 0%;
   width: 400px;
-  padding: 20px 50px 40px;
   top: -10px;
   left: -390px;
   position: absolute;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 99999;
   font-weight: 300;
+  outline: none;
 }
 .settings .close {
   position: absolute;
   top: 1rem;
   right: 2rem;
+  outline: none;
+  width: 30px;
+  height: 30px;
+  z-index: 10;
 }
 .main-info__names {
     font-weight: 400;
     font-size: 16px;
     text-transform: capitalize;
 }
+.avatar-menu {
+  background: lightgray;
+}
 .settings .personal-info {
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-    padding: 1.3rem 1.3rem;
-    margin: 1rem 0;
     font-size: 14px;
 }
 .settings .personal-info label{
     font-weight: 400;
     width: 20%;
 }
+.settings .options {
+  border-top: 1px solid lightgray;
+  padding-top: 0.5rem;
+  margin-top: 0.8rem;
+}
 .profile-opt {
-    color: darkgray;
     padding: .3rem 0;
     font-size: 14px;
+    &:before {
+      content: '';
+      background: gray;
+      width: 24px;
+      height: 24px;
+      margin-right: 0.3rem;
+    }
 }
 .profile-opt span {
     cursor: pointer;
