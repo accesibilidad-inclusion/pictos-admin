@@ -1,28 +1,28 @@
 <template>
     <div>
         <ValidationObserver ref="observer">
-            <v-form>
+            <v-form class="login-form mx-auto">
                 <v-container>
                     <v-row>
-                        <ValidationProvider v-slot="{ errors }" name="correo electronico" rules="required|email">
+                        <ValidationProvider v-slot="{ errors }" name="correo electronico" rules="required|email" class="login-form__item">
                             <v-col cols="12">
-                                <v-text-field 
-                                v-model="email" 
-                                label="Correo electronico" 
-                                :error-messages="errors" 
+                                <v-text-field
+                                v-model="email"
+                                label="Correo electronico"
+                                :error-messages="errors"
                                 required
                                 ></v-text-field>
                             </v-col>
                         </ValidationProvider>
                     </v-row>
                     <v-row>
-                        <ValidationProvider v-slot="{ errors }" name="contraseña" rules="required">
+                        <ValidationProvider v-slot="{ errors }" name="contraseña" rules="required" class="login-form__item">
                             <v-col cols="12">
-                                <v-text-field 
-                                v-model="password" 
+                                <v-text-field
+                                v-model="password"
                                 label="Contraseña"
-                                type="password" 
-                                :error-messages="errors" 
+                                type="password"
+                                :error-messages="errors"
                                 required
                                 ></v-text-field>
                             </v-col>
@@ -86,3 +86,12 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.login-form {
+  max-width: 400px;
+}
+.login-form__item {
+  width: 100%;
+  display: block;
+}
+</style>
