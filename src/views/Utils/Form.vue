@@ -1,13 +1,7 @@
 <template>
     <v-card>
-<<<<<<< HEAD
-        <v-card-title class="headline grey lighten-2" primary-title>
-            <span>{{ object.form().title }}</span>
-=======
         <v-card-title class="font-weight-regular grey lighten-4" primary-title>
-            <span v-if="!object.id">Agregar nuevo {{ name }}</span>
-            <span v-else>Editar {{ name }}</span>
->>>>>>> a8badba43695c4445349843bc0c9d445091c2692
+            <span>{{ object.form().title }}</span>
         </v-card-title>
 
         <ValidationObserver ref="observer">
