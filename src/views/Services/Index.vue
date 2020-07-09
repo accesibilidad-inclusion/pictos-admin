@@ -12,7 +12,7 @@
           width="500"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" color="primary">
+            <v-btn v-bind="attrs" v-on="on" depressed color="primary">
               <v-icon>mdi-plus</v-icon> Agregar nuevo servicio
             </v-btn>
           </template>

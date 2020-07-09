@@ -7,11 +7,12 @@
     ></v-progress-circular>
   </v-layout>
   <div v-else>
-    <v-row>
-      <v-col cols="12">
-        <router-link to="/tareas/"><v-icon>mdi-chevron-left</v-icon> Tareas</router-link> | {{ task.name }}
-        <span>{{ task.status }}</span>
-        <v-btn text small color="error" @click="deleteTask()">Eliminar</v-btn>
+    <v-row class="mb-3">
+      <v-col cols="12" class="d-flex align-center breadcrumbs">
+        <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>{{ task.name }}
+        <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
+        <v-spacer></v-spacer>
+        <v-btn text default color="error" @click="deleteTask()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -37,12 +38,12 @@
           </v-card-title>
           <v-card-text class="py-5 px-6">
             <ul>
-              <li>Titulo: {{ task.title }}</li>
-              <li>Servicio: <router-link :to="'/servicios/'+task.service.id">{{ task.service.name }}</router-link></li>
-              <li>Lugar: <router-link :to="'/lugares/'+task.venue.id">{{ task.venue.name }}</router-link></li>
-              <li v-if="task.url != ''">Url: <a target="_blank" :href="task.url">{{ task.url }}</a></li>
-              <li>Id: {{ task.id }}</li>
-              <li v-if="task.tags.length">Sinonimos: {{ task.tags.join(', ') }}</li>
+              <li class="py-2"><span class="font-weight-bold">Titulo:</span> {{ task.title }}</li>
+              <li class="py-2"><span class="font-weight-bold">Servicio:</span> <router-link :to="'/servicios/'+task.service.id">{{ task.service.name }}</router-link></li>
+              <li class="py-2"><span class="font-weight-bold">Lugar:</span> <router-link :to="'/lugares/'+task.venue.id">{{ task.venue.name }}</router-link></li>
+              <li v-if="task.url != ''" class="py-2"><span class="font-weight-bold">Url:</span> <a target="_blank" :href="task.url">{{ task.url }}</a></li>
+              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ task.id }}</li>
+              <li v-if="task.tags.length" class="py-2"><span class="font-weight-bold">Sinonimos:</span> {{ task.tags.join(', ') }}</li>
             </ul>
           </v-card-text>
         </v-card>
@@ -56,12 +57,12 @@
             <span v-if="!task.steps.length">Esta tarea no tiene pasos</span>
             <span v-else>Esta tarea tiene {{ task.steps.length }} pasos</span>
           </v-card-title>
-          <v-card-text class="py-5 px-6">
-            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'AddStep', params: { task_id: task.id }}">
+          <v-card-text class="pa-0">
+            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'AddStep', params: { task_id: task.id }}" class="right-box__button">
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
-            <ul v-else>
-              <li v-for="(step, index) in task.steps" v-bind:key="index">{{ index+1 }} {{ step.label }}</li>
+            <ul v-else class="right-box">
+              <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4">{{ index+1 }} {{ step.label }}</li>
             </ul>
           </v-card-text>
         </v-card>
@@ -142,5 +143,44 @@ export default {
 <style lang="scss" scoped>
   .v-card {
     height: 100%;
+  }
+  .breadcrumbs {
+    font-size: 1.5rem;
+  }
+  .breadcrumbs__link {
+    text-decoration: none;
+    &:after {
+      content: '/';
+      padding: 0 0.5rem;
+      color: gray;
+    }
+  }
+  .breadcrumbs__status {
+    font-size: 0.9rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    &.color-draft {
+      background-color: #FFCA28;
+    }
+    &.color-published {
+      background-color: #E0E0E0;
+    }
+  }
+  .right-box {
+    list-style: none;
+    padding: 0;
+  }
+  .right-box__item {
+    &:only-child {
+      border-bottom: 1px solid #E0E0E0;
+    }
+    & + .right-box__item {
+      border-top: 1px solid #E0E0E0;
+    }
+  }
+  .right-box__button {
+    display: flex;
+    max-width: 230px;
+    margin: 3rem auto;
   }
 </style>

@@ -7,11 +7,12 @@
     ></v-progress-circular>
   </v-layout>
   <div v-else>
-    <v-row>
-      <v-col cols="12">
-        <router-link to="/usuarios/"><v-icon>mdi-chevron-left</v-icon> Usuarios</router-link> | {{ user.name }}
-        <span>{{ user.status }}</span>
-        <v-btn text small color="error" @click="deleteUser()">Eliminar</v-btn>
+    <v-row class="mb-3">
+      <v-col cols="12" class="d-flex align-center breadcrumbs">
+        <router-link to="/usuarios/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Usuarios</router-link>{{ user.name }}
+        <span class="breadcrumbs__status color-published mx-3 px-3">{{ user.status }}</span>
+        <v-spacer></v-spacer>
+        <v-btn text default color="error" @click="deleteUser()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -37,11 +38,11 @@
           </v-card-title>
           <v-card-text class="py-5 px-6">
             <ul>
-              <li>Nombre: {{ user.name }}</li>
-              <li>Categoria: {{ user.category.name }}</li>
-              <li v-if="user.url != ''">Url: <a target="_blank" :href="user.url">{{ user.url }}</a></li>
-              <li>Id: {{ user.id }}</li>
-              <li v-if="user.tags.length">Sinonimos: {{ user.tags.join(', ') }}</li>
+              <li class="py-2"><span class="font-weight-bold">Nombre:</span> {{ user.name }}</li>
+              <li class="py-2"><span class="font-weight-bold">Categoria:</span> {{ user.category.name }}</li>
+              <li v-if="user.url != ''" class="py-2"><span class="font-weight-bold">Url:</span> <a target="_blank" :href="user.url">{{ user.url }}</a></li>
+              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ user.id }}</li>
+              <li v-if="user.tags.length" class="py-2"><span class="font-weight-bold">Sinonimos:</span> {{ user.tags.join(', ') }}</li>
             </ul>
           </v-card-text>
         </v-card>
@@ -54,9 +55,9 @@
           >
           Este usuario tiene {{ user.venues.length }} lugares
           </v-card-title>
-          <v-card-text class="py-5 px-6">
-            <ul>
-              <li v-for="(venue, index) in user.venues" v-bind:key="index">
+          <v-card-text class="pa-0">
+            <ul class="right-box">
+              <li v-for="(venue, index) in user.venues" v-bind:key="index" class="right-box__item px-9 py-4">
                 <router-link :to="'/lugares/'+venue.id">{{ index+1 }} {{ venue.name }}</router-link>
               </li>
             </ul>
@@ -131,5 +132,40 @@ export default {
 <style lang="scss" scoped>
   .v-card {
     height: 100%;
+  }
+  .breadcrumbs {
+    font-size: 1.5rem;
+  }
+  .breadcrumbs__link {
+    text-decoration: none;
+    &:after {
+      content: '/';
+      padding: 0 0.5rem;
+      color: gray;
+    }
+  }
+  .breadcrumbs__status {
+    font-size: 0.9rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    &.color-draft {
+      background-color: #FFCA28;
+    }
+    &.color-published {
+      background-color: #E0E0E0;
+    }
+  }
+  .right-box {
+    list-style: none;
+    padding: 0;
+  }
+  .right-box__item {
+
+    &:only-child {
+      border-bottom: 1px solid #E0E0E0;
+    }
+    & + .right-box__item {
+      border-top: 1px solid #E0E0E0;
+    }
   }
 </style>

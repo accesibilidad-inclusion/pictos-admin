@@ -7,11 +7,12 @@
     ></v-progress-circular>
   </v-layout>
   <div v-else>
-    <v-row>
-      <v-col cols="12">
-        <router-link to="/lugares/"><v-icon>mdi-chevron-left</v-icon> Lugares</router-link> | {{ venue.name }}
-        <span>{{ venue.status }}</span>
-        <v-btn text small color="error" @click="deleteVenue()">Eliminar</v-btn>
+    <v-row class="mb-3">
+      <v-col cols="12" class="d-flex align-center breadcrumbs">
+        <router-link to="/lugares/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares</router-link>{{ venue.name }}
+        <span class="breadcrumbs__status color-published mx-3 px-3">{{ venue.status }}</span>
+        <v-spacer></v-spacer>
+        <v-btn text default  color="error" @click="deleteVenue()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -37,11 +38,11 @@
           </v-card-title>
           <v-card-text class="py-5 px-6">
             <ul>
-              <li>Nombre: {{ venue.name }}</li>
-              <li>Servicio: <router-link :to="'/servicios/'+venue.service.id">{{ venue.service.name }}</router-link></li>
-              <li v-if="venue.url != ''">Url: <a target="_blank" :href="venue.url">{{ venue.url }}</a></li>
-              <li>Id: {{ venue.id }}</li>
-              <li v-if="venue.tags.length">Sinonimos: {{ venue.tags.join(', ') }}</li>
+              <li class="py-2"><span class="font-weight-bold">Nombre:</span> {{ venue.name }}</li>
+              <li class="py-2"><span class="font-weight-bold">Servicio:</span> <router-link :to="'/servicios/'+venue.service.id">{{ venue.service.name }}</router-link></li>
+              <li v-if="venue.url != ''" class="py-2"><span class="font-weight-bold">Url:</span> <a target="_blank" :href="venue.url">{{ venue.url }}</a></li>
+              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ venue.id }}</li>
+              <li v-if="venue.tags.length" class="py-2"><span class="font-weight-bold">Sinonimos:</span> {{ venue.tags.join(', ') }}</li>
             </ul>
           </v-card-text>
         </v-card>
@@ -54,9 +55,9 @@
           >
           Este lugar tiene {{ venue.tasks.length }} tareas
           </v-card-title>
-          <v-card-text class="py-5 px-6">
-            <ul>
-              <li v-for="(task, index) in venue.tasks" v-bind:key="index">
+          <v-card-text class="pa-0">
+            <ul class="right-box">
+              <li v-for="(task, index) in venue.tasks" v-bind:key="index" class="right-box__item px-9 py-4">
                 <router-link :to="'/tareas/'+task.id">{{ index + 1 }} {{ task.title }}</router-link>
               </li>
             </ul>
@@ -136,5 +137,40 @@ export default {
 <style lang="scss" scoped>
   .v-card {
     height: 100%;
+  }
+  .breadcrumbs {
+    font-size: 1.5rem;
+  }
+  .breadcrumbs__link {
+    text-decoration: none;
+    &:after {
+      content: '/';
+      padding: 0 0.5rem;
+      color: gray;
+    }
+  }
+  .breadcrumbs__status {
+    font-size: 0.9rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    &.color-draft {
+      background-color: #FFCA28;
+    }
+    &.color-published {
+      background-color: #E0E0E0;
+    }
+  }
+  .right-box {
+    list-style: none;
+    padding: 0;
+  }
+  .right-box__item {
+
+    &:only-child {
+      border-bottom: 1px solid #E0E0E0;
+    }
+    & + .right-box__item {
+      border-top: 1px solid #E0E0E0;
+    }
   }
 </style>
