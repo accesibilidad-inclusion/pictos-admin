@@ -7,11 +7,12 @@
     ></v-progress-circular>
   </v-layout>
   <div v-else>
-    <v-row>
-      <v-col cols="12">
-        <router-link to="/lugares/"><v-icon>mdi-chevron-left</v-icon> Lugares</router-link> | {{ venue.name }}
-        <span>{{ venue.status }}</span>
-        <v-btn text small color="error" @click="deleteVenue()">Eliminar</v-btn>
+    <v-row class="mb-4">
+      <v-col cols="12" class="d-flex align-center breadcrumbs">
+        <router-link to="/lugares/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares</router-link>{{ venue.name }}
+        <span class="breadcrumbs__status color-published mx-3 px-3">{{ venue.status }}</span>
+        <v-spacer></v-spacer>
+        <v-btn text default  color="error" @click="deleteVenue()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -136,5 +137,27 @@ export default {
 <style lang="scss" scoped>
   .v-card {
     height: 100%;
+  }
+  .breadcrumbs {
+    font-size: 1.6rem;
+  }
+  .breadcrumbs__link {
+    text-decoration: none;
+    &:after {
+      content: '/';
+      padding: 0 0.5rem;
+      color: gray;
+    }
+  }
+  .breadcrumbs__status {
+    font-size: 0.9rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    &.color-draft {
+      background-color: #FFCA28;
+    }
+    &.color-published {
+      background-color: #E0E0E0;
+    }
   }
 </style>
