@@ -4,10 +4,7 @@ class Service {
         this.id = null
         this.name = ''
         this.url = ''
-        this.category = {
-            'id': null,
-            'name': ''
-        }
+        this.category = null
         this.venues = []
         this.tags_text = ''
         this.tags = []
@@ -29,34 +26,51 @@ class Service {
     }
 
     form() {
-        return [
-            {
-                id: 'name',
-                prefix: 'el',
-                name: 'nombre',
-                label: 'Nombre del servicio',
-                rules: 'required|max:100',
-                type: 'text'
-            },
-            {
-                id: 'category',
-                prefix: 'la',
-                name: 'categoria',
-                label: 'Categoria',
-                rules: 'required',
-                type: 'select',
-                data: 'categories',
-                textOption: ['name']
-            },
-            {
-                id: 'tags_text',
-                prefix: 'los',
-                name: 'sinonimos',
-                label: 'Sinónimos de búsqueda (Separados por coma)',
-                rules: '',
-                type: 'text'
-            }
-        ]
+        let form = {
+            title: this.id ? 'Editar servicio' : 'Agregar nuevo servicio',
+            fields: [
+                {
+                    id: 'name',
+                    name: 'nombre',
+                    label: 'Nombre del servicio',
+                    rules: 'required|max:100',
+                    type: 'text'
+                },
+                {
+                    id: 'category',
+                    name: 'categoria',
+                    label: 'Categoria',
+                    rules: 'required',
+                    type: 'select',
+                    data: 'categories',
+                    textOption: ['name']
+                },
+                {
+                    id: 'tags_text',
+                    name: 'sinonimos',
+                    label: 'Sinónimos de búsqueda (Separados por coma)',
+                    rules: '',
+                    type: 'text'
+                }
+            ],
+            actions: [
+                {
+                    label: 'Cancelar',
+                    color: 'grey',
+                    callback: 'cancel',
+                },
+                {
+                    label: this.id ? 'Actualizar servicio' : 'Crear servicio',
+                    color: 'primary',
+                    callback: 'request',
+                    url: this.id ? 'api/services/update' : 'api/services/store',
+                    method: this.id ? 'put' : 'post',
+                    validate: true,
+                    emit: 'updated'
+                }
+            ]
+        }
+        return form
     }
 
 }

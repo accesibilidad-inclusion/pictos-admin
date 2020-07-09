@@ -42,7 +42,7 @@
           <v-card-text class="py-5 px-6">
             <div v-for="task in tasks" v-bind:key="task.id" class="py-1">
               <span class="grey--text lighten-2">{{ moment(task.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
-              <span> - <router-link :to="'/tareas/'+task.id">{{ task.title }}</router-link></span>
+              <span> - <a @click="setTaskEdit(task)">{{ task.title }}</a></span>
             </div>
           </v-card-text>
         </v-card>
@@ -82,11 +82,16 @@
         v-on:cancel="closeModalVenue"
         v-on:updated="updateVenues"
         :object="venueEdit"
-        name="lugar"
-        url="/api/venues/update"
-        method="put"
-        :deleteAction="true"
-        deleteUrl="/api/venues/delete"
+      ></Form>
+    </v-dialog>
+    <v-dialog
+      v-model="taskDialog"
+      width="500"
+    >
+      <Form
+        v-on:cancel="closeModalTask"
+        v-on:updated="updateTasks"
+        :object="taskEdit"
       ></Form>
     </v-dialog>
   </div>
@@ -94,6 +99,7 @@
 
 <script>
 import Venue from '../../models/Venue'
+import Task from '../../models/Task'
 import Form from '../Utils/Form'
 
 export default {
@@ -108,7 +114,7 @@ export default {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users').then((response) => {
       this.tasks = response.data;
     });
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/by_users').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users_with_pictograms').then((response) => {
       this.steps = response.data;
     });
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/reports').then((response) => {
@@ -122,7 +128,9 @@ export default {
       steps: [],
       reports: [],
       venueDialog: false,
-      venueEdit: new Venue()
+      venueEdit: new Venue(),
+      taskDialog: false,
+      taskEdit: new Task()
     };
   },
   methods: {
@@ -131,7 +139,7 @@ export default {
     },
     setVenueEdit(venue) {
       this.venueEdit.set(venue)
-      this.venueEdit.visible = 1
+      this.venueEdit.visible = 0
       this.venueDialog = true
     },
     updateVenues() {
@@ -139,6 +147,20 @@ export default {
         this.venues = response.data;
       });
       this.venueDialog = false
+    },
+    closeModalTask() {
+      this.taskDialog = false
+    },
+    setTaskEdit(task) {
+      this.taskEdit.set(task)
+      this.taskEdit.visible = 0
+      this.taskDialog = true
+    },
+    updateTasks() {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users').then((response) => {
+        this.tasks = response.data;
+      });
+      this.taskDialog = false
     }
   },
 };

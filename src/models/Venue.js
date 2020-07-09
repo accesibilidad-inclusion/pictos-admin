@@ -3,10 +3,7 @@ class Venue {
     constructor() {
         this.id = null
         this.name = ''
-        this.service = {
-            'id': null,
-            'name': ''
-        }
+        this.service = null
         this.url = ''
         this.lat = 0
         this.long = 0
@@ -35,34 +32,76 @@ class Venue {
     }
 
     form() {
-        return [
-            {
-                id: 'name',
-                prefix: 'el',
-                name: 'nombre',
-                label: 'Nombre del lugar',
-                rules: 'required|max:100',
-                type: 'text'
-            },
-            {
-                id: 'service',
-                prefix: 'el',
-                name: 'lugar',
-                label: 'Servicio al que pertenece',
-                rules: 'required',
-                type: 'select',
-                data: 'services',
-                textOption: ['name']
-            },
-            {
-                id: 'tags_text',
-                prefix: 'los',
-                name: 'sinonimos',
-                label: 'Sinónimos de búsqueda (Separados por coma)',
-                rules: '',
-                type: 'text'
-            }
-        ]
+        let form = {
+            title: this.status == "Enviado por usuario" ? 'Crear nuevo lugar' : 
+            ( this.id ? 'Editar lugar' : 'Agregar nuevo lugar' ),
+            fields: [
+                {
+                    id: 'name',
+                    name: 'nombre',
+                    label: 'Nombre del lugar',
+                    rules: 'required|max:100',
+                    type: 'text'
+                },
+                {
+                    id: 'service',
+                    name: 'lugar',
+                    label: 'Servicio al que pertenece',
+                    rules: 'required',
+                    type: 'select',
+                    data: 'services',
+                    textOption: ['name']
+                },
+                {
+                    id: 'tags_text',
+                    name: 'sinonimos',
+                    label: 'Sinónimos de búsqueda (Separados por coma)',
+                    rules: '',
+                    type: 'text'
+                }
+            ],
+            actions: this.status == "Enviado por usuario" ? [
+                {
+                    label: 'Eliminar',
+                    color: 'error',
+                    callback: 'request',
+                    url: 'api/venues/delete',
+                    method: 'post',
+                    confirm: '¿Esta seguro de eliminar este lugar?',
+                    emit: 'updated'
+                },
+                {
+                    label: 'Cancelar',
+                    color: 'grey',
+                    callback: 'cancel',
+                },
+                {
+                    label: 'Crear tarea',
+                    color: 'primary',
+                    callback: 'request',
+                    url: 'api/venues/update',
+                    method: 'put',
+                    validate: true,
+                    emit: 'updated'
+                }
+            ] : [
+                {
+                    label: 'Cancelar',
+                    color: 'grey',
+                    callback: 'cancel',
+                },
+                {
+                    label: this.id ? 'Actualizar lugar' : 'Crear lugar',
+                    color: 'primary',
+                    callback: 'request',
+                    url: this.id ? 'api/venues/update' : 'api/venues/store',
+                    method: this.id ? 'put' : 'post',
+                    validate: true,
+                    emit: 'updated'
+                }
+            ]
+        }
+        return form
     }
 
 }

@@ -17,7 +17,11 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:created="created" :object="newVenue" name="lugar" url="/api/venues/store" method="post"></Form>
+          <Form 
+            v-on:cancel="closeModal" 
+            v-on:updated="created" 
+            :object="newVenue"
+          ></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">

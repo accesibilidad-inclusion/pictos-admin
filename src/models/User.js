@@ -29,24 +29,42 @@ class User {
     }
 
     form() {
-        return [
-            {
-                id: 'name',
-                prefix: 'el',
-                name: 'nombre',
-                label: 'Nombre del usuario',
-                rules: 'required|max:100',
-                type: 'text'
-            },
-            {
-                id: 'email',
-                prefix: 'los',
-                name: 'correo electronico',
-                label: 'Correo electronico',
-                rules: 'required|email|unique_email',
-                type: 'text'
-            }
-        ]
+        let form = {
+            title: this.id ? 'Editar usuario' : 'Agregar nuevo usuario',
+            fields: [
+                {
+                    id: 'name',
+                    name: 'nombre',
+                    label: 'Nombre del usuario',
+                    rules: 'required|max:100',
+                    type: 'text'
+                },
+                {
+                    id: 'email',
+                    name: 'correo electronico',
+                    label: 'Correo electronico',
+                    rules: 'required|email|unique_email',
+                    type: 'text'
+                }
+            ],
+            actions: [
+                {
+                    label: 'Cancelar',
+                    color: 'grey',
+                    callback: 'cancel',
+                },
+                {
+                    label: this.id ? 'Actualizar usuario' : 'Crear usuario',
+                    color: 'primary',
+                    callback: 'request',
+                    url: this.id ? 'api/users/update' : 'api/users/store',
+                    method: this.id ? 'put' : 'post',
+                    validate: true,
+                    emit: 'updated'
+                }
+            ]
+        }
+        return form
     }
 
 }

@@ -1,15 +1,26 @@
 <template>
     <v-card>
         <v-card-title class="headline grey lighten-2" primary-title>
-            <span v-if="!object.id">Agregar nuevo {{ name }}</span>
-            <span v-else>Editar {{ name }}</span>
+            <span>{{ object.form().title }}</span>
         </v-card-title>
 
         <ValidationObserver ref="observer">
             <v-form>
                 <v-container>
                     <v-row>
-                        <v-col cols="12" v-for="(field, index) in object.form()" v-bind:key="index">
+                        <v-col cols="12" v-for="(field, index) in object.form().fields" v-bind:key="index">
+                            <div v-if="field.type == 'read'">
+                                <div>{{ field.label }}</div>
+                                <div>{{ field.value ? object[field.id][field.value] : object[field.id] }}</div>
+                            </div>
+                            <div v-if="field.type == 'iteration'">
+                                <div v-for="it in object[field.id]" v-bind:key="it.id">
+                                    <v-text-field 
+                                        v-model="it[field.value]" 
+                                        :label="field.label" 
+                                    ></v-text-field>
+                                </div>
+                            </div>
                             <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
                                 <v-text-field 
                                     v-if="field.type == 'text'" 
@@ -40,14 +51,10 @@
 
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text small color="error" @click="destroy()" v-if="deleteAction">Eliminar</v-btn>
-            <v-btn color="grey" text @click="cancel()">
-                Cancelar
-            </v-btn>
-            <v-btn color="primary" text @click="create()">
-                <span v-if="!object.id">Crear {{ name }}</span>
-                <span v-else>Actualizar {{ name }}</span>
-            </v-btn>
+            <template v-for="(action, index) in object.form().actions">
+                <v-btn text :color="action.color" @click="handleAction(action)" v-bind:key="index">{{ action.label }}</v-btn>
+            </template>
+
         </v-card-actions>
     </v-card>
 </template>
@@ -94,35 +101,36 @@ export default {
         };
     },
     methods: {
-        create() {
-            this.$refs.observer.validate().then( valid => {
-                if(valid) {
-                    if(this.method == 'post')
-                        this.$http.post(process.env.VUE_APP_API_DOMAIN + this.url, this.object).then((response) => {
-                            this.$emit( 'created' )
+        handleAction(action) {
+            if(action.confirm) {
+                if(confirm(action.confirm))
+                    this[action.callback](action);
+            }
+            else {
+                this[action.callback](action);
+            }
+        },
+        request(action) {
+            if(action.validate) {
+                this.$refs.observer.validate().then( valid => {
+                    if(valid) {
+                        this.$http[action.method](process.env.VUE_APP_API_DOMAIN + action.url, this.object).then((response) => {
+                            this.$emit( action.emit )
                             this.$refs.observer.reset();
                         });
-                    else if(this.method == 'put')
-                        this.$http.put(process.env.VUE_APP_API_DOMAIN + this.url, this.object).then((response) => {
-                            this.$emit( 'updated' )
-                            this.$refs.observer.reset();
-                        });
-                }
-            });
-            
-        },
-        cancel() {
-            this.$emit( 'cancel' )
-            this.$refs.observer.reset();
-        },
-        destroy() {
-            if(confirm('¿Esta seguro de eliminarlo?')) {
-                this.$http.post(process.env.VUE_APP_API_DOMAIN + this.deleteUrl, {
-                    'id': this.object.id
-                }).then((response) => {
-                    this.$emit( 'updated' )
+                    }
                 });
             }
+            else {
+                this.$http[action.method](process.env.VUE_APP_API_DOMAIN + action.url, this.object).then((response) => {
+                    this.$emit( action.emit )
+                });
+            }
+            
+        },
+        cancel( action ) {
+            this.$emit( 'cancel' )
+            this.$refs.observer.reset();
         }
     },
 };
