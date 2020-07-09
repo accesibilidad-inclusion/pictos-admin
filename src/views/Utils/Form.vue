@@ -1,21 +1,21 @@
 <template>
     <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
+        <v-card-title class="font-weight-regular grey lighten-4" primary-title>
             <span v-if="!object.id">Agregar nuevo {{ name }}</span>
             <span v-else>Editar {{ name }}</span>
         </v-card-title>
 
         <ValidationObserver ref="observer">
             <v-form>
-                <v-container>
+                <v-container class="px-7">
                     <v-row>
                         <v-col cols="12" v-for="(field, index) in object.form()" v-bind:key="index">
                             <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
-                                <v-text-field 
-                                    v-if="field.type == 'text'" 
-                                    v-model="object[field.id]" 
-                                    :label="field.label" 
-                                    :error-messages="errors" 
+                                <v-text-field
+                                    v-if="field.type == 'text'"
+                                    v-model="object[field.id]"
+                                    :label="field.label"
+                                    :error-messages="errors"
                                     required
                                 ></v-text-field>
                                 <v-autocomplete
@@ -38,9 +38,10 @@
         </ValidationObserver>
         <v-divider></v-divider>
 
-        <v-card-actions>
+        <v-card-actions class="px-5 pb-6 pt-4">
+
+            <v-btn text color="error" @click="destroy()" v-if="deleteAction">Eliminar</v-btn>
             <v-spacer></v-spacer>
-            <v-btn text small color="error" @click="destroy()" v-if="deleteAction">Eliminar</v-btn>
             <v-btn color="grey" text @click="cancel()">
                 Cancelar
             </v-btn>
@@ -109,7 +110,7 @@ export default {
                         });
                 }
             });
-            
+
         },
         cancel() {
             this.$emit( 'cancel' )
