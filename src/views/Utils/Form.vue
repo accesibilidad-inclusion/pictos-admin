@@ -120,7 +120,6 @@ export default {
                             this.$emit( action.emit )
                             this.$refs.observer.reset();
                         });
-<<<<<<< HEAD
                     }
                 });
             }
@@ -130,11 +129,6 @@ export default {
                 });
             }
             
-=======
-                }
-            });
-
->>>>>>> a8badba43695c4445349843bc0c9d445091c2692
         },
         cancel( action ) {
             this.$emit( 'cancel' )
