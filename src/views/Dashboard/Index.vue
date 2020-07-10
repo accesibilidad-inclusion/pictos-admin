@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="py-6 px-12">
     <v-row>
       <v-col cols="12">
-        <h1>Dashboard</h1>
+        <h1 class="display-1 pb-3">Dashboard</h1>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="6">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Lugares <router-link :to="{ name: 'Venues', params: { status: 'contributions' }}"
             class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Ver todos</router-link>
@@ -21,7 +21,7 @@
         </v-card>
       </v-col>
       <v-col cols="6">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Evaluaciones
           </v-card-title>
@@ -34,7 +34,7 @@
         </v-card>
       </v-col>
       <v-col cols="6">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Tareas <router-link :to="{ name: 'Tasks', params: { status: 'contributions' }}"
             class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Ver todos</router-link>
@@ -48,7 +48,7 @@
         </v-card>
       </v-col>
       <v-col cols="6">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Pictogramas
           </v-card-title>
@@ -61,7 +61,7 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-card>
+        <v-card height="100%">
           <v-card-title class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between" primary-title>
             Informe de errores
           </v-card-title>
@@ -165,8 +165,3 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-  .v-card {
-    height: 100%;
-  }
-</style>
