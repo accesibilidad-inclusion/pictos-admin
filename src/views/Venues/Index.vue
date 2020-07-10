@@ -17,9 +17,9 @@
             </v-btn>
           </template>
 
-          <Form 
-            v-on:cancel="closeModal" 
-            v-on:updated="created" 
+          <Form
+            v-on:cancel="closeModal"
+            v-on:updated="created"
             :object="newVenue"
           ></Form>
         </v-dialog>
@@ -34,11 +34,11 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12">
-        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')">Todos</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')">Publicados</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')">Borradores</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')">Aportes de usuarios</a>
+      <v-col cols="12" class="status-filter">
+        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')" class="status-filter__item">Todos</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')" class="status-filter__item">Publicados</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')" class="status-filter__item">Borradores</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')" class="status-filter__item">Aportes de usuarios</a>
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center>
@@ -133,3 +133,23 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .status-filter {
+    padding: 0 1.5rem;
+  }
+  .status-filter__item {
+    &:after {
+      content: '|';
+      padding: 0 12px;
+      display: inline-block;
+      color: rgba(0, 0, 0, 0.4);
+    }
+    &:last-child:after {
+      content: none;
+    }
+    &.active {
+      color: rgba(0,0,0,.7);
+      font-weight: 500;
+    }
+  }
+</style>
