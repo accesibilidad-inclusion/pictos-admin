@@ -17,9 +17,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12">
-            <v-btn text small @click="preview = false">Volver a editar</v-btn>
-            <v-btn text outlined @click="saveStep">Aceptar</v-btn>
+          <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center  blue--text text-darken-2">
+            <v-btn text default @click="preview = false">Volver a editar</v-btn>
+            <v-btn text outlined large @click="saveStep">Aceptar</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -199,7 +199,7 @@
         </v-row>
         <v-row class="mt-5">
           <v-col cols="12" class="d-flex justify-end">
-            <v-btn text outlined @click="showPreview">Previsualizar</v-btn>
+            <v-btn outlined color="primary" @click="showPreview">Previsualizar</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -281,21 +281,7 @@ export default {
 
 .slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
   position: relative;
-  border: 1px solid rgba(25, 117, 210, .6);
-}
-.slider__container::v-deep .vueperslide__content-wrapper:before, .image__pictogram:before {
-  transition: none;
-  content: '';
-}
-.slider__container::v-deep .vueperslide__content-wrapper.active:before, .image__pictogram.active:before {
-  background-color: rgba(24, 102, 191, 0.15);
-  bottom: 0;
-  content: '';
-  left: 0;
-  pointer-events: none;
-  position: absolute;
-  right: 0;
-  top: 0;
+  border: 2px solid rgba(25, 117, 210, .6);
   transition: 0.5s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
 .slider__container::v-deep  .vueperslides__arrows--outside .vueperslides__arrow--prev {
