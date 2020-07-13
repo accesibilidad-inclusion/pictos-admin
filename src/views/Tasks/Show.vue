@@ -71,14 +71,14 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="task.status == 'Borrador'">
-      <v-col cols="12">
-        Este tarea esta en borrador <v-btn text small @click="publishTask()">Publicar</v-btn>
+    <v-row v-if="task.status == 'Borrador'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este tarea esta en borrador <v-btn outlined large color="primary" @click="publishTask()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="task.status == 'Enviado por usuario'">
-      <v-col cols="12">
-        Esta tarea es un aporte de un usuario <v-btn text small @click="publishTask()">Publicar</v-btn>
+    <v-row v-if="task.status == 'Enviado por usuario'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Esta tarea es un aporte de un usuario <v-btn outlined large color="primary" @click="publishTask()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
   </div>

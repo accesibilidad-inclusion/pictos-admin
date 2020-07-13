@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="py-6 px-12">
     <v-row>
       <v-col cols="12">
-        <h1>Tareas</h1>
+        <h1 class="display-1 pb-2">Tareas</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -20,7 +20,7 @@
           <Form v-on:cancel="closeModal" v-on:updated="created" :object="newTask" name="tarea" url="/api/tasks/store" method="post"></Form>
         </v-dialog>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="2" class="search">
         <v-autocomplete
           append-icon="mdi-magnify"
           placeholder="Buscar"
@@ -30,14 +30,14 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12">
-        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')">Todos</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')">Publicados</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')">Borradores</a> |
-        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')">Aportes de usuarios</a>
+      <v-col cols="12" class="status-filter font-weight-medium">
+        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')" class="pr-3 status-filter__item">Todos</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')" class="px-3 status-filter__item">Publicados</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')" class="px-3 status-filter__item">Borradores</a>
+        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')" class="px-3 status-filter__item">Aportes de usuarios</a>
       </v-col>
     </v-row>
-    <v-layout v-if="!entries" justify-center>
+    <v-layout v-if="!entries" justify-center class="mt-8">
       <v-progress-circular
         :size="70"
         color="primary"
@@ -139,3 +139,26 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+  .search .v-select.v-select--is-menu-active .v-input__icon--append .v-icon {
+    transform: none;
+  }
+  .status-filter {
+    padding: 0 1.5rem;
+  }
+  .status-filter__item {
+    position: relative;
+    &:after {
+      content: '|';
+      color: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      right: -2px;
+    }
+    &:last-child:after {
+      content: none;
+    }
+    &.active {
+      color: rgba(0,0,0,.7);
+    }
+  }
+</style>

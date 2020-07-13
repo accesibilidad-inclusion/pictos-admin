@@ -65,14 +65,14 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="venue.status == 'Borrador'">
-      <v-col cols="12">
-        Este lugar esta en borrador <v-btn text small @click="publishVenue()">Publicar</v-btn>
+    <v-row v-if="venue.status == 'Borrador'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este lugar esta en borrador <v-btn outlined large color="primary" @click="publishVenue()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="venue.status == 'Enviado por usuario'">
-      <v-col cols="12">
-        Este lugar es un aporte de un usuario <v-btn text small @click="publishVenue()">Publicar</v-btn>
+    <v-row v-if="venue.status == 'Enviado por usuario'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este lugar es un aporte de un usuario <v-btn outlined large color="primary" @click="publishVenue()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
   </div>

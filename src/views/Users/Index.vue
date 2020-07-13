@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="py-6 px-12">
     <v-row>
       <v-col cols="12">
-        <h1>Usuarios</h1>
+        <h1 class="display-1 pb-2">Usuarios</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -17,9 +17,9 @@
             </v-btn>
           </template>
 
-          <Form 
-            v-on:cancel="closeModal" 
-            v-on:updated="created" 
+          <Form
+            v-on:cancel="closeModal"
+            v-on:updated="created"
             :object="newUser"
           ></Form>
         </v-dialog>
@@ -33,7 +33,7 @@
         </v-autocomplete>
       </v-col>
     </v-row>
-    <v-layout v-if="!entries" justify-center>
+    <v-layout v-if="!entries" justify-center class="mt-8">
       <v-progress-circular
         :size="70"
         color="primary"

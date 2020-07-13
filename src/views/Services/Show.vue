@@ -65,9 +65,9 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="service.status == 'Borrador'">
-      <v-col cols="12">
-        Este servicio esta en borrador <v-btn text small @click="publishService()">Publicar</v-btn>
+    <v-row v-if="service.status == 'Borrador'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este servicio esta en borrador <v-btn outlined large color="primary" @click="publishService()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
   </div>

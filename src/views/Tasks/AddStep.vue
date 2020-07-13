@@ -17,9 +17,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12">
-            <v-btn text small @click="preview = false">Volver a editar</v-btn>
-            <v-btn text outlined @click="saveStep">Aceptar</v-btn>
+          <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center  blue--text text-darken-2">
+            <v-btn text default @click="preview = false">Volver a editar</v-btn>
+            <v-btn text outlined large @click="saveStep">Aceptar</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -31,10 +31,10 @@
             <v-row>
               <v-col cols="12">
                 <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
-                  <v-text-field 
-                      v-model="step" 
-                      label="Describe el paso" 
-                      :error-messages="errors" 
+                  <v-text-field
+                      v-model="step"
+                      label="Describe el paso"
+                      :error-messages="errors"
                       required
                   ></v-text-field>
                 </ValidationProvider>
@@ -45,14 +45,14 @@
       </ValidationObserver>
       <div class="slider__container">
         <v-row>
-          <v-col cols="12">
-            <h3>Espacio</h3>
+          <v-col cols="12" class="slider__group">
+            <h3 class="mb-3">Espacio</h3>
             <v-dialog
               v-model="dialogContext"
               width="1200"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
                   Ver todos
                 </v-btn>
               </template>
@@ -83,9 +83,9 @@
               :gap="2"
               :touchable="false"
               :bullets="false">
-              <vueper-slide 
-                v-for="image in $store.getters.images.filter( i => i.layout == 3)" 
-                :key="image.id" 
+              <vueper-slide
+                v-for="image in $store.getters.images.filter( i => i.layout == 3)"
+                :key="image.id"
                 :image="image.path + '/' + image.filename" >
                 <template v-slot:content>
                   <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)">
@@ -95,15 +95,15 @@
             </vueper-slides>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12">
-            <h3>Objeto</h3>
+        <v-row class="mt-7">
+          <v-col cols="12" class="slider__group">
+            <h3 class="mb-3">Objeto</h3>
             <v-dialog
               v-model="dialogLandmark"
               width="1200"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
                   Ver todos
                 </v-btn>
               </template>
@@ -134,9 +134,9 @@
               :gap="2"
               :touchable="false"
               :bullets="false">
-              <vueper-slide 
-                v-for="image in $store.getters.images.filter( i => i.layout == 2)" 
-                :key="image.id" 
+              <vueper-slide
+                v-for="image in $store.getters.images.filter( i => i.layout == 2)"
+                :key="image.id"
                 :image="image.path + '/' + image.filename" >
                 <template v-slot:content>
                   <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)">
@@ -146,15 +146,15 @@
             </vueper-slides>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12">
-            <h3>Persona</h3>
+        <v-row class="mt-7">
+          <v-col cols="12" class="slider__group">
+            <h3 class="mb-3">Persona</h3>
             <v-dialog
               v-model="dialogSubject"
               width="1200"
             >
               <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary">
+                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
                   Ver todos
                 </v-btn>
               </template>
@@ -185,9 +185,9 @@
               :gap="2"
               :touchable="false"
               :bullets="false">
-              <vueper-slide 
-                v-for="image in $store.getters.images.filter( i => i.layout == 1)" 
-                :key="image.id" 
+              <vueper-slide
+                v-for="image in $store.getters.images.filter( i => i.layout == 1)"
+                :key="image.id"
                 :image="image.path + '/' + image.filename" >
                 <template v-slot:content>
                   <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': subject && image.id == subject.id }"  @click="setImage('subject', image)">
@@ -197,9 +197,9 @@
             </vueper-slides>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12">
-            <v-btn text outlined @click="showPreview">Previsualizar</v-btn>
+        <v-row class="mt-5">
+          <v-col cols="12" class="d-flex justify-end">
+            <v-btn outlined color="primary" @click="showPreview">Previsualizar</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -280,7 +280,19 @@ export default {
 }
 
 .slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
-  border: 1px solid black;
+  position: relative;
+  border: 2px solid rgba(25, 117, 210, .6);
+  transition: 0.5s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+.slider__container::v-deep  .vueperslides__arrows--outside .vueperslides__arrow--prev {
+  left: -2.8em;
+}
+.slider__container::v-deep  .vueperslides__arrows--outside .vueperslides__arrow--next {
+  right: -2.8em;
+}
+.slider__container::v-deep  .vueperslides__arrow svg {
+  width: 2em;
+  padding: 0.5rem;
 }
 .preview__pictos {
   position: relative;
@@ -289,5 +301,13 @@ export default {
 .preview__pictos img {
   position: absolute;
   height: 100%;
+}
+.slider__group {
+  position: relative;
+}
+.slider__all {
+  position: absolute;
+  right: 12px;
+  top: 12px;
 }
 </style>
