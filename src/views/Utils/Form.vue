@@ -21,6 +21,14 @@
                                     ></v-text-field>
                                 </div>
                             </div>
+                            <div v-if="field.type == 'pictograms'">
+                                <div v-for="it in object[field.id]" v-bind:key="it.id">
+                                    <div class="preview__pictos">
+                                        <img v-for="image in it.pictogram.images" :src="image.path + '/' + image.filename" v-bind:key="image.id" />
+                                    </div>
+                                    <div>{{ it.step.label }}</div>
+                                </div>
+                            </div>
                             <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
                                 <v-text-field
                                     v-if="field.type == 'text'"
@@ -50,8 +58,6 @@
         <v-divider></v-divider>
 
         <v-card-actions class="px-5 pb-6 pt-4">
-
-            <v-btn text color="error" @click="destroy()" v-if="deleteAction">Eliminar</v-btn>
             <v-spacer></v-spacer>
             <template v-for="(action, index) in object.form().actions">
                 <v-btn text :color="action.color" @click="handleAction(action)" v-bind:key="index">{{ action.label }}</v-btn>
@@ -93,7 +99,7 @@ extend('unique_email', {
 
 export default {
     name: 'Form',
-    props: [ 'object', 'name', 'url', 'method', 'deleteAction', 'deleteUrl' ],
+    props: [ 'object' ],
     components: {
         ValidationProvider,
         ValidationObserver,
@@ -137,3 +143,13 @@ export default {
     },
 };
 </script>
+<style scoped>
+.preview__pictos {
+  position: relative;
+  height: 150px;
+}
+.preview__pictos img {
+  position: absolute;
+  height: 100%;
+}
+</style>
