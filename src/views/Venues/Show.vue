@@ -25,7 +25,7 @@
             Información general
             <v-dialog
               v-model="dialog"
-              width="500"
+              width="700"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn text small v-bind="attrs" v-on="on" color="primary">

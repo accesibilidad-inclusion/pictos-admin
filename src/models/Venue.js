@@ -5,8 +5,7 @@ class Venue {
         this.name = ''
         this.service = null
         this.url = ''
-        this.lat = 0
-        this.long = 0
+        this.position = null
         this.tags_text = ''
         this.tags = []
         this.tasks = []
@@ -22,8 +21,10 @@ class Venue {
             'name': venue.service.name
         }
         this.url = venue.url
-        this.lat = 0
-        this.long = 0
+        this.position = {
+            lat: parseFloat(venue.lat),
+            lng: parseFloat(venue.long)
+        }
         this.tags_text = venue.tags.join(', ')
         this.tags = venue.tags
         this.tasks = venue.tasks
@@ -53,12 +54,18 @@ class Venue {
                     textOption: ['name']
                 },
                 {
+                    id: 'position',
+                    name: 'ubicacion',
+                    label: 'Ubicación',
+                    type: 'map'
+                },
+                {
                     id: 'tags_text',
                     name: 'sinonimos',
                     label: 'Sinónimos de búsqueda (Separados por coma)',
                     rules: '',
                     type: 'text'
-                }
+                },
             ],
             actions: this.status == "Enviado por usuario" ? [
                 {

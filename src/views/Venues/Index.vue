@@ -9,7 +9,7 @@
       <v-col cols="10">
         <v-dialog
           v-model="dialog"
-          width="500"
+          width="700"
         >
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary">

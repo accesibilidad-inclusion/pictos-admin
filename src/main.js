@@ -8,10 +8,18 @@ import vuetify from './plugins/vuetify';
 import Vuex from 'vuex'
 import Axios from 'axios'
 import moment from 'moment'
+import * as VueGoogleMaps from "vue2-google-maps-withscopedautocomp";
 
 Vue.prototype.moment = moment
 
 Vue.use(Vuex)
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: process.env.VUE_APP_GOOGLE_API_KEY,
+    libraries: "places" // necessary for places input
+  }
+});
 
 Vue.prototype.$http = Axios
 

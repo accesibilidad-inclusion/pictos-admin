@@ -29,6 +29,7 @@
                                     <div>{{ it.step.label }}</div>
                                 </div>
                             </div>
+                            <GoogleMap v-if="field.type == 'map'" :position="object[field.id]" v-on:update-position="setPosition" />
                             <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
                                 <v-text-field
                                     v-if="field.type == 'text'"
@@ -68,10 +69,10 @@
 </template>
 
 <script>
+import GoogleMap from "./GoogleMap";
 import { required, max } from 'vee-validate/dist/rules';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
 import axios from 'axios';
-import Service from '../../models/Service'
 
 setInteractionMode('eager');
 
@@ -103,6 +104,7 @@ export default {
     components: {
         ValidationProvider,
         ValidationObserver,
+        GoogleMap,
     },
     data() {
         return {
@@ -139,6 +141,9 @@ export default {
         cancel( action ) {
             this.$emit( 'cancel' )
             this.$refs.observer.reset();
+        },
+        setPosition( position ) {
+            this.object.position = position
         }
     },
 };
