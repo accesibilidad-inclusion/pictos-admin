@@ -9,6 +9,7 @@ class Venue {
         this.tags_text = ''
         this.tags = []
         this.tasks = []
+        this.evaluations = []
         this.visible = 0
         this.status = ''
     }
@@ -28,6 +29,7 @@ class Venue {
         this.tags_text = venue.tags.join(', ')
         this.tags = venue.tags
         this.tasks = venue.tasks
+        this.evaluations = venue.evaluations
         this.status = venue.status
         this.visible = venue.visible
     }

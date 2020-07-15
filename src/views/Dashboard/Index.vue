@@ -37,7 +37,7 @@
             <template v-else>
               <div v-for="evaluation in evaluations" v-bind:key="evaluation.id" class="py-1">
                 <span class="grey--text lighten-2">{{ moment(evaluation.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
-                <span> - <router-link :to="'/evaluaciones/'+evaluation.id">{{ evaluation.label }}</router-link></span>
+                <span> - <a @click="$router.push('/lugares/evaluacion/'+evaluation.id)">{{ evaluation.venue.name }}</a></span>
               </div>
             </template>
           </v-card-text>
@@ -92,7 +92,7 @@
             <template v-else>
               <div v-for="report in reports" v-bind:key="report.id" class="py-1">
                 <span class="grey--text lighten-2">{{ moment(report.created_at).format('DD/MM/YYYY \- HH:mm') }}</span>
-                <span> - {{ report.report }} en <router-link :to="'/tareas/'+report.task.id">{{ report.task.title }}</router-link></span>
+                <span> - {{ report.report }} en <a @click="$router.push('/tareas/'+report.task.id)">{{ report.task.title }}</a></span>
               </div>
             </template>
           </v-card-text>
@@ -133,9 +133,9 @@ export default {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/proposal_tasks/by_users').then((response) => {
       this.proposal_tasks = response.data;
     });
-    // this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/by_users_with_pictograms').then((response) => {
-    //   this.evaluations = response.data;
-    // });
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/evaluations').then((response) => {
+      this.evaluations = response.data;
+    });
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/reports').then((response) => {
       this.reports = response.data;
     });

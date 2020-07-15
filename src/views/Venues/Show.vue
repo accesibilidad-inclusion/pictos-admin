@@ -65,6 +65,21 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="5">
+        <v-card>
+          <v-card-title
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
+            primary-title
+          >
+            Evaluaciones <router-link :to="'/lugares/'+venue.id+'/evaluaciones'">(Ver todas)</router-link>
+          </v-card-title>
+          <v-card-text class="py-5 px-6">
+          Total: {{ venue.evaluations.length }} evaluaciones
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
     <v-row v-if="venue.status == 'Borrador'" class="px-3 pt-10">
       <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
         Este lugar esta en borrador <v-btn outlined large color="primary" @click="publishVenue()" class="ml-6">Publicar</v-btn>

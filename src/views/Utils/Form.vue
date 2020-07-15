@@ -22,12 +22,12 @@
                                 </div>
                             </div>
                             <div v-if="field.type == 'pictograms'">
-                                <div v-for="it in object[field.id]" v-bind:key="it.id">
-                                    <div class="preview__pictos">
+                                <v-row v-for="it in object[field.id]" v-bind:key="it.id">
+                                    <v-col cols="6" class="preview__pictos">
                                         <img v-for="image in it.pictogram.images" :src="image.path + '/' + image.filename" v-bind:key="image.id" />
-                                    </div>
-                                    <div>{{ it.step.label }}</div>
-                                </div>
+                                    </v-col>
+                                    <v-col cols="6" class="d-flex align-center">{{ it.step.label }}</v-col>
+                                </v-row>
                             </div>
                             <GoogleMap v-if="field.type == 'map'" :position="object[field.id]" v-on:update-position="setPosition" />
                             <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
@@ -151,7 +151,7 @@ export default {
 <style scoped>
 .preview__pictos {
   position: relative;
-  height: 150px;
+  height: 180px;
 }
 .preview__pictos img {
   position: absolute;

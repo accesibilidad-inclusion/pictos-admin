@@ -6,6 +6,8 @@ import Services from '../views/Services/Index.vue';
 import ShowService from '../views/Services/Show.vue';
 import Venues from '../views/Venues/Index.vue';
 import ShowVenue from '../views/Venues/Show.vue';
+import Evaluations from '../views/Evaluations/Index.vue';
+import ShowEvaluation from '../views/Evaluations/Show.vue';
 import Tasks from '../views/Tasks/Index.vue';
 import ShowTask from '../views/Tasks/Show.vue';
 import AddStep from '../views/Tasks/AddStep.vue';
@@ -46,6 +48,16 @@ const router = new Router({
       path: '/lugares/:id',
       name: 'ShowVenue',
       component: ShowVenue,
+    },
+    {
+      path: '/lugares/:id/evaluaciones',
+      name: 'Evaluations',
+      component: Evaluations,
+    },
+    {
+      path: '/lugares/evaluacion/:id',
+      name: 'ShowEvaluation',
+      component: ShowEvaluation,
     },
     {
       path: '/tareas',
