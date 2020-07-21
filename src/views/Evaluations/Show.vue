@@ -6,7 +6,7 @@
       indeterminate
     ></v-progress-circular>
   </v-layout>
-  <div v-else>
+  <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/lugares/" class="breadcrumbs__link">
@@ -26,10 +26,11 @@
     <v-row>
       <v-col cols="12" v-for="answer in evaluation.answers" v-bind:key="answer.id">
         <b>{{ answer.question.text }}</b>
-        <p v-if="answer.question.answer_type != 'Fotografía'">{{ answer.answer }}</p>
-        <p v-else>
+        <p v-if="answer.question.answer_type != 'Fotografía'" class="pt-2 grey--text text--darken-3">{{ answer.answer }}</p>
+        <p v-else class="mt-4">
           <img :src="imgServer + 'storage/answer-' + answer.id + '.jpg'" />
         </p>
+        <v-divider></v-divider>
       </v-col>
     </v-row>
   </div>
