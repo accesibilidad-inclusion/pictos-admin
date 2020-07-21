@@ -9,7 +9,7 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <div class="preview__pictos">
+            <div class="preview__pictos blue lighten-5">
               <img v-if="context" :src="context.path + '/' + context.filename" />
               <img v-if="landmark" :src="landmark.path + '/' + landmark.filename" />
               <img v-if="subject" :src="subject.path + '/' + subject.filename" />
@@ -17,9 +17,9 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center  blue--text text-darken-2">
-            <v-btn text default @click="preview = false">Volver a editar</v-btn>
-            <v-btn text outlined large @click="saveStep">Aceptar</v-btn>
+          <v-col cols="12" class="py-4 d-flex justify-end align-center">
+            <v-btn text large color="primary" @click="preview = false" class="mr-3">Volver a editar</v-btn>
+            <v-btn outlined large color="primary" @click="saveStep">Aceptar</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -111,7 +111,7 @@
                 <v-card-title class="headline grey lighten-2" primary-title>
                   Selecciona un pictograma para objeto
                 </v-card-title>
-                <v-container>
+                <v-container class="px-6 py-6">
                   <v-row>
                     <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 2)" v-bind:key="image.id">
                       <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
@@ -297,10 +297,14 @@ export default {
 .preview__pictos {
   position: relative;
   height: 700px;
+  border: 1px solid #64B5F6;
 }
 .preview__pictos img {
   position: absolute;
   height: 100%;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
 }
 .slider__group {
   position: relative;
