@@ -142,7 +142,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .v-card {
-    min-height: 100px;
+    min-height: 200px;
   }
   .breadcrumbs {
     font-size: 1.5rem;

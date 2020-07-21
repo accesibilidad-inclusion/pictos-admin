@@ -8,25 +8,25 @@
             <v-form>
                 <v-container class="px-7">
                     <v-row>
-                        <v-col cols="12" v-for="(field, index) in object.form().fields" v-bind:key="index">
+                        <v-col cols="12" v-for="(field, index) in object.form().fields" v-bind:key="index" class="pb-2">
                             <div v-if="field.type == 'read'">
-                                <div>{{ field.label }}</div>
+                                <div class="grey--text text--darken-2">{{ field.label }}</div>
                                 <div>{{ field.value ? object[field.id][field.value] : object[field.id] }}</div>
                             </div>
                             <div v-if="field.type == 'iteration'">
                                 <div v-for="it in object[field.id]" v-bind:key="it.id">
-                                    <v-text-field 
-                                        v-model="it[field.value]" 
-                                        :label="field.label" 
+                                    <v-text-field
+                                        v-model="it[field.value]"
+                                        :label="field.label"
                                     ></v-text-field>
                                 </div>
                             </div>
-                            <div v-if="field.type == 'pictograms'">
-                                <v-row v-for="it in object[field.id]" v-bind:key="it.id">
-                                    <v-col cols="6" class="preview__pictos">
+                            <div v-if="field.type == 'pictograms'" class="pt-3">
+                                <v-row v-for="it in object[field.id]" v-bind:key="it.id" class="mb-6 mx-1">
+                                    <v-col cols="6" class="preview__pictos blue lighten-5 pa-0">
                                         <img v-for="image in it.pictogram.images" :src="image.path + '/' + image.filename" v-bind:key="image.id" />
                                     </v-col>
-                                    <v-col cols="6" class="d-flex align-center">{{ it.step.label }}</v-col>
+                                    <v-col cols="6" class="d-flex align-center pl-6">{{ it.step.label }}</v-col>
                                 </v-row>
                             </div>
                             <GoogleMap v-if="field.type == 'map'" :position="object[field.id]" v-on:update-position="setPosition" />
@@ -136,7 +136,7 @@ export default {
                     this.$emit( action.emit )
                 });
             }
-            
+
         },
         cancel( action ) {
             this.$emit( 'cancel' )
@@ -156,5 +156,8 @@ export default {
 .preview__pictos img {
   position: absolute;
   height: 100%;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
 }
 </style>

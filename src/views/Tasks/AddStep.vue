@@ -3,7 +3,7 @@
     <template v-if="preview">
       <v-container>
         <v-row>
-          <v-col cols="12">
+          <v-col cols="12 headline">
           {{ step }}
           </v-col>
         </v-row>
