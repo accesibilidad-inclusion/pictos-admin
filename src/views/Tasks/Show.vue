@@ -6,7 +6,7 @@
       indeterminate
     ></v-progress-circular>
   </v-layout>
-  <div v-else>
+  <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>{{ task.name }}
@@ -66,17 +66,17 @@
             </ul>
           </v-card-text>
         </v-card>
-        <v-btn v-if="task.steps.length" color="primary" small text :to="{ name: 'AddStep', params: { task_id: task.id }}">
+        <v-btn v-if="task.steps.length" color="primary" default text :to="{ name: 'AddStep', params: { task_id: task.id }}" class="text-right my-3">
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso
         </v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="task.status == 'Borrador'" class="px-3 pt-10">
+    <v-row v-if="task.status == 'Borrador'" class="px-3 pt-12">
       <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
         Este tarea esta en borrador <v-btn outlined large color="primary" @click="publishTask()" class="ml-6">Publicar</v-btn>
       </v-col>
     </v-row>
-    <v-row v-if="task.status == 'Enviado por usuario'" class="px-3 pt-10">
+    <v-row v-if="task.status == 'Enviado por usuario'" class="px-3 pt-12">
       <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
         Esta tarea es un aporte de un usuario <v-btn outlined large color="primary" @click="publishTask()" class="ml-6">Publicar</v-btn>
       </v-col>
@@ -142,7 +142,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .v-card {
-    height: 100%;
+    min-height: 100px;
   }
   .breadcrumbs {
     font-size: 1.5rem;

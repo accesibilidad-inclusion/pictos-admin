@@ -6,7 +6,7 @@
       indeterminate
     ></v-progress-circular>
   </v-layout>
-  <div v-else>
+  <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/servicios/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Servicios</router-link>{{ service.name }}
