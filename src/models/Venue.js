@@ -23,8 +23,8 @@ class Venue {
         }
         this.url = venue.url
         this.position = {
-            lat: parseFloat(venue.lat),
-            lng: parseFloat(venue.long)
+            lat: parseFloat(venue.position.lat),
+            lng: parseFloat(venue.position.lng)
         }
         this.tags_text = venue.tags.join(', ')
         this.tags = venue.tags
