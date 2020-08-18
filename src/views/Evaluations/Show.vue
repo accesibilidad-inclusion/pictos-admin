@@ -28,7 +28,7 @@
         <b>{{ answer.question.text }}</b>
         <p v-if="answer.question.answer_type != 'Fotografía'" class="pt-2 grey--text text--darken-3">{{ answer.answer }}</p>
         <p v-else class="mt-4">
-          <img :src="imgServer + 'storage/answer-' + answer.id + '.jpg'" />
+          <img :src="answer.answer" />
         </p>
         <v-divider></v-divider>
       </v-col>
@@ -47,8 +47,7 @@ export default {
   },
   data() {
     return {
-      evaluation: null,
-      imgServer: process.env.VUE_APP_API_DOMAIN
+      evaluation: null
     };
   },
   methods: {
