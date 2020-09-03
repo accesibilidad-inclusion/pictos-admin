@@ -44,6 +44,8 @@
               <li v-if="task.url != ''" class="py-2"><span class="font-weight-bold">Url:</span> <a target="_blank" :href="task.url">{{ task.url }}</a></li>
               <li class="py-2"><span class="font-weight-bold">Id:</span> {{ task.id }}</li>
               <li v-if="task.tags.length" class="py-2"><span class="font-weight-bold">Sinonimos:</span> {{ task.tags.join(', ') }}</li>
+              <li class="py-2"><span class="font-weight-bold">Me gusta:</span> {{ task.likes }}</li>
+              <li class="py-2"><span class="font-weight-bold">No me gusta:</span> {{ task.dislikes }}</li>
             </ul>
           </v-card-text>
         </v-card>

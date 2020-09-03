@@ -58,7 +58,7 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td><router-link :to="'/lugares/'+item.id">{{ item.name }}</router-link></td>
-                <td>{{ item.service.name }}</td>
+                <td><span v-if="item.service">{{ item.service.name }}</span><span v-else>-</span></td>
                 <td>{{ item.count_tasks }}</td>
                 <td>{{ item.status }}</td>
               </tr>

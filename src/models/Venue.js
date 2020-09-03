@@ -17,10 +17,10 @@ class Venue {
     set(venue) {
         this.id = venue.id
         this.name = venue.name
-        this.service = {
+        this.service = venue.service ? {
             'id': venue.service.id,
             'name': venue.service.name
-        }
+        } : null
         this.url = venue.url
         this.position = {
             lat: parseFloat(venue.position.lat),
@@ -88,7 +88,7 @@ class Venue {
                     label: 'Crear tarea',
                     color: 'primary',
                     callback: 'request',
-                    url: 'api/venues/update',
+                    url: 'api/venues/accept_contribution',
                     method: 'put',
                     validate: true,
                     emit: 'updated'

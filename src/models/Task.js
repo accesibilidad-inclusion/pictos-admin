@@ -10,6 +10,8 @@ class Task {
         this.tags = []
         this.steps = []
         this.visible = 0
+        this.likes = 0
+        this.dislikes = 0
         this.status = ''
     }
 
@@ -29,6 +31,8 @@ class Task {
         this.tags = task.tags
         this.steps = task.steps
         this.visible = task.visible
+        this.likes = task.likes
+        this.dislikes = task.dislikes
         this.status = task.status
     }
 
