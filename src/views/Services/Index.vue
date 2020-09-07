@@ -25,12 +25,13 @@
         </v-dialog>
       </v-col>
       <v-col cols="2">
-        <v-autocomplete
-          append-icon="mdi-magnify"
-          placeholder="Buscar"
-          cache-items
-        >
-        </v-autocomplete>
+        <v-text-field
+            v-model="search_text"
+            append-icon="mdi-magnify"
+            placeholder="Buscar"
+            @click:append="search"
+            @keyup.enter="search"
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">
@@ -97,12 +98,19 @@ export default {
         },
       ],
       entries: null,
+      search_text: '',
       pagination: {},
       dialog: false,
       newService: new Service(),
     };
   },
   methods: {
+    search() {
+      this.entries = null;
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/search/'+this.search_text).then((response) => {
+        this.entries = response.data;
+      });
+    },
     closeModal() {
       this.dialog = false;
       this.newService = new Service();

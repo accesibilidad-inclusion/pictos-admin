@@ -25,12 +25,13 @@
         </v-dialog>
       </v-col>
       <v-col cols="2">
-        <v-autocomplete
-          append-icon="mdi-magnify"
-          placeholder="Buscar"
-          cache-items
-        >
-        </v-autocomplete>
+        <v-text-field
+            v-model="search_text"
+            append-icon="mdi-magnify"
+            placeholder="Buscar"
+            @click:append="search"
+            @keyup.enter="search"
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
@@ -107,6 +108,7 @@ export default {
         },
       ],
       entries: null,
+      search_text: '',
       pagination: {},
       dialog: false,
       newVenue: new Venue(),
@@ -125,11 +127,28 @@ export default {
       this.closeModal();
     },
     changeStatus(status) {
+      this.entries = null
       this.showStatus = status
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+status).then((response) => {
+      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/venues/'
+      if(this.showStatus !== '')
+        ruta += this.showStatus + '/';
+      if(this.search_text !== '')
+        ruta += 'search/' + this.search_text;
+      this.$http.get(ruta).then((response) => {
         this.entries = response.data;
       });
-    }
+    },
+    search() {
+      this.entries = null;
+      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/venues/';
+      if(this.showStatus !== '')
+        ruta += this.showStatus + '/';
+      ruta += 'search/' + this.search_text;
+
+      this.$http.get(ruta).then((response) => {
+        this.entries = response.data;
+      });
+    },
   },
 };
 </script>

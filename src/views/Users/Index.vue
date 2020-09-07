@@ -25,12 +25,13 @@
         </v-dialog>
       </v-col>
       <v-col cols="2">
-        <v-autocomplete
-          append-icon="mdi-magnify"
-          placeholder="Buscar"
-          cache-items
-        >
-        </v-autocomplete>
+        <v-text-field
+            v-model="search_text"
+            append-icon="mdi-magnify"
+            placeholder="Buscar"
+            @click:append="search"
+            @keyup.enter="search"
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">
@@ -92,6 +93,7 @@ export default {
         },
       ],
       entries: null,
+      search_text: '',
       pagination: {},
       dialog: false,
       newUser: new User(),
@@ -107,7 +109,15 @@ export default {
         this.entries = response.data;
       });
       this.closeModal();
-    }
+    },
+    search() {
+      this.entries = null;
+      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/users/search/' + this.search_text;
+
+      this.$http.get(ruta).then((response) => {
+        this.entries = response.data;
+      });
+    },
   },
 };
 </script>
