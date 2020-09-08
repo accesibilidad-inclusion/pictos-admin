@@ -121,6 +121,7 @@ export default {
         this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/venues/delete', {
           'id': this.$route.params.id
         }).then((response) => {
+          this.$store.dispatch("setVenues");
           this.$router.push('/lugares');
         });
       }
@@ -130,6 +131,7 @@ export default {
         this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/venues/publish', {
           'id': this.$route.params.id
         }).then((response) => {
+          this.$store.dispatch("setVenues");
           if(response.data)
             this.venue.status = 'Publicado';
         });
@@ -143,6 +145,7 @@ export default {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+this.$route.params.id).then((response) => {
         this.venue.set(response.data);
         this.editVenue = _.clone( this.venue  )
+        this.$store.dispatch("setVenues");
         this.closeModal();
       });
     }

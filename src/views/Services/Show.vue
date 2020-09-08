@@ -101,6 +101,7 @@ export default {
         this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/services/delete', {
           'id': this.$route.params.id
         }).then((response) => {
+          this.$store.dispatch("setServices");
           this.$router.push('/servicios');
         });
       }
@@ -110,6 +111,7 @@ export default {
         this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/services/publish', {
           'id': this.$route.params.id
         }).then((response) => {
+          this.$store.dispatch("setServices");
           if(response.data)
             this.service.status = 'Publicado';
         });
@@ -122,6 +124,7 @@ export default {
     updated() {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/'+this.$route.params.id).then((response) => {
         this.service.set(response.data);
+        this.$store.dispatch("setServices");
         this.editService = _.clone( this.service  )
         this.closeModal();
       });

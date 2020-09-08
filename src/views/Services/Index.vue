@@ -116,6 +116,7 @@ export default {
       this.newService = new Service();
     },
     created( service ) {
+      this.$store.dispatch("setServices");
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services').then((response) => {
         this.entries = response.data;
       });

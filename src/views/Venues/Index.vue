@@ -121,6 +121,7 @@ export default {
       this.newVenue = new Venue();
     },
     created( service ) {
+      this.$store.dispatch("setVenues");
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues').then((response) => {
         this.entries = response.data;
       });
