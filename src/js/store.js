@@ -104,7 +104,10 @@ export default new Vuex.Store({
                         token: response.data.token,
                         user: response.data.user
                     })
-                    dispatch( 'setCategories' )
+                    dispatch("setCategories");
+                    dispatch("setServices");
+                    dispatch("setVenues");
+                    dispatch("setImages");
                     resolve(response)
                 })
                 .catch(err => {
