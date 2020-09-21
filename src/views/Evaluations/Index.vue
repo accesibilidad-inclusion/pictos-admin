@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="2">
+      <v-col cols="2" v-if="entries.length">
         <a :href="urlExport" target="_blank" class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Exportar excel</a>
       </v-col>
     </v-row>
