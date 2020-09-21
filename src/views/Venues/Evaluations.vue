@@ -1,15 +1,26 @@
 <template>
   <div class="py-6 px-12">
-    <v-row>
-      <v-col cols="12">
-        <h1 class="display-1 pb-2">Evaluaciones</h1>
+    <v-row class="mb-3">
+      <v-col cols="12" class="d-flex align-center breadcrumbs">
+        <router-link to="/lugares/" class="breadcrumbs__link">
+            <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares
+        </router-link>
+        <router-link :to="'/lugares/' + venue.id" class="breadcrumbs__link">
+          {{ venue.name }}
+        </router-link>
+        Evaluaciones
       </v-col>
     </v-row>
-    <v-row>
+    <!-- <v-row>
       <v-col cols="2">
-        <a :href="urlExport" target="_blank" class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text">Exportar excel</a>
+        <v-autocomplete
+          append-icon="mdi-magnify"
+          placeholder="Buscar"
+          cache-items
+        >
+        </v-autocomplete>
       </v-col>
-    </v-row>
+    </v-row> -->
     <v-layout v-if="!entries" justify-center class="mt-8">
       <v-progress-circular
         :size="70"
@@ -27,14 +38,12 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>{{ item.id }}</td>
-                <td><router-link :to="'/servicios/'+item.service.id">{{ item.service.name }}</router-link></td>
-                <td><router-link :to="'/lugares/'+item.venue.id">{{ item.venue.name }}</router-link></td>
-                <!-- <td>{{ item.app_user.sex }}</td>
+                <td>{{ item.app_user.sex }}</td>
                 <td>{{ item.app_user.impairments.join(', ') }}</td>
-                <td>{{ moment(item.app_user.birthday).format('DD/MM/YYYY') }}</td> -->
+                <td>{{ moment(item.app_user.birthday).format('DD/MM/YYYY') }}</td>
                 <td>{{ item.calification }}</td>
                 <td>{{ moment(item.created_at).format('DD/MM/YYYY \- HH:mm') }}</td>
-                <td><router-link :to="'/evaluaciones/'+item.id">Ver evaluación</router-link></td>
+                <td><router-link :to="'/lugares/evaluacion/'+item.id">Ver evaluación</router-link></td>
               </tr>
             </tbody>
           </template>
@@ -47,9 +56,13 @@
 <script>
 
 export default {
-  name: 'Evaluations',
+  name: 'VenueEvaluations',
   beforeMount() {
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/evaluations/').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/' + this.$route.params.id).then((response) => {
+      this.venue = response.data;
+    });
+
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/evaluations/venue/' + this.$route.params.id).then((response) => {
       this.entries = response.data;
     });
   },
@@ -61,25 +74,17 @@ export default {
           value: 'id',
         },
         {
-          text: 'Servicio',
-          value: 'service.name',
+          text: 'Sexo',
+          value: 'sex',
         },
         {
-          text: 'Lugar',
-          value: 'venue.name',
+          text: 'Discapacidad',
+          value: 'impairments',
         },
-        // {
-        //   text: 'Sexo',
-        //   value: 'sex',
-        // },
-        // {
-        //   text: 'Discapacidad',
-        //   value: 'impairments',
-        // },
-        // {
-        //   text: 'Nacimiento',
-        //   value: 'birthday',
-        // },
+        {
+          text: 'Nacimiento',
+          value: 'birthday',
+        },
         {
           text: 'Evaluacion',
           value: 'calification',
@@ -96,11 +101,6 @@ export default {
       venue: null,
       pagination: {}
     };
-  },
-  computed: {
-    urlExport() {
-      return process.env.VUE_APP_API_DOMAIN + 'evaluations/exportExcel';
-    },
   },
   methods: {
   },

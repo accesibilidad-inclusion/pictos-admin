@@ -9,8 +9,14 @@
   <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link :to="'/evaluaciones/'" class="breadcrumbs__link">
-          <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Evaluaciones
+        <router-link to="/lugares/" class="breadcrumbs__link">
+          <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares
+        </router-link>
+        <router-link :to="'/lugares/' + evaluation.venue.id" class="breadcrumbs__link">
+          {{ evaluation.venue.name }}
+        </router-link>
+        <router-link :to="'/lugares/' + evaluation.venue.id + '/evaluaciones'" class="breadcrumbs__link">
+          Evaluaciones
         </router-link>
         {{ evaluation.id }}
         <v-spacer></v-spacer>
@@ -33,7 +39,7 @@
 <script>
 
 export default {
-  name: 'ShowEvaluation',
+  name: 'ShowVenueEvaluation',
   beforeMount() {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/evaluations/'+this.$route.params.id).then((response) => {
       this.evaluation = response.data;

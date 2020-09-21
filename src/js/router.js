@@ -6,6 +6,8 @@ import Services from '../views/Services/Index.vue';
 import ShowService from '../views/Services/Show.vue';
 import Venues from '../views/Venues/Index.vue';
 import ShowVenue from '../views/Venues/Show.vue';
+import VenueEvaluations from '../views/Venues/Evaluations.vue';
+import ShowVenueEvaluation from '../views/Venues/ShowEvaluation.vue';
 import Evaluations from '../views/Evaluations/Index.vue';
 import ShowEvaluation from '../views/Evaluations/Show.vue';
 import Tasks from '../views/Tasks/Index.vue';
@@ -51,11 +53,21 @@ const router = new Router({
     },
     {
       path: '/lugares/:id/evaluaciones',
+      name: 'VenueEvaluations',
+      component: VenueEvaluations,
+    },
+    {
+      path: '/lugares/evaluacion/:id',
+      name: 'ShowVenueEvaluation',
+      component: ShowVenueEvaluation,
+    },
+    {
+      path: '/evaluaciones',
       name: 'Evaluations',
       component: Evaluations,
     },
     {
-      path: '/lugares/evaluacion/:id',
+      path: '/evaluaciones/:id',
       name: 'ShowEvaluation',
       component: ShowEvaluation,
     },
