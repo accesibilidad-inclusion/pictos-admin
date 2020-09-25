@@ -12,7 +12,7 @@ import Evaluations from '../views/Evaluations/Index.vue';
 import ShowEvaluation from '../views/Evaluations/Show.vue';
 import Tasks from '../views/Tasks/Index.vue';
 import ShowTask from '../views/Tasks/Show.vue';
-import AddStep from '../views/Tasks/AddStep.vue';
+import Step from '../views/Tasks/Step.vue';
 import Users from '../views/Users/Index.vue';
 import ShowUser from '../views/Users/Show.vue';
 
@@ -78,8 +78,13 @@ const router = new Router({
     },
     {
       path: '/tareas/nuevo_paso',
-      name: 'AddStep',
-      component: AddStep,
+      name: 'Step',
+      component: Step,
+    },
+    {
+      path: '/tareas/paso/:id',
+      name: 'Step',
+      component: Step
     },
     {
       path: '/tareas/:id',

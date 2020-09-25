@@ -86,6 +86,18 @@ extend('max', {
   message: 'El campo {_field_} no puede ser mas largo que {length} caracteres',
 });
 
+extend('url', {
+    validate: (str) => {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        return !!pattern.test(str);
+    },
+    message: 'El campo no es una URL valida'
+})
 extend('unique_email', {
     message: 'El campo {_field_} ya esta registrado.',
     validate: value => {

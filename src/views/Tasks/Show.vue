@@ -12,7 +12,18 @@
         <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>{{ task.name }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
         <v-spacer></v-spacer>
-        <v-btn text default color="error" @click="deleteTask()">Eliminar</v-btn>
+        <v-dialog
+          v-model="dialogDuplicate"
+          width="500"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text small v-bind="attrs" v-on="on" color="primary">
+              Duplicar esta tarea
+            </v-btn>
+          </template>
+
+          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="duplicateTask"></Form>
+        </v-dialog> | <v-btn text default color="error" @click="deleteTask()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -33,7 +44,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editTask" name="tarea" url="/api/tasks/update" method="put"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editTask"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -60,15 +71,17 @@
             <span v-else>Esta tarea tiene {{ task.steps.length }} pasos</span>
           </v-card-title>
           <v-card-text class="pa-0">
-            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'AddStep', params: { task_id: task.id }}" class="right-box__button">
+            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'Step', params: { task_id: task.id }}" class="right-box__button">
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
             <ul v-else class="right-box">
-              <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4">{{ index+1 }} {{ step.label }}</li>
+              <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4">
+                <router-link :to="'/tareas/paso/'+step.id">{{ index+1 }} {{ step.label }}</router-link>
+              </li>
             </ul>
           </v-card-text>
         </v-card>
-        <v-btn v-if="task.steps.length" color="primary" default text :to="{ name: 'AddStep', params: { task_id: task.id }}" class="text-right my-3">
+        <v-btn v-if="task.steps.length" color="primary" default text :to="{ name: 'Step', params: { task_id: task.id }}" class="text-right my-3">
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso
         </v-btn>
       </v-col>
@@ -99,13 +112,17 @@ export default {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.$route.params.id).then((response) => {
       this.task.set(response.data);
       this.editTask = _.clone( this.task  )
+      this.duplicateTask = _.clone( this.task  )
+      this.duplicateTask.form_type = 'duplicate'
     });
   },
   data() {
     return {
       task: new Task(),
       editTask: null,
-      dialog: false
+      duplicateTask: null,
+      dialog: false,
+      dialogDuplicate: false
     };
   },
   methods: {
@@ -130,7 +147,10 @@ export default {
     },
     closeModal() {
       this.dialog = false;
+      this.dialogDuplicate = false;
       this.editTask = _.clone( this.task );
+      this.duplicateTask = _.clone( this.task  )
+      this.duplicateTask.form_type = 'duplicate'
     },
     updated() {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.$route.params.id).then((response) => {

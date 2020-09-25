@@ -17,7 +17,7 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="created" :object="newTask" name="tarea" url="/api/tasks/store" method="post"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="created" :object="newTask"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2" class="search">

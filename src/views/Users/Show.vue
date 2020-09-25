@@ -33,7 +33,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editUser" name="usuario" url="/api/users/update" method="put"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editUser"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">

@@ -13,34 +13,37 @@ class Task {
         this.likes = 0
         this.dislikes = 0
         this.status = ''
+        this.form_type = ''
     }
 
     set(task) {
         this.id = task.id
         this.title = task.title
-        this.service = {
+        this.service = task.service ? {
             'id': task.service.id,
             'name': task.service.name
-        }
+        } : null
         this.venue = {
             'id': task.venue.id,
             'name': task.venue.name
         }
         this.url = task.url
-        this.tags_text = task.tags.join(', ')
+        this.tags_text = task.tags ? task.tags.join(', ') : ''
         this.tags = task.tags
         this.steps = task.steps
         this.visible = task.visible
         this.likes = task.likes
         this.dislikes = task.dislikes
         this.status = task.status
+        this.form_type = task.form_type
     }
 
     form() {
         let form = {
-            title: this.status == "Enviado por usuario" ? 'Tarea propuesta por usuario' : 
-            ( this.id ? 'Editar tarea' : 'Agregar nueva tarea' ),
-            fields: this.status == "Enviado por usuario" ? [
+            title: this.status === "Enviado por usuario" ? 'Tarea propuesta por usuario' : (
+                this.form_type === 'duplicate' ? 'Duplicar tarea' :
+                ( this.id ? 'Editar tarea' : 'Agregar nueva tarea' ) ),
+            fields: this.status === "Enviado por usuario" ? [
                 {
                     id: 'venue',
                     value: 'name',
@@ -66,6 +69,21 @@ class Task {
                     type: 'iteration',
                     value: 'label'
                 }
+            ] : ( this.form_type === 'venue' ? [
+                {
+                    id: 'title',
+                    name: 'titulo',
+                    label: 'Titulo de la tarea',
+                    rules: 'required|max:500',
+                    type: 'text'
+                },
+                {
+                    id: 'tags_text',
+                    name: 'sinonimos',
+                    label: 'Sinónimos de búsqueda (Separados por coma)',
+                    rules: '',
+                    type: 'text'
+                }
             ] : [
                 {
                     id: 'title',
@@ -90,7 +108,7 @@ class Task {
                     rules: '',
                     type: 'text'
                 }
-            ],
+            ]),
             actions: this.status == "Enviado por usuario" ? [
                 {
                     label: 'Eliminar',
@@ -115,6 +133,21 @@ class Task {
                     validate: true,
                     emit: 'updated'
                 }
+            ] : ( this.form_type === 'duplicate' ? [
+                {
+                    label: 'Cancelar',
+                    color: 'grey',
+                    callback: 'cancel',
+                },
+                {
+                    label: 'Duplicar tarea',
+                    color: 'primary',
+                    callback: 'request',
+                    url: 'api/tasks/duplicate',
+                    method: 'post',
+                    validate: true,
+                    emit: 'updated'
+                }
             ] : [
                 {
                     label: 'Cancelar',
@@ -130,7 +163,7 @@ class Task {
                     validate: true,
                     emit: 'updated'
                 }
-            ]
+            ] )
         }
 
         return form

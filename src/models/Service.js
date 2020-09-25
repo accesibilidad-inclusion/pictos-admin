@@ -46,6 +46,13 @@ class Service {
                     textOption: ['name']
                 },
                 {
+                    id: 'url',
+                    name: 'url',
+                    label: 'Url',
+                    rules: 'url',
+                    type: 'text'
+                },
+                {
                     id: 'tags_text',
                     name: 'sinonimos',
                     label: 'Sinónimos de búsqueda (Separados por coma)',

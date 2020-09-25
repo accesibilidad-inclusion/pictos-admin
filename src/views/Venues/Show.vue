@@ -33,7 +33,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editVenue" name="lugar" url="/api/venues/update" method="put"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editVenue"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -59,10 +59,23 @@
             <ul class="right-box">
               <li v-for="(task, index) in venue.tasks" v-bind:key="index" class="right-box__item px-9 py-4">
                 <router-link :to="'/tareas/'+task.id">{{ index + 1 }} {{ task.title }}</router-link>
+                <span class="color-published mx-3 task-draft" v-if="!task.visible">Borrador</span>
               </li>
             </ul>
           </v-card-text>
         </v-card>
+        <v-dialog
+          v-model="dialogTask"
+          width="700"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text default v-bind="attrs" v-on="on" color="primary" class="text-right my-3">
+              <v-icon>mdi-plus</v-icon> Agregar nueva tarea
+            </v-btn>
+          </template>
+
+          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newTask"></Form>
+        </v-dialog>
       </v-col>
     </v-row>
     <v-row>
@@ -72,7 +85,7 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Evaluaciones <router-link :to="'/lugares/'+venue.id+'/evaluaciones'">(Ver todas)</router-link>
+            Evaluaciones <v-btn text small color="primary" :to="'/lugares/'+venue.id+'/evaluaciones'">Ver todas</v-btn>
           </v-card-title>
           <v-card-text class="py-5 px-6">
           Total: {{ venue.evaluations.length }} evaluaciones
@@ -95,6 +108,7 @@
 
 <script>
 import Venue from '../../models/Venue'
+import Task from '../../models/Task'
 import Form from '../Utils/Form'
 
 export default {
@@ -105,14 +119,20 @@ export default {
   beforeMount() {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+this.$route.params.id).then((response) => {
       this.venue.set(response.data);
+      this.newTask.set({
+        venue: this.venue,
+        form_type: 'venue'
+      })
       this.editVenue = _.clone( this.venue  )
     });
   },
   data() {
     return {
       venue: new Venue(),
+      newTask: new Task(),
       editVenue: null,
-      dialog: false
+      dialog: false,
+      dialogTask: false
     };
   },
   methods: {
@@ -140,6 +160,9 @@ export default {
     closeModal() {
       this.dialog = false;
       this.editVenue = _.clone( this.venue );
+      this.dialogTask = false;
+      this.newTask.title = '';
+      this.newTask.tags_text = '';
     },
     updated() {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/'+this.$route.params.id).then((response) => {
@@ -190,5 +213,8 @@ export default {
     & + .right-box__item {
       border-top: 1px solid #E0E0E0;
     }
+  }
+  .task-draft {
+    font-style: italic;
   }
 </style>

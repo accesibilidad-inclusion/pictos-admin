@@ -221,7 +221,7 @@ extend('required', {
 });
 
 export default {
-  name: 'AddStep',
+  name: 'Step',
   components: { VueperSlides, VueperSlide, ValidationProvider, ValidationObserver, },
   data() {
     return {
@@ -235,7 +235,18 @@ export default {
       step: ''
     };
   },
-  mounted() {
+  beforeMount() {
+    if(this.$route.params.id) {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/' + this.$route.params.id).then((response) => {
+        this.step = response.data.label
+        const picto = response.data.pictogram
+        if(picto) {
+          this.setImage('context', picto.images.find( i => i.layout === 3))
+          this.setImage('landmark', picto.images.find( i => i.layout === 2))
+          this.setImage('subject', picto.images.find( i => i.layout === 1))
+        }
+      });
+    }
   },
   methods: {
     setImage(type, image) {
@@ -257,13 +268,23 @@ export default {
       if(this.context)
        images.push(this.context.id)
 
-      this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
-        images: images,
-        label: this.step,
-        task_id: this.$route.params.task_id
-      }).then((response) => {
-          this.$router.push('/tareas/'+this.$route.params.task_id);
-      });
+      if(this.$route.params.id) {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/steps/update', {
+          images: images,
+          label: this.step,
+          id: this.$route.params.id
+        }).then((response) => {
+            this.$router.go(-1);
+        });
+      } else {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
+          images: images,
+          label: this.step,
+          task_id: this.$route.params.task_id
+        }).then((response) => {
+            this.$router.push('/tareas/'+this.$route.params.task_id);
+        });
+      }
     }
   },
 };

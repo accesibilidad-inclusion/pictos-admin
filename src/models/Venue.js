@@ -12,6 +12,7 @@ class Venue {
         this.evaluations = []
         this.visible = 0
         this.status = ''
+        this.form_type = ''
     }
 
     set(venue) {
@@ -22,23 +23,45 @@ class Venue {
             'name': venue.service.name
         } : null
         this.url = venue.url
-        this.position = {
+        this.position = venue.position ? {
             lat: parseFloat(venue.position.lat),
             lng: parseFloat(venue.position.lng)
-        }
-        this.tags_text = venue.tags.join(', ')
+        } : null
+        this.tags_text = venue.tags ? venue.tags.join(', ') : ''
         this.tags = venue.tags
         this.tasks = venue.tasks
         this.evaluations = venue.evaluations
         this.status = venue.status
         this.visible = venue.visible
+        this.form_type = venue.form_type
     }
 
     form() {
         let form = {
             title: this.status == "Enviado por usuario" ? 'Crear nuevo lugar' : 
             ( this.id ? 'Editar lugar' : 'Agregar nuevo lugar' ),
-            fields: [
+            fields: this.form_type === 'service' ? [
+                {
+                    id: 'name',
+                    name: 'nombre',
+                    label: 'Nombre del lugar',
+                    rules: 'required|max:100',
+                    type: 'text'
+                },
+                {
+                    id: 'position',
+                    name: 'ubicacion',
+                    label: 'Ubicación',
+                    type: 'map'
+                },
+                {
+                    id: 'tags_text',
+                    name: 'sinonimos',
+                    label: 'Sinónimos de búsqueda (Separados por coma)',
+                    rules: '',
+                    type: 'text'
+                },
+            ] : [
                 {
                     id: 'name',
                     name: 'nombre',

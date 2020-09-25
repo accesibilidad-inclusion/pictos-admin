@@ -33,7 +33,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editService" name="servicio" url="/api/services/update" method="put"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editService"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -59,10 +59,23 @@
             <ul class="right-box">
               <li v-for="(venue, index) in service.venues" v-bind:key="index" class="right-box__item px-9 py-4">
                 <router-link :to="'/lugares/'+venue.id">{{ index+1 }} {{ venue.name }}</router-link>
+                <span class="color-published mx-3 venue-draft" v-if="!venue.visible">Borrador</span>
               </li>
             </ul>
           </v-card-text>
         </v-card>
+        <v-dialog
+          v-model="dialogVenue"
+          width="700"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text default v-bind="attrs" v-on="on" color="primary" class="text-right my-3">
+              <v-icon>mdi-plus</v-icon> Agregar nuevo lugar
+            </v-btn>
+          </template>
+
+          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newVenue"></Form>
+        </v-dialog>
       </v-col>
     </v-row>
     <v-row v-if="service.status == 'Borrador'" class="px-3 pt-10">
@@ -75,6 +88,7 @@
 
 <script>
 import Service from '../../models/Service'
+import Venue from '../../models/Venue'
 import Form from '../Utils/Form'
 
 export default {
@@ -85,14 +99,20 @@ export default {
   beforeMount() {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/'+this.$route.params.id).then((response) => {
       this.service.set(response.data);
+      this.newVenue.set({
+        service: this.service,
+        form_type: 'service'
+      })
       this.editService = _.clone( this.service  )
     });
   },
   data() {
     return {
       service: new Service(),
+      newVenue: new Venue(),
       editService: null,
-      dialog: false
+      dialog: false,
+      dialogVenue: false
     };
   },
   methods: {
@@ -120,6 +140,7 @@ export default {
     closeModal() {
       this.dialog = false;
       this.editService = _.clone( this.service );
+      this.dialogVenue = false;
     },
     updated() {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/'+this.$route.params.id).then((response) => {
@@ -170,5 +191,8 @@ export default {
     & + .right-box__item {
       border-top: 1px solid #E0E0E0;
     }
+  }
+  .venue-draft {
+    font-style: italic;
   }
 </style>
