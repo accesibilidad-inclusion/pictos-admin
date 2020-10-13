@@ -77,12 +77,7 @@ const router = new Router({
       component: Tasks,
     },
     {
-      path: '/tareas/nuevo_paso',
-      name: 'Step',
-      component: Step,
-    },
-    {
-      path: '/tareas/paso/:id',
+      path: '/tareas/paso/',
       name: 'Step',
       component: Step
     },

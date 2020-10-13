@@ -27,9 +27,9 @@
       <v-col cols="2">
         <v-text-field
             v-model="search_text"
-            append-icon="mdi-magnify"
+            :append-icon="search_text == '' ? 'mdi-magnify' : 'mdi-window-close'"
             placeholder="Buscar"
-            @click:append="search"
+            @click:append="clearSearch"
             @keyup.enter="search"
         ></v-text-field>
       </v-col>
@@ -105,6 +105,10 @@ export default {
     };
   },
   methods: {
+    clearSearch() {
+      this.search_text = '';
+      this.search();
+    },
     search() {
       this.entries = null;
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/services/search/'+this.search_text).then((response) => {

@@ -9,7 +9,7 @@
   <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>{{ task.name }}
+        <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>{{ task.title }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
         <v-spacer></v-spacer>
         <v-dialog
@@ -71,17 +71,17 @@
             <span v-else>Esta tarea tiene {{ task.steps.length }} pasos</span>
           </v-card-title>
           <v-card-text class="pa-0">
-            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'Step', params: { task_id: task.id }}" class="right-box__button">
+            <v-btn v-if="!task.steps.length" color="primary" :to="{ name: 'Step', params: { task: task }}" class="right-box__button">
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
             <ul v-else class="right-box">
               <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4">
-                <router-link :to="'/tareas/paso/'+step.id">{{ index+1 }} {{ step.label }}</router-link>
+                <router-link :to="{ name: 'Step', params: { id: step.id, task: task } }">{{ index+1 }} {{ step.label }}</router-link>
               </li>
             </ul>
           </v-card-text>
         </v-card>
-        <v-btn v-if="task.steps.length" color="primary" default text :to="{ name: 'Step', params: { task_id: task.id }}" class="text-right my-3">
+        <v-btn v-if="task.steps.length" color="primary" default text :to="{ name: 'Step', params: { task: task }}" class="text-right my-3">
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso
         </v-btn>
       </v-col>

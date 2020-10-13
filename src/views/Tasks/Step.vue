@@ -1,5 +1,11 @@
 <template>
   <div>
+    <v-col cols="12" class="d-flex align-center breadcrumbs">
+      <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>
+      <router-link :to="'/tareas/' + $route.params.task.id" class="breadcrumbs__link"> {{ $route.params.task.title }} </router-link>
+      <span v-if="!$route.params.id">Crear paso</span>
+      <span v-else>Editar paso</span>
+    </v-col>
     <template v-if="preview">
       <v-container>
         <v-row>
@@ -238,6 +244,7 @@ export default {
   beforeMount() {
     if(this.$route.params.id) {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/' + this.$route.params.id).then((response) => {
+        console.log(response)
         this.step = response.data.label
         const picto = response.data.pictogram
         if(picto) {
@@ -289,7 +296,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .slider__container {
   width: 90%;
   max-width: 100%;
@@ -334,5 +341,16 @@ export default {
   position: absolute;
   right: 12px;
   top: 12px;
+}
+.breadcrumbs {
+    font-size: 1.5rem;
+}
+.breadcrumbs__link {
+  text-decoration: none;
+  &:after {
+    content: '/';
+    padding: 0 0.5rem;
+    color: gray;
+  }
 }
 </style>
