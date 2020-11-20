@@ -28,7 +28,7 @@
         <b>{{ answer.question.text }}</b>
         <p v-if="answer.question.answer_type != 'Fotografía'" class="pt-2 grey--text text--darken-3">{{ answer.answer }}</p>
         <p v-else class="mt-4">
-          <img :src="answer.answer" />
+          <img :src="answer.answer" class="evaluation-img" />
         </p>
         <v-divider></v-divider>
       </v-col>
@@ -93,5 +93,10 @@ export default {
     & + .right-box__item {
       border-top: 1px solid #E0E0E0;
     }
+  }
+  .evaluation-img {
+    max-height: 450px;
+    width: auto;
+    display: block;
   }
 </style>
