@@ -242,9 +242,11 @@ export default {
     };
   },
   beforeMount() {
+    if(!this.$route.params.task) {
+      this.$router.push('/tareas/');
+    }
     if(this.$route.params.id) {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/' + this.$route.params.id).then((response) => {
-        console.log(response)
         this.step = response.data.label
         const picto = response.data.pictogram
         if(picto) {
@@ -287,9 +289,9 @@ export default {
         this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
           images: images,
           label: this.step,
-          task_id: this.$route.params.task_id
+          task_id: this.$route.params.task.id
         }).then((response) => {
-            this.$router.push('/tareas/'+this.$route.params.task_id);
+            this.$router.push('/tareas/'+this.$route.params.task.id);
         });
       }
     }
