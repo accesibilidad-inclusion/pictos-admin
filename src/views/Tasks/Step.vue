@@ -245,6 +245,7 @@ export default {
     if(!this.$route.params.task) {
       this.$router.push('/tareas/');
     }
+    this.$store.dispatch("setImages");
     if(this.$route.params.id) {
       this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/steps/' + this.$route.params.id).then((response) => {
         this.step = response.data.label
