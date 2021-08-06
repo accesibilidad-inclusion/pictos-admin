@@ -86,6 +86,11 @@
         </v-btn>
       </v-col>
     </v-row>
+    <v-row v-if="task.status == 'Publicado'" class="px-3 pt-12">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este tarea esta publicada <v-btn outlined large color="primary" @click="draftTask()" class="ml-6">Despublicar</v-btn>
+      </v-col>
+    </v-row>
     <v-row v-if="task.status == 'Borrador'" class="px-3 pt-12">
       <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
         Este tarea esta en borrador <v-btn outlined large color="primary" @click="publishTask()" class="ml-6">Publicar</v-btn>
@@ -142,6 +147,16 @@ export default {
         }).then((response) => {
           if(response.data)
             this.task.status = 'Publicado';
+        });
+      }
+    },
+    draftTask() {
+      if(confirm('¿Esta seguro de despublicar este tarea?')) {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/tasks/draft', {
+          'id': this.$route.params.id
+        }).then((response) => {
+          if(response.data)
+            this.task.status = 'Borrador';
         });
       }
     },

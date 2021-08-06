@@ -93,6 +93,11 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row v-if="venue.status == 'Publicado'" class="px-3 pt-10">
+      <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
+        Este lugar esta publicado <v-btn outlined large color="primary" @click="draftVenue()" class="ml-6">Despublicar</v-btn>
+      </v-col>
+    </v-row>
     <v-row v-if="venue.status == 'Borrador'" class="px-3 pt-10">
       <v-col cols="12" class="grey lighten-4 py-8 pr-10 d-flex justify-end align-center">
         Este lugar esta en borrador <v-btn outlined large color="primary" @click="publishVenue()" class="ml-6">Publicar</v-btn>
@@ -154,6 +159,17 @@ export default {
           this.$store.dispatch("setVenues");
           if(response.data)
             this.venue.status = 'Publicado';
+        });
+      }
+    },
+    draftVenue() {
+      if(confirm('¿Esta seguro de despublicar este lugar?')) {
+        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/venues/draft', {
+          'id': this.$route.params.id
+        }).then((response) => {
+          this.$store.dispatch("setVenues");
+          if(response.data)
+            this.venue.status = 'Borrador';
         });
       }
     },
