@@ -75,9 +75,14 @@
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
             </v-btn>
             <ul v-else class="right-box">
-              <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4">
-                <router-link :to="{ name: 'Step', params: { id: step.id, task: task } }">{{ index+1 }} {{ step.label }}</router-link>
-              </li>
+              <draggable v-model="task.steps" @change="setOrder()" handle=".icon-draggable">
+                <li v-for="(step, index) in task.steps" v-bind:key="index" class="right-box__item px-9 py-4 d-flex justify-space-between">
+                  <div>
+                    <v-icon class="icon-draggable">mdi-drag</v-icon> <router-link :to="{ name: 'Step', params: { id: step.id, task: task } }">{{ index+1 }} {{ step.label }}</router-link>
+                  </div>
+                  <v-btn text small color="error" @click="deleteStep(step.id)">Eliminar</v-btn>
+                </li>
+              </draggable>
             </ul>
           </v-card-text>
         </v-card>
@@ -105,13 +110,16 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
 import Task from '../../models/Task'
 import Form from '../Utils/Form'
 
 export default {
   name: 'ShowTask',
   components: {
-    Form
+    Form,
+    draggable
   },
   beforeMount() {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/tasks/'+this.$route.params.id).then((response) => {
@@ -160,6 +168,15 @@ export default {
         });
       }
     },
+    deleteStep(id) {
+      if(confirm('¿Esta seguro de eliminar este paso?')) {
+        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/delete', {
+          'id': id
+        }).then((response) => {
+          this.task.steps = this.task.steps.filter( s => s.id !== id);
+        });
+      }
+    },
     closeModal() {
       this.dialog = false;
       this.dialogDuplicate = false;
@@ -172,6 +189,16 @@ export default {
         this.task.set(response.data);
         this.editTask = _.clone( this.task  )
         this.closeModal();
+      });
+    },
+    setOrder() {
+      this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/steps/order', {
+        'steps': this.task.steps.map( (s, i) => {
+          return {
+            id: s.id,
+            order: i+1
+          }
+        }),
       });
     }
   },
@@ -219,5 +246,8 @@ export default {
     display: flex;
     max-width: 230px;
     margin: 3rem auto;
+  }
+  .icon-draggable {
+    cursor: move;
   }
 </style>

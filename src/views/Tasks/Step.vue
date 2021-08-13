@@ -260,7 +260,10 @@ export default {
   },
   methods: {
     setImage(type, image) {
-      this[type] = image
+      if(this[type] && this[type].id === image.id)
+        this[type] = null;
+      else
+        this[type] = image
     },
     showPreview() {
       this.$refs.observer.validate().then( valid => {
