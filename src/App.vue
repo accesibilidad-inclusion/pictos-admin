@@ -98,9 +98,9 @@
         <router-view></router-view>
       </v-container>
     </v-content>
-    <v-footer app>
+    <!-- <v-footer app>
       <span class="white--text">&copy; 2019</span>
-    </v-footer>
+    </v-footer> -->
   </v-app>
 </template>
 

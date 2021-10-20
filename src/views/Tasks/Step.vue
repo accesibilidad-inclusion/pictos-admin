@@ -1,221 +1,182 @@
 <template>
   <div>
-    <v-col cols="12" class="d-flex align-center breadcrumbs">
+    <v-col cols="12" class="sticky-top d-flex align-center breadcrumbs">
       <router-link to="/tareas/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas</router-link>
       <router-link :to="'/tareas/' + $route.params.task.id" class="breadcrumbs__link"> {{ $route.params.task.title }} </router-link>
       <span v-if="!$route.params.id">Crear paso</span>
       <span v-else>Editar paso</span>
     </v-col>
-    <template v-if="preview">
-      <v-container>
-        <v-row>
-          <v-col cols="12 headline">
-          {{ step }}
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12">
-            <div class="preview__pictos blue lighten-5">
+    <v-row>
+      <v-col cols="6">
+        <v-container class="sticky-top-2 d-flex flex-column justify-center">
+          <div class="container-preview">
+            <span class="subtitle font-weight-bold grey--text text--darken-1 text-uppercase">
+              Previsualización
+            </span>
+            <div class="mt-3 preview__pictos blue lighten-5">
               <img v-if="context" :src="context.path + '/' + context.filename" />
               <img v-if="landmark" :src="landmark.path + '/' + landmark.filename" />
               <img v-if="subject" :src="subject.path + '/' + subject.filename" />
             </div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" class="py-4 d-flex justify-end align-center">
-            <v-btn text large color="primary" @click="preview = false" class="mr-3">Volver a editar</v-btn>
-            <v-btn outlined large color="primary" @click="saveStep">Aceptar</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </template>
-    <template v-else>
-      <ValidationObserver ref="observer">
-        <v-form>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
-                  <v-text-field
-                      v-model="step"
-                      label="Describe el paso"
-                      :error-messages="errors"
-                      required
-                  ></v-text-field>
-                </ValidationProvider>
+            <v-row  align="center" justify="center" class="mt-3">
+              <v-col v-if="action" cols="2">
+                <img :src="action.path + '/' + action.filename" />
+              </v-col>
+              <v-col :cols=" action ? 8 : 12" class="headline font-weight-bold">
+                {{ step }}
               </v-col>
             </v-row>
-          </v-container>
-        </v-form>
-      </ValidationObserver>
-      <div class="slider__container">
-        <v-row>
-          <v-col cols="12" class="slider__group">
-            <h3 class="mb-3">Espacio</h3>
-            <v-dialog
-              v-model="dialogContext"
-              width="1200"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
-                  Ver todos
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>
-                  Selecciona un pictograma para espacio
-                </v-card-title>
-                <v-container>
-                  <v-row>
-                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 3)" v-bind:key="image.id">
-                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)" />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-btn text outlined @click="dialogContext = false">Seleccionar pictograma</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-dialog>
-            <vueper-slides
-              class="no-shadow"
-              :visible-slides="5"
-              :slide-ratio="1 / 8"
-              slide-multiple
-              arrows-outside
-              :gap="2"
-              :touchable="false"
-              :bullets="false">
-              <vueper-slide
-                v-for="image in $store.getters.images.filter( i => i.layout == 3)"
-                :key="image.id"
-                :image="image.path + '/' + image.filename" >
-                <template v-slot:content>
-                  <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)">
-                  </div>
-                </template>
-              </vueper-slide>
-            </vueper-slides>
-          </v-col>
-        </v-row>
-        <v-row class="mt-7">
-          <v-col cols="12" class="slider__group">
-            <h3 class="mb-3">Objeto</h3>
-            <v-dialog
-              v-model="dialogLandmark"
-              width="1200"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
-                  Ver todos
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>
-                  Selecciona un pictograma para objeto
-                </v-card-title>
-                <v-container class="px-6 py-6">
-                  <v-row>
-                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 2)" v-bind:key="image.id">
-                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-btn text outlined @click="dialogLandmark = false">Seleccionar pictograma</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-dialog>
-            <vueper-slides
-              class="no-shadow"
-              :visible-slides="5"
-              :slide-ratio="1 / 8"
-              slide-multiple
-              arrows-outside
-              :gap="2"
-              :touchable="false"
-              :bullets="false">
-              <vueper-slide
-                v-for="image in $store.getters.images.filter( i => i.layout == 2)"
-                :key="image.id"
-                :image="image.path + '/' + image.filename" >
-                <template v-slot:content>
-                  <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)">
-                  </div>
-                </template>
-              </vueper-slide>
-            </vueper-slides>
-          </v-col>
-        </v-row>
-        <v-row class="mt-7">
-          <v-col cols="12" class="slider__group">
-            <h3 class="mb-3">Persona</h3>
-            <v-dialog
-              v-model="dialogSubject"
-              width="1200"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn v-bind="attrs" v-on="on" small text color="primary" class="slider__all">
-                  Ver todos
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>
-                  Selecciona un pictograma para persona
-                </v-card-title>
-                <v-container>
-                  <v-row>
-                    <v-col cols="3" v-for="image in $store.getters.images.filter( i => i.layout == 1)" v-bind:key="image.id">
-                      <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': subject && image.id == subject.id }"  @click="setImage('subject', image)" />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-btn text outlined @click="dialogSubject = false">Seleccionar pictograma</v-btn>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
-            </v-dialog>
-            <vueper-slides
-              class="no-shadow"
-              :visible-slides="5"
-              :slide-ratio="1/8"
-              slide-multiple
-              arrows-outside
-              :gap="2"
-              :touchable="false"
-              :bullets="false">
-              <vueper-slide
-                v-for="image in $store.getters.images.filter( i => i.layout == 1)"
-                :key="image.id"
-                :image="image.path + '/' + image.filename" >
-                <template v-slot:content>
-                  <div class="vueperslide__content-wrapper" v-bind:class="{ 'active': subject && image.id == subject.id }"  @click="setImage('subject', image)">
-                  </div>
-                </template>
-              </vueper-slide>
-            </vueper-slides>
-          </v-col>
-        </v-row>
-        <v-row class="mt-5">
-          <v-col cols="12" class="d-flex justify-end">
-            <v-btn outlined color="primary" @click="showPreview">Previsualizar</v-btn>
-          </v-col>
-        </v-row>
-      </div>
-    </template>
+          </div>
+        </v-container>
+      </v-col>
+      <v-col cols="6" class="mb-12">
+        <ValidationObserver ref="observer">
+          <v-form>
+            <v-container>
+              <span class="subtitle font-weight-bold grey--text text--darken-1 text-uppercase">
+                Configuración
+              </span>
+              <v-row>
+                <v-col cols="12">
+                  <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
+                    <v-text-field
+                        v-model="step"
+                        label="Describe el paso"
+                        :error-messages="errors"
+                        required
+                    ></v-text-field>
+                  </ValidationProvider>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">
+                  <v-text-field
+                    clearable
+                    v-model="filters.text"
+                    label="Busca por texto"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                  <v-select
+                    clearable
+                    v-model="filters.category"
+                    :items="['Trámites','Salud','Transporte','Ocio']"
+                    label="Busca por categoria"
+                    multiple
+                    persistent-hint
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-expansion-panels>
+                <v-expansion-panel>
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': context}" expand-icon="mdi-menu-down" :disable-icon-rotate="context">
+                    <template v-slot:actions v-if="context">
+                      <v-icon color="teal">
+                        mdi-check
+                      </v-icon>
+                    </template>
+                    Espacio
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-container>
+                      <div v-if="!getImages(3).length" class="mt-4">
+                        No existen coincidencias con tu búsqueda
+                      </div>
+                      <v-row>
+                        <v-col cols="4" v-for="image in getImages(3)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)" />
+                          <span>{{ image.label }}</span>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': landmark}" expand-icon="mdi-menu-down" :disable-icon-rotate="landmark">
+                    <template v-slot:actions v-if="landmark">
+                      <v-icon color="teal">
+                        mdi-check
+                      </v-icon>
+                    </template>
+                    Objeto
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-container>
+                      <div v-if="!getImages(2).length" class="mt-4">
+                        No existen coincidencias con tu búsqueda
+                      </div>
+                      <v-row>
+                        <v-col cols="4" v-for="image in getImages(2)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
+                          <span>{{ image.label }}</span>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': subject}" expand-icon="mdi-menu-down" :disable-icon-rotate="subject">
+                    <template v-slot:actions v-if="subject">
+                      <v-icon color="teal">
+                        mdi-check
+                      </v-icon>
+                    </template>
+                    Persona
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-container>
+                      <div v-if="!getImages(1).length" class="mt-4">
+                        No existen coincidencias con tu búsqueda
+                      </div>
+                      <v-row>
+                        <v-col cols="4" v-for="image in getImages(1)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': subject && image.id == subject.id }"  @click="setImage('subject', image)" />
+                          <span>{{ image.label }}</span>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': action}" expand-icon="mdi-menu-down" :disable-icon-rotate="action">
+                    <template v-slot:actions v-if="action">
+                      <v-icon color="teal">
+                        mdi-check
+                      </v-icon>
+                    </template>
+                    Acción
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-container>
+                      <div v-if="!getImages(4).length" class="mt-4">
+                        No existen coincidencias con tu búsqueda
+                      </div>
+                      <v-row>
+                        <v-col cols="4" v-for="image in getImages(4)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': action && image.id == action.id }"  @click="setImage('action', image)" />
+                          <span>{{ image.label }}</span>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-container>
+          </v-form>
+        </ValidationObserver>
+      </v-col>
+    </v-row>
+    <v-footer fixed>
+      <v-row>
+        <v-col cols="12" class="d-flex justify-end">
+          <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
+        </v-col>
+      </v-row>
+    </v-footer>
   </div>
 </template>
 
 <script>
-import { VueperSlides, VueperSlide } from 'vueperslides'
-import 'vueperslides/dist/vueperslides.css'
 import { required } from 'vee-validate/dist/rules';
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
 
@@ -228,17 +189,18 @@ extend('required', {
 
 export default {
   name: 'Step',
-  components: { VueperSlides, VueperSlide, ValidationProvider, ValidationObserver, },
+  components: { ValidationProvider, ValidationObserver, },
   data() {
     return {
       subject: null,
       landmark: null,
       context: null,
-      preview: false,
-      dialogContext: false,
-      dialogLandmark: false,
-      dialogSubject: false,
-      step: ''
+      action: null,
+      step: '',
+      filters: {
+        text: null,
+        category: null
+      }
     };
   },
   beforeMount() {
@@ -251,6 +213,7 @@ export default {
         this.step = response.data.label
         const picto = response.data.pictogram
         if(picto) {
+          this.setImage('action', picto.images.find( i => i.layout === 4))
           this.setImage('context', picto.images.find( i => i.layout === 3))
           this.setImage('landmark', picto.images.find( i => i.layout === 2))
           this.setImage('subject', picto.images.find( i => i.layout === 1))
@@ -259,45 +222,54 @@ export default {
     }
   },
   methods: {
+    getImages(layout) {
+      let images = this.$store.getters.images.filter( i => i.layout == layout);
+      if(this.filters.category?.length) {
+        images = images.filter( i => i.categories.some( c => this.filters.category.includes(c) ) );
+      }
+      if(this.filters.text) {
+        images = images.filter( i => i.label.toLowerCase().includes(this.filters.text.toLowerCase()) || i.tags.some( t => t.toLowerCase().includes(this.filters.text.toLowerCase()) ) );
+      }
+      return images;
+    },
     setImage(type, image) {
       if(this[type] && this[type].id === image.id)
         this[type] = null;
       else
         this[type] = image
     },
-    showPreview() {
+    saveStep() {
       this.$refs.observer.validate().then( valid => {
         if(valid) {
-          this.preview = true
+          let images = []
+          if(this.subject)
+          images.push(this.subject.id)
+          if(this.landmark)
+          images.push(this.landmark.id)
+          if(this.context)
+          images.push(this.context.id)
+          if(this.action)
+          images.push(this.action.id)
+
+          if(this.$route.params.id) {
+            this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/steps/update', {
+              images: images,
+              label: this.step,
+              id: this.$route.params.id
+            }).then((response) => {
+                this.$router.go(-1);
+            });
+          } else {
+            this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
+              images: images,
+              label: this.step,
+              task_id: this.$route.params.task.id
+            }).then((response) => {
+                this.$router.push('/tareas/'+this.$route.params.task.id);
+            });
+          }
         }
       } )
-    },
-    saveStep() {
-      let images = []
-      if(this.subject)
-       images.push(this.subject.id)
-      if(this.landmark)
-       images.push(this.landmark.id)
-      if(this.context)
-       images.push(this.context.id)
-
-      if(this.$route.params.id) {
-        this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/steps/update', {
-          images: images,
-          label: this.step,
-          id: this.$route.params.id
-        }).then((response) => {
-            this.$router.go(-1);
-        });
-      } else {
-        this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/steps/store', {
-          images: images,
-          label: this.step,
-          task_id: this.$route.params.task.id
-        }).then((response) => {
-            this.$router.push('/tareas/'+this.$route.params.task.id);
-        });
-      }
     }
   },
 };
@@ -328,16 +300,27 @@ export default {
   width: 2em;
   padding: 0.5rem;
 }
+.container-preview {
+  position: relative;
+  width: 520px;
+  margin: 0 auto;
+}
 .preview__pictos {
   position: relative;
-  height: 700px;
-  border: 1px solid #64B5F6;
+  height: 400px;
+  width: 520px;
+  border: 1px solid lightgray;
 }
-.preview__pictos img {
+.preview__pictos-action {
+  position: relative;
+  height: 200px;
+  width: 200px;
+  border: 1px solid lightgray;
+}
+.preview__pictos img,
+.preview__pictos-action img {
   position: absolute;
   height: 100%;
-  right: 0;
-  left: 0;
   margin: 0 auto;
 }
 .slider__group {
@@ -358,5 +341,17 @@ export default {
     padding: 0 0.5rem;
     color: gray;
   }
+}
+.sticky-top {
+    position: sticky;
+    top: 5rem;
+}
+.sticky-top-2 {
+    position: sticky;
+    top: 9.3rem;
+}
+.subtitle {
+  font-size: 0.9rem !important;
+  letter-spacing: 0.166em;
 }
 </style>
