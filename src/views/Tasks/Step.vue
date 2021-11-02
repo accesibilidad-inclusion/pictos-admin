@@ -69,22 +69,22 @@
               </v-row>
               <v-expansion-panels>
                 <v-expansion-panel>
-                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': context}" expand-icon="mdi-menu-down" :disable-icon-rotate="context">
-                    <template v-slot:actions v-if="context">
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': action}" expand-icon="mdi-menu-down" :disable-icon-rotate="action !== null">
+                    <template v-slot:actions v-if="action">
                       <v-icon color="teal">
                         mdi-check
                       </v-icon>
                     </template>
-                    Espacio
+                    Acción
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <v-container>
-                      <div v-if="!getImages(3).length" class="mt-4">
+                      <div v-if="!getImages(4).length" class="mt-4">
                         No existen coincidencias con tu búsqueda
                       </div>
                       <v-row>
-                        <v-col cols="4" v-for="image in getImages(3)" v-bind:key="image.id">
-                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)" />
+                        <v-col cols="4" v-for="image in getImages(4)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': action && image.id == action.id }"  @click="setImage('action', image)" />
                           <span>{{ image.label }}</span>
                         </v-col>
                       </v-row>
@@ -92,30 +92,7 @@
                   </v-expansion-panel-content>
                 </v-expansion-panel>
                 <v-expansion-panel>
-                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': landmark}" expand-icon="mdi-menu-down" :disable-icon-rotate="landmark">
-                    <template v-slot:actions v-if="landmark">
-                      <v-icon color="teal">
-                        mdi-check
-                      </v-icon>
-                    </template>
-                    Objeto
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-container>
-                      <div v-if="!getImages(2).length" class="mt-4">
-                        No existen coincidencias con tu búsqueda
-                      </div>
-                      <v-row>
-                        <v-col cols="4" v-for="image in getImages(2)" v-bind:key="image.id">
-                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
-                          <span>{{ image.label }}</span>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-                <v-expansion-panel>
-                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': subject}" expand-icon="mdi-menu-down" :disable-icon-rotate="subject">
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': subject}" expand-icon="mdi-menu-down" :disable-icon-rotate="subject !== null">
                     <template v-slot:actions v-if="subject">
                       <v-icon color="teal">
                         mdi-check
@@ -138,22 +115,45 @@
                   </v-expansion-panel-content>
                 </v-expansion-panel>
                 <v-expansion-panel>
-                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': action}" expand-icon="mdi-menu-down" :disable-icon-rotate="action">
-                    <template v-slot:actions v-if="action">
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': landmark}" expand-icon="mdi-menu-down" :disable-icon-rotate="landmark !== null">
+                    <template v-slot:actions v-if="landmark">
                       <v-icon color="teal">
                         mdi-check
                       </v-icon>
                     </template>
-                    Acción
+                    Objeto
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <v-container>
-                      <div v-if="!getImages(4).length" class="mt-4">
+                      <div v-if="!getImages(2).length" class="mt-4">
                         No existen coincidencias con tu búsqueda
                       </div>
                       <v-row>
-                        <v-col cols="4" v-for="image in getImages(4)" v-bind:key="image.id">
-                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': action && image.id == action.id }"  @click="setImage('action', image)" />
+                        <v-col cols="4" v-for="image in getImages(2)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': landmark && image.id == landmark.id }"  @click="setImage('landmark', image)" />
+                          <span>{{ image.label }}</span>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                  <v-expansion-panel-header v-bind:class="{'grey lighten-4': context}" expand-icon="mdi-menu-down" :disable-icon-rotate="context !== null">
+                    <template v-slot:actions v-if="context">
+                      <v-icon color="teal">
+                        mdi-check
+                      </v-icon>
+                    </template>
+                    Espacio
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-container>
+                      <div v-if="!getImages(3).length" class="mt-4">
+                        No existen coincidencias con tu búsqueda
+                      </div>
+                      <v-row>
+                        <v-col cols="4" v-for="image in getImages(3)" v-bind:key="image.id">
+                          <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': context && image.id == context.id }"  @click="setImage('context', image)" />
                           <span>{{ image.label }}</span>
                         </v-col>
                       </v-row>
