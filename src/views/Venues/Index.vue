@@ -7,112 +7,124 @@
     </v-row>
     <v-row>
       <v-col cols="10">
-        <v-dialog
-          v-model="dialog"
-          width="700"
-        >
+        <v-dialog persistent v-model="dialog" width="700">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary">
               <v-icon>mdi-plus</v-icon> Agregar nuevo lugar
             </v-btn>
           </template>
 
-          <Form
-            v-on:cancel="closeModal"
-            v-on:updated="created"
-            :object="newVenue"
-          ></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="created" :object="newVenue"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">
         <v-text-field
-            v-model="search_text"
-            :append-icon="search_text == '' ? 'mdi-magnify' : 'mdi-window-close'"
-            placeholder="Buscar"
-            @click:append="clearSearch"
-            @keyup.enter="search"
+          v-model="search_text"
+          :append-icon="search_text == '' ? 'mdi-magnify' : 'mdi-window-close'"
+          placeholder="Buscar"
+          @click:append="clearSearch"
+          @keyup.enter="search"
         ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12" class="status-filter font-weight-medium">
-        <a v-bind:class="{ 'active': this.showStatus == '' }" @click="changeStatus('')" class="pr-3 status-filter__item">Todos</a>
-        <a v-bind:class="{ 'active': this.showStatus == 'publish' }" @click="changeStatus('publish')" class="px-3 status-filter__item">Publicados</a>
-        <a v-bind:class="{ 'active': this.showStatus == 'draft' }" @click="changeStatus('draft')" class="px-3 status-filter__item">Borradores</a>
-        <a v-bind:class="{ 'active': this.showStatus == 'contributions' }" @click="changeStatus('contributions')" class="px-3 status-filter__item">Aportes de usuarios</a>
+        <a
+          v-bind:class="{ active: this.showStatus == '' }"
+          @click="changeStatus('')"
+          class="pr-3 status-filter__item"
+          >Todos</a
+        >
+        <a
+          v-bind:class="{ active: this.showStatus == 'publish' }"
+          @click="changeStatus('publish')"
+          class="px-3 status-filter__item"
+          >Publicados</a
+        >
+        <a
+          v-bind:class="{ active: this.showStatus == 'draft' }"
+          @click="changeStatus('draft')"
+          class="px-3 status-filter__item"
+          >Borradores</a
+        >
+        <a
+          v-bind:class="{ active: this.showStatus == 'contributions' }"
+          @click="changeStatus('contributions')"
+          class="px-3 status-filter__item"
+          >Aportes de usuarios</a
+        >
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular
-        :size="70"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
     </v-layout>
     <v-row v-else>
       <v-col cols="12">
-        <v-data-table
-          :headers="headers"
-          :items="entries"
-        >
+        <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.id">
-                <td><router-link :to="'/lugares/'+item.id">{{ item.name }}</router-link></td>
-                <td><span v-if="item.service">{{ item.service.name }}</span><span v-else>-</span></td>
+                <td>
+                  <router-link :to="'/lugares/' + item.id">{{ item.name }}</router-link>
+                </td>
+                <td>
+                  <span v-if="item.service">{{ item.service.name }}</span
+                  ><span v-else>-</span>
+                </td>
                 <td>{{ item.count_tasks }}</td>
                 <td>{{ item.status }}</td>
               </tr>
             </tbody>
           </template>
-      </v-data-table>
+        </v-data-table>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import Venue from '../../models/Venue'
-import Form from '../Utils/Form'
+import Venue from "../../models/Venue";
+import Form from "../Utils/Form";
 
 export default {
-  name: 'Venues',
+  name: "Venues",
   components: {
     Form
   },
   beforeMount() {
-    if(this.$route.params.status)
-      this.showStatus = this.$route.params.status
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues/' + this.showStatus).then((response) => {
-      this.entries = response.data;
-    });
+    if (this.$route.params.status) this.showStatus = this.$route.params.status;
+    this.$http
+      .get(process.env.VUE_APP_API_DOMAIN + "api/venues/" + this.showStatus)
+      .then(response => {
+        this.entries = response.data;
+      });
   },
   data() {
     return {
       headers: [
         {
-          text: 'Lugar',
-          value: 'name',
+          text: "Lugar",
+          value: "name"
         },
         {
-          text: 'Servicio',
-          value: 'service.name',
+          text: "Servicio",
+          value: "service.name"
         },
         {
-          text: 'N° de tareas',
-          value: 'count_tasks',
+          text: "N° de tareas",
+          value: "count_tasks"
         },
         {
-          text: 'Estado',
-          value: 'status',
-        },
+          text: "Estado",
+          value: "status"
+        }
       ],
       entries: null,
-      search_text: '',
+      search_text: "",
       pagination: {},
       dialog: false,
       newVenue: new Venue(),
-      showStatus: ''
+      showStatus: ""
     };
   },
   methods: {
@@ -120,60 +132,57 @@ export default {
       this.dialog = false;
       this.newVenue = new Venue();
     },
-    created( service ) {
+    created(service) {
       this.$store.dispatch("setVenues");
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/venues').then((response) => {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/venues").then(response => {
         this.entries = response.data;
       });
       this.closeModal();
     },
     changeStatus(status) {
-      this.entries = null
-      this.showStatus = status
-      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/venues/'
-      if(this.showStatus !== '')
-        ruta += this.showStatus + '/';
-      if(this.search_text !== '')
-        ruta += 'search/' + this.search_text;
-      this.$http.get(ruta).then((response) => {
+      this.entries = null;
+      this.showStatus = status;
+      let ruta = process.env.VUE_APP_API_DOMAIN + "api/venues/";
+      if (this.showStatus !== "") ruta += this.showStatus + "/";
+      if (this.search_text !== "") ruta += "search/" + this.search_text;
+      this.$http.get(ruta).then(response => {
         this.entries = response.data;
       });
     },
     clearSearch() {
-      this.search_text = '';
+      this.search_text = "";
       this.search();
     },
     search() {
       this.entries = null;
-      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/venues/';
-      if(this.showStatus !== '')
-        ruta += this.showStatus + '/';
-      ruta += 'search/' + this.search_text;
+      let ruta = process.env.VUE_APP_API_DOMAIN + "api/venues/";
+      if (this.showStatus !== "") ruta += this.showStatus + "/";
+      ruta += "search/" + this.search_text;
 
-      this.$http.get(ruta).then((response) => {
+      this.$http.get(ruta).then(response => {
         this.entries = response.data;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
-  .status-filter {
-    padding: 0 1.5rem;
+.status-filter {
+  padding: 0 1.5rem;
+}
+.status-filter__item {
+  position: relative;
+  &:after {
+    content: "|";
+    color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    right: -2px;
   }
-  .status-filter__item {
-    position: relative;
-    &:after {
-      content: '|';
-      color: rgba(0, 0, 0, 0.4);
-      position: absolute;
-      right: -2px;
-    }
-    &:last-child:after {
-      content: none;
-    }
-    &.active {
-      color: rgba(0,0,0,.7);
-    }
+  &:last-child:after {
+    content: none;
   }
+  &.active {
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
 </style>

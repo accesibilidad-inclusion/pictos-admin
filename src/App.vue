@@ -34,7 +34,7 @@
             <v-list-item-title>Tareas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/usuarios">
+        <v-list-item v-if="user.role.name === 'Administrador'" link to="/usuarios">
           <v-list-item-action>
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
@@ -50,11 +50,11 @@
       <v-toolbar-title>PICTOS Admin</v-toolbar-title>
       <div class="profile">
         <transition name="bounce-avatar">
-          <div
-            class="avatar"
-            @click="openAvatar"
-            v-if="!showProfile"
-          >{{ user.name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'') }}</div>
+          <div class="avatar" @click="openAvatar" v-if="!showProfile">
+            {{
+              user.name.split(/\s/).reduce((response, word) => (response += word.slice(0, 1)), "")
+            }}
+          </div>
         </transition>
         <transition name="bounce-menu">
           <div
@@ -65,11 +65,22 @@
             ref="avatarEl"
             @keyup.esc="showProfile = false"
           >
-            <button type="button" @click="showProfile = false" class="close grey--text text--darken-4" aria-label="Close"><v-icon class="grey--text text--darken-1">mdi-close</v-icon></button>
+            <button
+              type="button"
+              @click="showProfile = false"
+              class="close grey--text text--darken-4"
+              aria-label="Close"
+            >
+              <v-icon class="grey--text text--darken-1">mdi-close</v-icon>
+            </button>
             <div class="main">
-              <div
-                class="avatar-menu black--text"
-              >{{ user.name.split(/\s/).reduce((response,word)=> response+=word.slice(0,1),'') }}</div>
+              <div class="avatar-menu black--text">
+                {{
+                  user.name
+                    .split(/\s/)
+                    .reduce((response, word) => (response += word.slice(0, 1)), "")
+                }}
+              </div>
               <div class="main-info ms-10 ps-4">
                 <div class="main-info__names grey--text text--darken-4">{{ user.name }}</div>
               </div>
@@ -82,7 +93,9 @@
             </div>
             <div class="options ms-10 ps-4">
               <div class="profile-opt">
-                <span @click="showProfile = false" class="blue--text text--darken-2">Cambiar contraseña</span>
+                <span @click="showProfile = false" class="blue--text text--darken-2"
+                  >Cambiar contraseña</span
+                >
               </div>
               <div class="profile-opt">
                 <span @click="logout" class="blue--text text--darken-2">Cerrar sesión</span>
@@ -124,11 +137,7 @@ export default {
   created() {
     this.$http.interceptors.response.use(undefined, err => {
       return new Promise((resolve, reject) => {
-        if (
-          err.response.status === 401 &&
-          err.config &&
-          !err.config.__isRetryRequest
-        ) {
+        if (err.response.status === 401 && err.config && !err.config.__isRetryRequest) {
           this.$store.dispatch("logout").then(() => {
             this.$router.push("/login");
           });
@@ -137,6 +146,7 @@ export default {
       });
     });
     if (this.isLoggedIn) {
+      this.$store.dispatch("setRoles");
       this.$store.dispatch("setCategories");
       this.$store.dispatch("setServices");
       this.$store.dispatch("setVenues");
@@ -205,7 +215,7 @@ export default {
   position: absolute;
   cursor: pointer;
   &:hover:before {
-    content: '';
+    content: "";
     opacity: 0.08;
     height: 42px;
     width: 42px;
@@ -255,19 +265,19 @@ export default {
   z-index: 10;
 }
 .main-info__names {
-    font-weight: 400;
-    font-size: 16px;
-    text-transform: capitalize;
+  font-weight: 400;
+  font-size: 16px;
+  text-transform: capitalize;
 }
 .avatar-menu {
   background: lightgray;
 }
 .settings .personal-info {
-    font-size: 14px;
+  font-size: 14px;
 }
-.settings .personal-info label{
-    font-weight: 400;
-    width: 20%;
+.settings .personal-info label {
+  font-weight: 400;
+  width: 20%;
 }
 .settings .options {
   border-top: 1px solid lightgray;
@@ -275,21 +285,21 @@ export default {
   margin-top: 0.8rem;
 }
 .profile-opt {
-    padding: .3rem 0;
-    font-size: 14px;
-    &:before {
-      content: '';
-      background: gray;
-      width: 24px;
-      height: 24px;
-      margin-right: 0.3rem;
-    }
+  padding: 0.3rem 0;
+  font-size: 14px;
+  &:before {
+    content: "";
+    background: gray;
+    width: 24px;
+    height: 24px;
+    margin-right: 0.3rem;
+  }
 }
 .profile-opt span {
-    cursor: pointer;
+  cursor: pointer;
 }
 .profile-opt span:hover {
-    cursor: pointer;
-    opacity: .87;
+  cursor: pointer;
+  opacity: 0.87;
 }
 </style>

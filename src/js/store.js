@@ -1,140 +1,160 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import axios from 'axios'
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state: {
-        categories: [],
-        services: [],
-        venues: [],
-        images: [],
-        status: '',
-        token: localStorage.getItem('token') || '',
-        user: JSON.parse(localStorage.getItem('user')) || {},
+  state: {
+    categories: [],
+    services: [],
+    venues: [],
+    roles: [],
+    images: [],
+    status: "",
+    token: localStorage.getItem("token") || "",
+    user: JSON.parse(localStorage.getItem("user")) || {}
+  },
+  mutations: {
+    auth_request(state) {
+      state.status = "loading";
     },
-    mutations: {
-        auth_request( state ) {
-            state.status = 'loading'
-        },
-        auth_success( state, data ) {
-            state.status = 'success'
-            state.token = data.token
-            state.user = data.user
-        },
-        auth_error( state ) {
-            state.status = 'error'
-        },
-        logout( state ) {
-            state.status = ''
-            state.token = ''
-            state.user = {}
-        },
-        setCategories( state, categories ) {
-            state.categories = categories
-        },
-        setServices( state, services ) {
-            state.services = services
-        },
-        setVenues( state, venues ) {
-            state.venues = venues
-        },
-        setImages( state, images ) {
-            state.images = images
-        }
+    auth_success(state, data) {
+      state.status = "success";
+      state.token = data.token;
+      state.user = data.user;
     },
-    actions: {
-        setCategories( { commit } ){
-            return new Promise( ( resolve, reject ) => {
-                axios( {
-                    url: process.env.VUE_APP_API_DOMAIN + 'api/categories/list',
-                    method: 'GET'
-                } ).then( response => {
-                    commit('setCategories', response.data)
-                    resolve()
-                })
-            })
-        },
-        setServices( { commit } ){
-            return new Promise( ( resolve, reject ) => {
-                axios( {
-                    url: process.env.VUE_APP_API_DOMAIN + 'api/services/list',
-                    method: 'GET'
-                } ).then( response => {
-                    commit('setServices', response.data)
-                    resolve()
-                })
-            })
-        },
-        setVenues( { commit } ){
-            return new Promise( ( resolve, reject ) => {
-                axios( {
-                    url: process.env.VUE_APP_API_DOMAIN + 'api/venues/list',
-                    method: 'GET'
-                } ).then( response => {
-                    commit('setVenues', response.data)
-                    resolve()
-                })
-            })
-        },
-        setImages( { commit } ) {
-            return new Promise( ( resolve, reject ) => {
-                axios( {
-                    url: process.env.VUE_APP_API_DOMAIN + 'api/images',
-                    method: 'GET'
-                } ).then( response => {
-                    commit('setImages', response.data)
-                    resolve()
-                })
-            } )
-        },
-        login( { commit, dispatch }, user ){
-            return new Promise( ( resolve, reject ) => {
-                commit('auth_request')
-                axios( {
-                    url: process.env.VUE_APP_API_DOMAIN + 'api/login',
-                    data: user,
-                    method: 'POST'
-                } ).then( response => {
-                    localStorage.setItem('token', response.data.token)
-                    localStorage.setItem('user', JSON.stringify(response.data.user))
-                    Vue.prototype.$http.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-                    commit('auth_success', {
-                        token: response.data.token,
-                        user: response.data.user
-                    })
-                    dispatch("setCategories");
-                    dispatch("setServices");
-                    dispatch("setVenues");
-                    dispatch("setImages");
-                    resolve(response)
-                })
-                .catch(err => {
-                    commit('auth_error')
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('user')
-                    reject(err)
-                })
-            })
-        },
-        logout( { commit } ) {
-            return new Promise( ( resolve, reject ) => {
-                commit('logout')
-                localStorage.removeItem('token')
-                localStorage.removeItem('user')
-                delete axios.defaults.headers.common['Authorization']
-                resolve()
-            } )
-        },
+    auth_error(state) {
+      state.status = "error";
     },
-    getters : {
-        isLoggedIn: state => !!state.token,
-        user: state => state.user,
-        authStatus: state => state.status,
-        categories: state => state.categories,
-        services: state => state.services,
-        venues: state => state.venues,
-        images: state => state.images,
+    logout(state) {
+      state.status = "";
+      state.token = "";
+      state.user = {};
+    },
+    setRoles(state, roles) {
+      state.roles = roles;
+    },
+    setCategories(state, categories) {
+      state.categories = categories;
+    },
+    setServices(state, services) {
+      state.services = services;
+    },
+    setVenues(state, venues) {
+      state.venues = venues;
+    },
+    setImages(state, images) {
+      state.images = images;
     }
-})
+  },
+  actions: {
+    setRoles({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/roles/list",
+          method: "GET"
+        }).then(response => {
+          commit("setRoles", response.data);
+          resolve();
+        });
+      });
+    },
+    setCategories({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/categories/list",
+          method: "GET"
+        }).then(response => {
+          commit("setCategories", response.data);
+          resolve();
+        });
+      });
+    },
+    setServices({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/services/list",
+          method: "GET"
+        }).then(response => {
+          commit("setServices", response.data);
+          resolve();
+        });
+      });
+    },
+    setVenues({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/venues/list",
+          method: "GET"
+        }).then(response => {
+          commit("setVenues", response.data);
+          resolve();
+        });
+      });
+    },
+    setImages({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/images",
+          method: "GET"
+        }).then(response => {
+          commit("setImages", response.data);
+          resolve();
+        });
+      });
+    },
+    login({ commit, dispatch }, user) {
+      return new Promise((resolve, reject) => {
+        commit("auth_request");
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/login",
+          data: user,
+          method: "POST"
+        })
+          .then(response => {
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            Vue.prototype.$http.defaults.headers.common["Authorization"] =
+              "Bearer " + response.data.token;
+            commit("auth_success", {
+              token: response.data.token,
+              user: response.data.user
+            });
+            dispatch("setRoles");
+            dispatch("setCategories");
+            dispatch("setServices");
+            dispatch("setVenues");
+            dispatch("setImages");
+            resolve(response);
+          })
+          .catch(err => {
+            commit("auth_error");
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            reject(err);
+          });
+      });
+    },
+    logout({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit("logout");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        delete axios.defaults.headers.common["Authorization"];
+        resolve();
+      });
+    }
+  },
+  getters: {
+    isLoggedIn: state => !!state.token,
+    token: state => state.token,
+    user: state => state.user,
+    authStatus: state => state.status,
+    roles: state => state.roles,
+    categories: state => state.categories,
+    services: state => state.services,
+    venues: state => state.venues,
+    images: state => state.images
+  }
+});

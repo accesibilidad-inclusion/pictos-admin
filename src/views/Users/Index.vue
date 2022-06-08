@@ -7,72 +7,61 @@
     </v-row>
     <v-row>
       <v-col cols="10">
-        <v-dialog
-          v-model="dialog"
-          width="500"
-        >
+        <v-dialog persistent v-model="dialog" width="500">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on" color="primary">
               <v-icon>mdi-plus</v-icon> Agregar nuevo usuario
             </v-btn>
           </template>
 
-          <Form
-            v-on:cancel="closeModal"
-            v-on:updated="created"
-            :object="newUser"
-          ></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="created" :object="newUser"></Form>
         </v-dialog>
       </v-col>
       <v-col cols="2">
         <v-text-field
-            v-model="search_text"
-            :append-icon="search_text == '' ? 'mdi-magnify' : 'mdi-window-close'"
-            placeholder="Buscar"
-            @click:append="clearSearch"
-            @keyup.enter="search"
+          v-model="search_text"
+          :append-icon="search_text == '' ? 'mdi-magnify' : 'mdi-window-close'"
+          placeholder="Buscar"
+          @click:append="clearSearch"
+          @keyup.enter="search"
         ></v-text-field>
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular
-        :size="70"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
     </v-layout>
     <v-row v-else>
       <v-col cols="12">
-        <v-data-table
-          :headers="headers"
-          :items="entries"
-        >
+        <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>{{ item.id }}</td>
-                <td><router-link :to="'/usuarios/'+item.id">{{ item.name }}</router-link></td>
+                <td>
+                  <router-link :to="'/usuarios/' + item.id">{{ item.name }}</router-link>
+                </td>
+                <td>{{ item.role.name }}</td>
                 <td>{{ item.email }}</td>
               </tr>
             </tbody>
           </template>
-      </v-data-table>
+        </v-data-table>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import User from '../../models/User'
-import Form from '../Utils/Form'
+import User from "../../models/User";
+import Form from "../Utils/Form";
 
 export default {
-  name: 'Users',
+  name: "Users",
   components: {
     Form
   },
   beforeMount() {
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users').then((response) => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/users").then(response => {
       this.entries = response.data;
     });
   },
@@ -80,23 +69,27 @@ export default {
     return {
       headers: [
         {
-          text: 'Id',
-          value: 'id',
+          text: "Id",
+          value: "id"
         },
         {
-          text: 'Nombre',
-          value: 'name',
+          text: "Nombre",
+          value: "name"
         },
         {
-          text: 'E-amil',
-          value: 'email',
+          text: "Rol",
+          value: "role.name"
         },
+        {
+          text: "E-amil",
+          value: "email"
+        }
       ],
       entries: null,
-      search_text: '',
+      search_text: "",
       pagination: {},
       dialog: false,
-      newUser: new User(),
+      newUser: new User()
     };
   },
   methods: {
@@ -104,24 +97,24 @@ export default {
       this.dialog = false;
       this.newUser = new User();
     },
-    created( user ) {
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/users').then((response) => {
+    created(user) {
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/users").then(response => {
         this.entries = response.data;
       });
       this.closeModal();
     },
     clearSearch() {
-      this.search_text = '';
+      this.search_text = "";
       this.search();
     },
     search() {
       this.entries = null;
-      let ruta = process.env.VUE_APP_API_DOMAIN + 'api/users/search/' + this.search_text;
+      let ruta = process.env.VUE_APP_API_DOMAIN + "api/users/search/" + this.search_text;
 
-      this.$http.get(ruta).then((response) => {
+      this.$http.get(ruta).then(response => {
         this.entries = response.data;
       });
-    },
-  },
+    }
+  }
 };
 </script>
