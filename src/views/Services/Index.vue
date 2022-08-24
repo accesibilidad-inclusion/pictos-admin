@@ -46,6 +46,10 @@
                 </td>
                 <td>{{ item.category.name }}</td>
                 <td>{{ item.count_venues }}</td>
+                <td v-if="item.last_modified">
+                  {{ moment(item.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+                </td>
+                <td v-else>-</td>
                 <td>{{ item.status }}</td>
               </tr>
             </tbody>
@@ -84,6 +88,10 @@ export default {
         {
           text: "Cantidad de lugares",
           value: "count_venues"
+        },
+        {
+          text: "Ultima modificación",
+          value: "last_modified.date"
         },
         {
           text: "Estado",

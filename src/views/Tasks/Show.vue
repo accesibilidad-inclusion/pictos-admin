@@ -45,13 +45,13 @@
             <ul>
               <li class="py-2"><span class="font-weight-bold">Titulo:</span> {{ task.title }}</li>
               <li class="py-2">
-                <span class="font-weight-bold">Servicio:</span>
+                <span class="font-weight-bold">Servicio: </span>
                 <router-link :to="'/servicios/' + task.service.id">{{
                   task.service.name
                 }}</router-link>
               </li>
               <li class="py-2">
-                <span class="font-weight-bold">Lugar:</span>
+                <span class="font-weight-bold">Lugar: </span>
                 <router-link :to="'/lugares/' + task.venue.id">{{ task.venue.name }}</router-link>
               </li>
               <li v-if="task.url != ''" class="py-2">
@@ -65,6 +65,11 @@
               <li class="py-2"><span class="font-weight-bold">Me gusta:</span> {{ task.likes }}</li>
               <li class="py-2">
                 <span class="font-weight-bold">No me gusta:</span> {{ task.dislikes }}
+              </li>
+              <li v-if="task.last_modified" class="py-2">
+                <span class="font-weight-bold">Ultima modificación:</span>
+                Por {{ task.last_modified.user }} el
+                {{ moment(task.last_modified.date).format("DD/MM/YYYY HH:mm") }}
               </li>
             </ul>
           </v-card-text>

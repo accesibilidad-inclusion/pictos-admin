@@ -71,6 +71,10 @@
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
                 <td>{{ item.count_pictograms }}</td>
+                <td v-if="item.last_modified">
+                  {{ moment(item.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+                </td>
+                <td v-else>-</td>
                 <td>{{ item.status }}</td>
               </tr>
             </tbody>
@@ -118,8 +122,12 @@ export default {
           value: "count_steps"
         },
         {
-          text: "Pictoograms",
+          text: "Pictogramas",
           value: "count_pictograms"
+        },
+        {
+          text: "Ultima modificación",
+          value: "last_modified.date"
         },
         {
           text: "Estado",

@@ -72,6 +72,10 @@
                   ><span v-else>-</span>
                 </td>
                 <td>{{ item.count_tasks }}</td>
+                <td v-if="item.last_modified">
+                  {{ moment(item.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+                </td>
+                <td v-else>-</td>
                 <td>{{ item.status }}</td>
               </tr>
             </tbody>
@@ -113,6 +117,10 @@ export default {
         {
           text: "N° de tareas",
           value: "count_tasks"
+        },
+        {
+          text: "Ultima modificación",
+          value: "last_modified.date"
         },
         {
           text: "Estado",

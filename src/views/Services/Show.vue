@@ -46,6 +46,11 @@
               <li v-if="service.tags.length" class="py-2">
                 <span class="font-weight-bold">Sinonimos:</span> {{ service.tags.join(", ") }}
               </li>
+              <li v-if="service.last_modified" class="py-2">
+                <span class="font-weight-bold">Ultima modificación:</span>
+                Por {{ service.last_modified.user }} el
+                {{ moment(service.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+              </li>
             </ul>
           </v-card-text>
         </v-card>
