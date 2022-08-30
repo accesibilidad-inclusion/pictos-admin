@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app v-if="isLoggedIn">
-      <v-list>
+      <v-list height="100%">
         <v-list-item link to="/">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
@@ -40,6 +40,14 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Usuarios</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link dense href="https://forms.gle/QdbvD3CgSrxN9VZS6" target="_blank" class="list-item__bottom">
+          <v-list-item-action>
+            <v-icon>mdi-comment-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Envianos tus sugerencias</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -301,5 +309,10 @@ export default {
 .profile-opt span:hover {
   cursor: pointer;
   opacity: 0.87;
+}
+.list-item__bottom {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
 }
 </style>
