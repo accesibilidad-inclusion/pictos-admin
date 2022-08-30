@@ -10,6 +10,7 @@
           Tareas</router-link
         >{{ task.title }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
+        <v-btn default text v-if="task.service && task.status != 'Enviado por usuario'" color="primary" :href="clientDomain" target="_blank">Ver en App</v-btn>
         <v-spacer></v-spacer>
         <v-dialog persistent v-model="dialogDuplicate" width="500">
           <template v-slot:activator="{ on, attrs }">
@@ -175,6 +176,11 @@ export default {
       dialog: false,
       dialogDuplicate: false
     };
+  },
+  computed: {
+    clientDomain() {
+      return process.env.VUE_APP_CLIENT_DOMAIN + this.task.category.slug + '/' + this.task.service.slug + '/' + this.task.venue.slug + '/' + this.task.slug;
+    } 
   },
   methods: {
     deleteTask() {

@@ -2,9 +2,11 @@ class Task {
   constructor() {
     this.id = null;
     this.title = "";
-    this.venue = null;
+    this.category = null;
     this.service = null;
+    this.venue = null;
     this.url = "";
+    this.slug = "";
     this.tags_text = "";
     this.tags = [];
     this.steps = [];
@@ -19,17 +21,27 @@ class Task {
   set(task) {
     this.id = task.id;
     this.title = task.title;
+    this.category = task.category
+      ? {
+          id: task.category.id,
+          name: task.category.name,
+          slug: task.category.slug
+        }
+      : null;
     this.service = task.service
       ? {
           id: task.service.id,
-          name: task.service.name
+          name: task.service.name,
+          slug: task.service.slug
         }
       : null;
     this.venue = {
       id: task.venue.id,
-      name: task.venue.name
+      name: task.venue.name,
+      slug: task.venue.slug
     };
     this.url = task.url;
+    this.slug = task.slug;
     this.tags_text = task.tags ? task.tags.join(", ") : "";
     this.tags = task.tags;
     this.steps = task.steps;

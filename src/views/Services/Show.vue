@@ -10,6 +10,7 @@
           Servicios</router-link
         >{{ service.name }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ service.status }}</span>
+        <v-btn default text color="primary" :href="clientDomain" target="_blank">Ver en App</v-btn>
         <v-spacer></v-spacer>
         <v-btn text default color="error" @click="deleteService()">Eliminar</v-btn>
       </v-col>
@@ -129,6 +130,11 @@ export default {
         });
         this.editService = _.clone(this.service);
       });
+  },
+  computed: {
+    clientDomain() {
+      return process.env.VUE_APP_CLIENT_DOMAIN + this.service.category.slug + '/' + this.service.slug;
+    } 
   },
   data() {
     return {

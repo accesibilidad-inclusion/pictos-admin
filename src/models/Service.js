@@ -3,6 +3,7 @@ class Service {
     this.id = null;
     this.name = "";
     this.url = "";
+    this.slug = "";
     this.category = null;
     this.venues = [];
     this.tags_text = "";
@@ -15,10 +16,12 @@ class Service {
     this.id = service.id;
     this.name = service.name;
     this.url = service.url;
-    this.category = {
+    this.slug = service.slug;
+    this.category = service.category ? {
       id: service.category.id,
-      name: service.category.name
-    };
+      name: service.category.name,
+      slug: service.category.slug
+    } : null;
     this.venues = service.venues;
     this.tags_text = service.tags.join(", ");
     this.tags = service.tags;

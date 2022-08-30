@@ -2,8 +2,10 @@ class Venue {
   constructor() {
     this.id = null;
     this.name = "";
+    this.category = null;
     this.service = null;
     this.url = "";
+    this.slug = "";
     this.position = null;
     this.tags_text = "";
     this.tags = [];
@@ -20,13 +22,21 @@ class Venue {
   set(venue) {
     this.id = venue.id;
     this.name = venue.name;
+    this.category = venue.category
+      ? {
+        id: venue.category.id,
+        name: venue.category.name,
+        slug: venue.category.slug
+      } : null;
     this.service = venue.service
       ? {
           id: venue.service.id,
-          name: venue.service.name
+          name: venue.service.name,
+          slug: venue.service.slug
         }
       : null;
     this.url = venue.url;
+    this.slug = venue.slug;
     this.position = venue.position
       ? {
           lat: parseFloat(venue.position.lat),

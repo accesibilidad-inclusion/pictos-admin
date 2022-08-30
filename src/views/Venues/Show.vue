@@ -10,6 +10,7 @@
           Lugares</router-link
         >{{ venue.name }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ venue.status }}</span>
+        <v-btn v-if="venue.service" default text color="primary" :href="clientDomain" target="_blank">Ver en App</v-btn>
         <v-spacer></v-spacer>
         <v-btn text default color="error" @click="deleteVenue()">Eliminar</v-btn>
       </v-col>
@@ -168,6 +169,11 @@ export default {
         });
         this.editVenue = _.clone(this.venue);
       });
+  },
+  computed: {
+    clientDomain() {
+      return process.env.VUE_APP_CLIENT_DOMAIN + this.venue.category.slug + '/' + this.venue.service.slug + '/' + this.venue.slug;
+    } 
   },
   data() {
     return {
