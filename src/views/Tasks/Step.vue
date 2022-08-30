@@ -166,14 +166,10 @@
         </ValidationObserver>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12" class="d-flex justify-end">
-        <v-btn text color="primary" href="https://forms.gle/QdbvD3CgSrxN9VZS6" target="_blank">Envianos tus comentarios o sugerencias</v-btn>
-      </v-col>
-    </v-row>
     <v-footer fixed>
       <v-row>
         <v-col cols="12" class="d-flex justify-end">
+          <v-btn class="mr-5" text color="primary" href="https://forms.gle/QdbvD3CgSrxN9VZS6" target="_blank">Envianos tus comentarios o sugerencias</v-btn>
           <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
         </v-col>
       </v-row>
