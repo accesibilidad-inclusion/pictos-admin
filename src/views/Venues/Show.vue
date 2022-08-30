@@ -105,7 +105,23 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            Total: {{ venue.evaluations.length }} evaluaciones
+            <ul>
+              <li class="py-2">
+                <span class="font-weight-bold">Total: </span>
+                {{ venue.evaluations.length }} evaluaciones
+              </li>
+              <li class="py-2" v-if="venue.evaluation">
+                <span class="font-weight-bold">Evaluación promedio: </span>
+                {{ venue.evaluation.calification }}
+              </li>
+              <li>
+                <v-switch
+                  v-model="venue.show_evaluation"
+                  label="Mostrar evaluación"
+                  @change="showEvaluation()"
+                ></v-switch>
+              </li>
+            </ul>
           </v-card-text>
         </v-card>
       </v-col>
@@ -215,6 +231,12 @@ export default {
           this.$store.dispatch("setVenues");
           this.closeModal();
         });
+    },
+    showEvaluation() {
+      this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/venues/showEvaluation", {
+        id: this.$route.params.id,
+        show: this.venue.show_evaluation
+      });
     }
   }
 };

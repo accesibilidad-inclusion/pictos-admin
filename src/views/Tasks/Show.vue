@@ -44,7 +44,7 @@
           <v-card-text class="py-5 px-6">
             <ul>
               <li class="py-2"><span class="font-weight-bold">Titulo:</span> {{ task.title }}</li>
-              <li class="py-2">
+              <li class="py-2" v-if="task.service">
                 <span class="font-weight-bold">Servicio: </span>
                 <router-link :to="'/servicios/' + task.service.id">{{
                   task.service.name

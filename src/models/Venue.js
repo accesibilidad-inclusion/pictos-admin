@@ -9,6 +9,8 @@ class Venue {
     this.tags = [];
     this.tasks = [];
     this.evaluations = [];
+    this.evaluation = null;
+    this.show_evaluation = null;
     this.visible = 0;
     this.last_modified = null;
     this.status = "";
@@ -35,6 +37,8 @@ class Venue {
     this.tags = venue.tags;
     this.tasks = venue.tasks;
     this.evaluations = venue.evaluations;
+    this.evaluation = venue.evaluation;
+    this.show_evaluation = venue.show_evaluation;
     this.status = venue.status;
     this.visible = venue.visible;
     this.last_modified = venue.last_modified;
@@ -122,7 +126,7 @@ class Venue {
                 callback: "cancel"
               },
               {
-                label: "Crear tarea",
+                label: "Aceptar lugar",
                 color: "primary",
                 callback: "request",
                 url: "api/venues/accept_contribution",
