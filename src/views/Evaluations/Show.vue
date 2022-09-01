@@ -27,6 +27,13 @@
         <v-divider></v-divider>
       </v-col>
     </v-row>
+    <v-btn
+      v-if="this.$store.getters.user.role.name === 'Administrador'"
+      default
+      color="error"
+      @click="deleteEvaluation()"
+      >Eliminar</v-btn
+    >
   </div>
 </template>
 
@@ -45,7 +52,17 @@ export default {
     };
   },
   methods: {
-
+    deleteEvaluation() {
+      if (confirm("¿Esta seguro de eliminar esta evaluación?")) {
+        this.$http
+          .post(process.env.VUE_APP_API_DOMAIN + "api/evaluations/delete", {
+            id: this.evaluation.id
+          })
+          .then(response => {
+            this.$router.push("/evaluaciones");
+          });
+      }
+    }
   },
 };
 </script>

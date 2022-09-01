@@ -95,7 +95,7 @@ export default {
           text: ""
         }
       ],
-      entries: null,
+      entries: [],
       venue: null,
       pagination: {}
     };
