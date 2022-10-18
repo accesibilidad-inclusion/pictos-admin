@@ -40,7 +40,7 @@
                 <span class="font-weight-bold">Categoria:</span> {{ service.category.name }}
               </li>
               <li v-if="service.url != ''" class="py-2">
-                <span class="font-weight-bold">Url:</span>
+                <span class="font-weight-bold">Url: </span>
                 <a target="_blank" :href="service.url">{{ service.url }}</a>
               </li>
               <li class="py-2"><span class="font-weight-bold">Id:</span> {{ service.id }}</li>
@@ -51,6 +51,14 @@
                 <span class="font-weight-bold">Ultima modificación:</span>
                 Por {{ service.last_modified.user }} el
                 {{ moment(service.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+              </li>
+              <li class="py-2">
+                <span class="font-weight-bold">N° de tareas publicadas:</span>
+                {{ tasksPublished }}
+              </li>
+              <li class="py-2">
+                <span class="font-weight-bold">N° de pasos publicados:</span>
+                {{ stepsPublished }}
               </li>
             </ul>
           </v-card-text>
@@ -69,12 +77,17 @@
               <li
                 v-for="(venue, index) in service.venues"
                 v-bind:key="index"
-                class="right-box__item px-9 py-4"
+                class="right-box__item px-9 py-4 d-flex justify-space-between"
               >
-                <router-link :to="'/lugares/' + venue.id"
-                  >{{ index + 1 }} {{ venue.name }}</router-link
-                >
-                <span class="color-published mx-3 venue-draft" v-if="!venue.visible">Borrador</span>
+                <div>
+                  <router-link :to="'/lugares/' + venue.id"
+                    >{{ index + 1 }} {{ venue.name }}</router-link
+                  >
+                  <span class="color-published mx-3 venue-draft" v-if="!venue.visible">Borrador</span>
+                </div>
+                <div class="color-published venue-draft">
+                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador: {{ venue.tasks_drafted }}
+                </div>
               </li>
             </ul>
           </v-card-text>
@@ -134,7 +147,13 @@ export default {
   computed: {
     clientDomain() {
       return process.env.VUE_APP_CLIENT_DOMAIN + this.service.category.slug + '/' + this.service.slug;
-    } 
+    },
+    tasksPublished() {
+      return this.service.venues.reduce( (a, b) => b.visible ? a + b.tasks_published : a , 0 )
+    },
+    stepsPublished() {
+      return this.service.venues.reduce( (a, b) => b.visible ? a + b.steps_published : a , 0 )
+    }
   },
   data() {
     return {
