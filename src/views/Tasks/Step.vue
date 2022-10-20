@@ -20,7 +20,7 @@
             </div>
             <v-row  align="center" justify="center" class="mt-3">
               <v-col v-if="action" cols="2">
-                <img :src="action.path + '/' + action.filename" />
+                <img :src="action.path + '/' + action.filename" class="icon__pictogram" />
               </v-col>
               <v-col :cols=" action ? 8 : 12" class="headline font-weight-bold">
                 {{ step }}
@@ -284,6 +284,7 @@ export default {
 .slider__container::v-deep .vueperslide__content-wrapper, .image__pictogram {
   border: 1px solid lightgray;
   cursor: pointer;
+  max-width: 200px;
 }
 
 .slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
@@ -354,5 +355,8 @@ export default {
 .subtitle {
   font-size: 0.9rem !important;
   letter-spacing: 0.166em;
+}
+.icon__pictogram {
+  max-width: 70px;
 }
 </style>
