@@ -83,7 +83,7 @@
                         No existen coincidencias con tu búsqueda
                       </div>
                       <v-row>
-                        <v-col cols="4" v-for="image in getImages(4)" v-bind:key="image.id">
+                        <v-col cols="2" v-for="image in getImages(4)" v-bind:key="image.id">
                           <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': action && image.id == action.id }"  @click="setImage('action', image)" />
                           <span>{{ image.label }}</span>
                         </v-col>
@@ -284,7 +284,7 @@ export default {
 .slider__container::v-deep .vueperslide__content-wrapper, .image__pictogram {
   border: 1px solid lightgray;
   cursor: pointer;
-  max-width: 200px;
+  max-width: 100%;
 }
 
 .slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
