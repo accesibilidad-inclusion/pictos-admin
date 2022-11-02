@@ -89,7 +89,7 @@
             <v-btn
               v-if="!task.steps.length"
               color="primary"
-              :to="{ name: 'Step', params: { task: task } }"
+              :to="'/tareas/'+task.id+'/paso/'"
               class="right-box__button"
             >
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
@@ -103,7 +103,7 @@
                 >
                   <div>
                     <v-icon class="icon-draggable">mdi-drag</v-icon>
-                    <router-link :to="{ name: 'Step', params: { id: step.id, task: task } }"
+                    <router-link :to="'/tareas/'+task.id+'/paso/'+step.id"
                       >{{ index + 1 }} {{ step.label }}</router-link
                     >
                   </div>
@@ -118,7 +118,7 @@
           color="primary"
           default
           text
-          :to="{ name: 'Step', params: { task: task } }"
+          :to="'/tareas/'+task.id+'/paso/'"
           class="text-right my-3"
         >
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso

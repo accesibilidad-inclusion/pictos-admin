@@ -83,7 +83,7 @@ const router = new Router({
       component: Tasks
     },
     {
-      path: "/tareas/paso/",
+      path: "/tareas/:task_id/paso/:id?",
       name: "Step",
       component: Step
     },
