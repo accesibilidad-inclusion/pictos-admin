@@ -16,6 +16,8 @@ class Task {
     this.status = "";
     this.form_type = "";
     this.last_modified = null;
+    this.hasPrerequisites = false;
+    this.prerequisites = "";
   }
 
   set(task) {
@@ -51,6 +53,8 @@ class Task {
     this.status = task.status;
     this.form_type = task.form_type;
     this.last_modified = task.last_modified;
+    this.hasPrerequisites = task.prerequisites !== "";
+    this.prerequisites = task.prerequisites;
   }
 
   form() {
@@ -132,6 +136,20 @@ class Task {
                 label: "Sinónimos de búsqueda (Separados por coma)",
                 rules: "",
                 type: "text"
+              },
+              {
+                id: "hasPrerequisites",
+                name: "tiene prerrequisitos",
+                label: "Tiene Prerrequisitos",
+                rules: "",
+                type: "switch"
+              },
+              {
+                id: "prerequisites",
+                name: "prerrequisitos",
+                label: "Prerrequisitos",
+                rules: this.hasPrerequisites ? "required" : "",
+                type: "wysiwyg"
               }
             ],
       actions:

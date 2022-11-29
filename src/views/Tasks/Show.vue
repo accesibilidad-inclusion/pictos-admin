@@ -10,7 +10,15 @@
           Tareas</router-link
         >{{ task.title }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
-        <v-btn default text v-if="task.service && task.status != 'Enviado por usuario'" color="primary" :href="clientDomain" target="_blank">Ver en App</v-btn>
+        <v-btn
+          small
+          text
+          v-if="task.service && task.status != 'Enviado por usuario'"
+          color="primary"
+          :href="clientDomain"
+          target="_blank"
+          >Ver en App</v-btn
+        >
         <v-spacer></v-spacer>
         <v-dialog persistent v-model="dialogDuplicate" width="500">
           <template v-slot:activator="{ on, attrs }">
@@ -21,7 +29,7 @@
 
           <Form v-on:cancel="closeModal" v-on:updated="updated" :object="duplicateTask"></Form>
         </v-dialog>
-        | <v-btn text default color="error" @click="deleteTask()">Eliminar</v-btn>
+        | <v-btn text small color="error" @click="deleteTask()">Eliminar</v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -32,7 +40,7 @@
             primary-title
           >
             Información general
-            <v-dialog persistent v-model="dialog" width="500">
+            <v-dialog persistent v-model="dialog" width="770">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn text small v-bind="attrs" v-on="on" color="primary">
                   Editar
@@ -89,7 +97,7 @@
             <v-btn
               v-if="!task.steps.length"
               color="primary"
-              :to="'/tareas/'+task.id+'/paso/'"
+              :to="'/tareas/' + task.id + '/paso/'"
               class="right-box__button"
             >
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
@@ -103,7 +111,7 @@
                 >
                   <div>
                     <v-icon class="icon-draggable">mdi-drag</v-icon>
-                    <router-link :to="'/tareas/'+task.id+'/paso/'+step.id"
+                    <router-link :to="'/tareas/' + task.id + '/paso/' + step.id"
                       >{{ index + 1 }} {{ step.label }}</router-link
                     >
                   </div>
@@ -118,7 +126,7 @@
           color="primary"
           default
           text
-          :to="'/tareas/'+task.id+'/paso/'"
+          :to="'/tareas/' + task.id + '/paso/'"
           class="text-right my-3"
         >
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso
@@ -179,8 +187,17 @@ export default {
   },
   computed: {
     clientDomain() {
-      return process.env.VUE_APP_CLIENT_DOMAIN + this.task.category.slug + '/' + this.task.service.slug + '/' + this.task.venue.slug + '/' + this.task.slug;
-    } 
+      return (
+        process.env.VUE_APP_CLIENT_DOMAIN +
+        this.task.category.slug +
+        "/" +
+        this.task.service.slug +
+        "/" +
+        this.task.venue.slug +
+        "/" +
+        this.task.slug
+      );
+    }
   },
   methods: {
     deleteTask() {

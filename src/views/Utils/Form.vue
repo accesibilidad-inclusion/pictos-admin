@@ -48,6 +48,22 @@
                   :error-messages="errors"
                   required
                 ></v-text-field>
+                <div v-if="field.type == 'switch'">
+                  <v-switch v-model="object[field.id]" :label="field.label"></v-switch>
+                </div>
+                <div v-if="field.type == 'wysiwyg' && object['hasPrerequisites']">
+                  <div class="grey--text text--darken-2 pb-2">{{ field.label }}</div>
+                  <tiptap-vuetify v-model="object[field.id]" :extensions="extensions" />
+                  <div
+                    v-if="errors.length"
+                    class="mt-3 v-messages theme--light error--text"
+                    role="alert"
+                  >
+                    <div class="v-messages__wrapper">
+                      <div class="v-messages__message">{{ errors[0] }}</div>
+                    </div>
+                  </div>
+                </div>
                 <v-autocomplete
                   v-if="field.type == 'select'"
                   v-model="object[field.id]"
@@ -120,6 +136,24 @@ import GoogleMap from "./GoogleMap";
 import { required, max } from "vee-validate/dist/rules";
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from "vee-validate";
 import axios from "axios";
+import {
+  TiptapVuetify,
+  Heading,
+  Bold,
+  Italic,
+  Strike,
+  Underline,
+  Code,
+  Paragraph,
+  BulletList,
+  OrderedList,
+  ListItem,
+  Link,
+  Blockquote,
+  HardBreak,
+  HorizontalRule,
+  History
+} from "tiptap-vuetify";
 
 setInteractionMode("eager");
 
@@ -167,13 +201,46 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
-    GoogleMap
+    GoogleMap,
+    TiptapVuetify
   },
   data() {
-    return {};
+    return {
+      extensions: [
+        History,
+        Blockquote,
+        Link,
+        Underline,
+        Strike,
+        Italic,
+        ListItem,
+        BulletList,
+        OrderedList,
+        [
+          Heading,
+          {
+            options: {
+              levels: [1, 2, 3]
+            }
+          }
+        ],
+        Bold,
+        Code,
+        HorizontalRule,
+        Paragraph,
+        HardBreak
+      ]
+    };
   },
   methods: {
-    handleAction(action) {
+    async handleAction(action) {
+      if (
+        (this.object["prerequisites"] &&
+          this.object["prerequisites"].replace(/(<([^>]+)>)/gi, "") === "") ||
+        !this.object["hasPrerequisites"]
+      )
+        this.object["prerequisites"] = "";
+      await this.$refs.observer.validate();
       if (action.confirm) {
         if (confirm(action.confirm)) this[action.callback](action);
       } else {
