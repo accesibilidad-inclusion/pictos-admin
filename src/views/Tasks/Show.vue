@@ -75,6 +75,10 @@
               <li class="py-2">
                 <span class="font-weight-bold">No me gusta:</span> {{ task.dislikes }}
               </li>
+              <li class="py-2">
+                <span class="font-weight-bold">Tiene prerrequisitos: </span
+                ><span v-if="task.hasPrerequisites">Si</span><span v-else>No</span>
+              </li>
               <li v-if="task.last_modified" class="py-2">
                 <span class="font-weight-bold">Ultima modificación:</span>
                 Por {{ task.last_modified.user }} el
