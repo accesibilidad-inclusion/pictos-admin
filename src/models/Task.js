@@ -54,7 +54,7 @@ class Task {
     this.form_type = task.form_type;
     this.last_modified = task.last_modified;
     this.hasPrerequisites = task.prerequisites !== "";
-    this.prerequisites = task.prerequisites;
+    this.prerequisites = task.prerequisites ?? "";
   }
 
   form() {
