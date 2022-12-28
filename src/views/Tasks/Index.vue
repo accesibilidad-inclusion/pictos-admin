@@ -184,6 +184,7 @@ export default {
     },
     changeStatus(status) {
       this.showStatus = status;
+      this.options.page = 1;
       this.getDataFromApi();
     },
     clearSearch() {
@@ -191,6 +192,7 @@ export default {
       this.search();
     },
     search() {
+      this.options.page = 1;
       this.getDataFromApi();
     }
   }
