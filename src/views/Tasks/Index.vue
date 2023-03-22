@@ -74,6 +74,8 @@
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
                 <td>{{ item.count_pictograms }}</td>
+                <td>{{ item.likes }}</td>
+                <td>{{ item.dislikes }}</td>
                 <td v-if="item.modified">
                   {{ moment(item.modified).format("DD/MM/YYYY HH:mm") }}
                 </td>
@@ -123,6 +125,14 @@ export default {
           value: "count_pictograms"
         },
         {
+          text: "Votos +",
+          value: "likes"
+        },
+        {
+          text: "Votos -",
+          value: "dislikes"
+        },
+        {
           text: "Ultima modificación",
           value: "modified"
         },
@@ -151,7 +161,6 @@ export default {
   methods: {
     getDataFromApi() {
       this.loading = true;
-      console.log(this.options);
       this.$http
         .get(
           process.env.VUE_APP_API_DOMAIN +
