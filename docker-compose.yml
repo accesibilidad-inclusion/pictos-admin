@@ -1,0 +1,12 @@
+version: "3.4"
+services:
+  pictos_admin:
+    container_name: pictos_admin
+    image: node:lts
+    working_dir: /var/www/pictos/pictos_admin/
+    entrypoint: /bin/bash
+    expose:
+      - 8000
+    volumes:
+      - ./frontend/:/var/www/pictos/pictos_admin/
+    tty: true

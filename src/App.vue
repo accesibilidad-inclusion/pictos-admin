@@ -34,6 +34,22 @@
             <v-list-item-title>Tareas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/servicios-web">
+          <v-list-item-action>
+            <v-icon>mdi-web</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Servicios Web</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/tareas-web">
+          <v-list-item-action>
+            <v-icon>mdi-application-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Tareas Web</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item v-if="user.role.name === 'Administrador'" link to="/usuarios">
           <v-list-item-action>
             <v-icon>mdi-account</v-icon>
@@ -114,11 +130,11 @@
       </div>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <v-container fluid :fill-height="!isLoggedIn">
         <router-view :key="$route.fullPath"></router-view>
       </v-container>
-    </v-content>
+    </v-main>
     <!-- <v-footer app>
       <span class="white--text">&copy; 2019</span>
     </v-footer> -->
@@ -158,6 +174,7 @@ export default {
       this.$store.dispatch("setCategories");
       this.$store.dispatch("setServices");
       this.$store.dispatch("setVenues");
+      this.$store.dispatch("setWebServices");
       this.$store.dispatch("setImages");
     }
   },

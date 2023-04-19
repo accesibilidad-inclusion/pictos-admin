@@ -35,23 +35,23 @@
           </v-card-title>
           <v-card-text class="py-5 px-6">
             <ul>
-              <li class="py-2"><span class="font-weight-bold">Nombre:</span> {{ venue.name }}</li>
+              <li class="py-2"><span class="font-weight-bold">Nombre: </span> {{ venue.name }}</li>
               <li v-if="venue.service" class="py-2">
-                <span class="font-weight-bold">Servicio:</span>
+                <span class="font-weight-bold">Servicio: </span>
                 <router-link :to="'/servicios/' + venue.service.id">{{
                   venue.service.name
                 }}</router-link>
               </li>
               <li v-if="venue.url != ''" class="py-2">
-                <span class="font-weight-bold">Url:</span>
+                <span class="font-weight-bold">Url: </span>
                 <a target="_blank" :href="venue.url">{{ venue.url }}</a>
               </li>
-              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ venue.id }}</li>
+              <li class="py-2"><span class="font-weight-bold">Id: </span> {{ venue.id }}</li>
               <li v-if="venue.tags.length" class="py-2">
-                <span class="font-weight-bold">Sinonimos:</span> {{ venue.tags.join(", ") }}
+                <span class="font-weight-bold">Sinonimos: </span> {{ venue.tags.join(", ") }}
               </li>
               <li v-if="venue.last_modified" class="py-2">
-                <span class="font-weight-bold">Ultima modificación:</span>
+                <span class="font-weight-bold">Ultima modificación: </span>
                 Por {{ venue.last_modified.user }} el
                 {{ moment(venue.last_modified.date).format("DD/MM/YYYY HH:mm") }}
               </li>

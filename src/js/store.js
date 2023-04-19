@@ -9,6 +9,7 @@ export default new Vuex.Store({
     categories: [],
     services: [],
     venues: [],
+    web_services: [],
     roles: [],
     images: [],
     status: "",
@@ -43,6 +44,9 @@ export default new Vuex.Store({
     },
     setVenues(state, venues) {
       state.venues = venues;
+    },
+    setWebServices(state, web_services) {
+      state.web_services = web_services;
     },
     setImages(state, images) {
       state.images = images;
@@ -89,6 +93,17 @@ export default new Vuex.Store({
           method: "GET"
         }).then(response => {
           commit("setVenues", response.data);
+          resolve();
+        });
+      });
+    },
+    setWebServices({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/web_services/list",
+          method: "GET"
+        }).then(response => {
+          commit("setWebServices", response.data);
           resolve();
         });
       });
@@ -155,6 +170,7 @@ export default new Vuex.Store({
     categories: state => state.categories,
     services: state => state.services,
     venues: state => state.venues,
+    web_services: state => state.web_services,
     images: state => state.images
   }
 });

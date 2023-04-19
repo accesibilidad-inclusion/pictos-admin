@@ -16,6 +16,10 @@ import ShowTask from "../views/Tasks/Show.vue";
 import Step from "../views/Tasks/Step.vue";
 import Users from "../views/Users/Index.vue";
 import ShowUser from "../views/Users/Show.vue";
+import WebServices from "../views/WebServices/Index.vue";
+import ShowWebService from "../views/WebServices/Show.vue";
+import WebTasks from "../views/WebTasks/Index.vue";
+import ShowWebTask from "../views/WebTasks/Show.vue";
 
 Vue.use(Router);
 
@@ -101,7 +105,27 @@ const router = new Router({
       path: "/usuarios/:id",
       name: "ShowUser",
       component: ShowUser
-    }
+    },
+    {
+      path: "/servicios-web",
+      name: "WebServices",
+      component: WebServices
+    },
+    {
+      path: "/servicios-web/:id",
+      name: "ShowWebService",
+      component: ShowWebService
+    },
+    {
+      path: "/tareas-web",
+      name: "WebTasks",
+      component: WebTasks
+    },
+    {
+      path: "/tareas-web/:id",
+      name: "ShowWebTask",
+      component: ShowWebTask
+    },
   ]
 });
 
