@@ -20,6 +20,7 @@ import WebServices from "../views/WebServices/Index.vue";
 import ShowWebService from "../views/WebServices/Show.vue";
 import WebTasks from "../views/WebTasks/Index.vue";
 import ShowWebTask from "../views/WebTasks/Show.vue";
+import WebStep from "../views/WebTasks/WebStep.vue";
 
 Vue.use(Router);
 
@@ -125,6 +126,11 @@ const router = new Router({
       path: "/tareas-web/:id",
       name: "ShowWebTask",
       component: ShowWebTask
+    },
+    {
+      path: "/tareas-web/:web_task_id/paso/:id?",
+      name: "WebStep",
+      component: WebStep
     },
   ]
 });

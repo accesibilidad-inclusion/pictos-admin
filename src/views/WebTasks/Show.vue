@@ -103,7 +103,7 @@
                 >
                   <div>
                     <v-icon class="icon-draggable">mdi-drag</v-icon>
-                    <router-link :to="'/tareas/' + webTask.id + '/paso/' + step.id"
+                    <router-link :to="'/tareas-web/' + webTask.id + '/paso/' + step.id"
                       >{{ index + 1 }} {{ step.label }}</router-link
                     >
                   </div>
