@@ -156,7 +156,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-dialog persistent v-model="dialog" width="700">
+    <v-dialog v-if="dialog" persistent v-model="dialog" width="700">
       <Form v-on:cancel="closeModal" v-on:updated="update" :object="objectEdit"></Form>
     </v-dialog>
   </div>
