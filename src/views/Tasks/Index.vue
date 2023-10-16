@@ -55,12 +55,15 @@
         >
       </v-col>
     </v-row>
-    <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
-    </v-layout>
-    <v-row v-else>
+    <v-row>
       <v-col cols="12">
-        <v-data-table :headers="headers" :items="entries">
+        <v-data-table
+          :headers="headers"
+          :items="entries"
+          :loading="loading"
+          :options.sync="options"
+          :server-items-length="totalTasks"
+        >
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.id">
@@ -71,8 +74,10 @@
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
                 <td>{{ item.count_pictograms }}</td>
-                <td v-if="item.last_modified">
-                  {{ moment(item.last_modified.date).format("DD/MM/YYYY HH:mm") }}
+                <td>{{ item.likes }}</td>
+                <td>{{ item.dislikes }}</td>
+                <td v-if="item.modified">
+                  {{ moment(item.modified).format("DD/MM/YYYY HH:mm") }}
                 </td>
                 <td v-else>-</td>
                 <td>{{ item.status }}</td>
@@ -94,16 +99,10 @@ export default {
   components: {
     Form
   },
-  beforeMount() {
-    if (this.$route.params.status) this.showStatus = this.$route.params.status;
-    this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/tasks/" + this.showStatus)
-      .then(response => {
-        this.entries = response.data;
-      });
-  },
   data() {
     return {
+      totalTasks: 0,
+      options: {},
       headers: [
         {
           text: "Tarea",
@@ -111,11 +110,11 @@ export default {
         },
         {
           text: "Lugar",
-          value: "venue.name"
+          value: "venues.name"
         },
         {
           text: "Servicio",
-          value: "service.name"
+          value: "services.name"
         },
         {
           text: "N° de pasos",
@@ -126,56 +125,84 @@ export default {
           value: "count_pictograms"
         },
         {
+          text: "Votos +",
+          value: "likes"
+        },
+        {
+          text: "Votos -",
+          value: "dislikes"
+        },
+        {
           text: "Ultima modificación",
-          value: "last_modified.date"
+          value: "modified"
         },
         {
           text: "Estado",
           value: "status"
         }
       ],
-      entries: null,
+      entries: [],
       search_text: "",
       pagination: {},
       dialog: false,
       newTask: new Task(),
-      showStatus: ""
+      showStatus: "",
+      loading: false
     };
   },
+  watch: {
+    options: {
+      handler() {
+        this.getDataFromApi();
+      },
+      deep: true
+    }
+  },
   methods: {
+    getDataFromApi() {
+      this.loading = true;
+      this.$http
+        .get(
+          process.env.VUE_APP_API_DOMAIN +
+            "api/tasks?page=" +
+            this.options.page +
+            "&itemsPerPage=" +
+            this.options.itemsPerPage +
+            "&sortBy=" +
+            this.options.sortBy[0] +
+            "&sortDesc=" +
+            this.options.sortDesc[0] +
+            "&search=" +
+            this.search_text +
+            "&status=" +
+            this.showStatus
+        )
+        .then(response => {
+          this.entries = response.data.data;
+          this.totalTasks = response.data.total;
+          this.loading = false;
+        });
+    },
     closeModal() {
       this.dialog = false;
       this.newTask = new Task();
     },
-    created(service) {
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/tasks").then(response => {
-        this.entries = response.data;
-      });
+    created() {
+      this.getDataFromApi();
       this.closeModal();
     },
     changeStatus(status) {
       this.showStatus = status;
-      this.entries = null;
-      let ruta = process.env.VUE_APP_API_DOMAIN + "api/tasks/";
-      if (this.showStatus !== "") ruta += this.showStatus + "/";
-      if (this.search_text !== "") ruta += "search/" + this.search_text;
-      this.$http.get(ruta).then(response => {
-        this.entries = response.data;
-      });
+      this.options.page = 1;
+      this.getDataFromApi();
     },
     clearSearch() {
       this.search_text = "";
       this.search();
     },
     search() {
-      this.entries = null;
-      let ruta = process.env.VUE_APP_API_DOMAIN + "api/tasks/";
-      if (this.showStatus !== "") ruta += this.showStatus + "/";
-      ruta += "search/" + this.search_text;
-
-      this.$http.get(ruta).then(response => {
-        this.entries = response.data;
-      });
+      this.options.page = 1;
+      this.getDataFromApi();
     }
   }
 };
