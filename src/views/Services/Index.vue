@@ -45,7 +45,8 @@
                   <router-link :to="'/servicios/' + item.id">{{ item.name }}</router-link>
                 </td>
                 <td>{{ item.category.name }}</td>
-                <td>{{ item.count_venues }}</td>
+                <td>{{ item.count_presential_venues }}</td>
+                <td>{{ item.count_online_venues }}</td>
                 <td v-if="item.last_modified">
                   {{ moment(item.last_modified.date).format("DD/MM/YYYY HH:mm") }}
                 </td>
@@ -86,8 +87,12 @@ export default {
           value: "category.name"
         },
         {
-          text: "Cantidad de lugares",
-          value: "count_venues"
+          text: "Lugares presenciales",
+          value: "count_presential_venues"
+        },
+        {
+          text: "Lugares en internet",
+          value: "count_online_venues"
         },
         {
           text: "Ultima modificación",

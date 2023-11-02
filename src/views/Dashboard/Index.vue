@@ -146,10 +146,13 @@
                 }}</span>
                 <span>
                   - {{ report.report }} en
-                  <a @click="$router.push('/tareas/' + report.task.id)">{{
-                    report.task.title
-                  }}</a></span
-                >
+                  <a v-if="report.presential_task" @click="$router.push('/tareas-presenciales/' + report.presential_task.id)">{{
+                    report.presential_task.title
+                  }}</a>
+                  <a v-if="report.online_task" @click="$router.push('/tareas-en-internet/' + report.online_task.id)">{{
+                    report.online_task.title
+                  }}</a>
+                </span>
               </div>
             </template>
           </v-card-text>
@@ -163,8 +166,8 @@
 </template>
 
 <script>
-import Venue from "../../models/Venue";
-import Task from "../../models/Task";
+import PresentialVenue from "../../models/PresentialVenue";
+import PresentialTask from "../../models/PresentialTask";
 import ProposalTask from "../../models/ProposalTask";
 import Form from "../Utils/Form";
 
@@ -174,20 +177,22 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/venues/by_users").then(response => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/by_users").then(response => {
       this.venues = response.data;
     });
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/tasks/by_users").then(response => {
-      this.tasks = response.data;
-    });
+    this.$http
+      .get(process.env.VUE_APP_API_DOMAIN + "api/presential_tasks/by_users")
+      .then(response => {
+        this.tasks = response.data;
+      });
     this.$http
       .get(process.env.VUE_APP_API_DOMAIN + "api/proposal_tasks/by_users")
       .then(response => {
         this.proposal_tasks = response.data;
       });
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get").then(response => {
-      this.evaluations = response.data;
-    });
+    // this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get").then(response => {
+    //   this.evaluations = response.data;
+    // });
     this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/reports").then(response => {
       this.reports = response.data;
     });
@@ -210,8 +215,8 @@ export default {
     },
     setObjectEdit(type, obj) {
       this.typeEdit = type;
-      if (type == "venues") this.objectEdit = new Venue();
-      else if (type == "tasks") this.objectEdit = new Task();
+      if (type == "venues") this.objectEdit = new PresentialVenue();
+      else if (type == "tasks") this.objectEdit = new PresentialTask();
       else if (type == "proposal_tasks") this.objectEdit = new ProposalTask();
       this.objectEdit.set(obj);
       this.objectEdit.visible = 0;

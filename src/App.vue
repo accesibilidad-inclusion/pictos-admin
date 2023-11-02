@@ -18,36 +18,36 @@
             <v-list-item-title>Servicios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/lugares">
+        <v-list-item link to="/lugares-presenciales">
           <v-list-item-action>
             <v-icon>mdi-map-marker</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Lugares</v-list-item-title>
+            <v-list-item-title>Lugares presenciales</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/tareas">
+        <v-list-item link to="/tareas-presenciales">
           <v-list-item-action>
             <v-icon>mdi-alert-circle-check-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Tareas</v-list-item-title>
+            <v-list-item-title>Tareas presenciales</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/servicios-web">
+        <v-list-item link to="/lugares-en-internet">
           <v-list-item-action>
             <v-icon>mdi-web</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Servicios Web</v-list-item-title>
+            <v-list-item-title>Lugares en internet</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/tareas-web">
+        <v-list-item link to="/tareas-en-internet">
           <v-list-item-action>
             <v-icon>mdi-application-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Tareas Web</v-list-item-title>
+            <v-list-item-title>Tareas en internet</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-list-item v-if="user.role.name === 'Administrador'" link to="/usuarios">
@@ -58,7 +58,13 @@
             <v-list-item-title>Usuarios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link dense href="https://forms.gle/QdbvD3CgSrxN9VZS6" target="_blank" class="list-item__bottom">
+        <v-list-item
+          link
+          dense
+          href="https://forms.gle/QdbvD3CgSrxN9VZS6"
+          target="_blank"
+          class="list-item__bottom"
+        >
           <v-list-item-action>
             <v-icon>mdi-comment-outline</v-icon>
           </v-list-item-action>
@@ -173,9 +179,10 @@ export default {
       this.$store.dispatch("setRoles");
       this.$store.dispatch("setCategories");
       this.$store.dispatch("setServices");
-      this.$store.dispatch("setVenues");
-      this.$store.dispatch("setWebServices");
+      this.$store.dispatch("setPresentialVenues");
+      this.$store.dispatch("setOnlineVenues");
       this.$store.dispatch("setImages");
+      this.$store.dispatch("setRegions");
     }
   },
 

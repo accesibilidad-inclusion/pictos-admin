@@ -67,7 +67,7 @@
                 <v-autocomplete
                   v-if="field.type == 'select'"
                   v-model="object[field.id]"
-                  :items="$store.getters[field.data]"
+                  :items="getData(field)"
                   :error-messages="errors"
                   hide-no-data
                   hide-selected
@@ -276,11 +276,11 @@ export default {
       this.object.position = position;
     },
     remove(item, id) {
-      console.log(this.object[id]);
       const index = this.object[id].map(o => o.id).indexOf(item.id);
       if (index >= 0) this.object[id].splice(index, 1);
-
-      console.log(this.object[id]);
+    },
+    getData(field) {
+      return field.parent ? (this.object[field.parent] ? this.$store.getters[this.object.form().fields.find( f => f.id === field.parent).data].find( p => p.id === this.object[field.parent].id)[field.data] : []) : this.$store.getters[field.data];
     }
   }
 };

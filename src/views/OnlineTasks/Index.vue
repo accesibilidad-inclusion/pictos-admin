@@ -2,7 +2,7 @@
   <div class="py-6 px-12">
     <v-row>
       <v-col cols="12">
-        <h1 class="display-1 pb-2">Tareas</h1>
+        <h1 class="display-1 pb-2">Tareas en internet</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -68,12 +68,13 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>
-                  <router-link :to="'/tareas/' + item.id">{{ item.title }}</router-link>
+                  <router-link :to="'/tareas-en-internet/' + item.id">{{
+                    item.title
+                  }}</router-link>
                 </td>
-                <td>{{ item.venue.name }}</td>
+                <td>{{ item.venue }}</td>
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
-                <td>{{ item.count_pictograms }}</td>
                 <td>{{ item.likes }}</td>
                 <td>{{ item.dislikes }}</td>
                 <td v-if="item.modified">
@@ -91,11 +92,11 @@
 </template>
 
 <script>
-import Task from "../../models/Task";
+import OnlineTask from "../../models/OnlineTask";
 import Form from "../Utils/Form";
 
 export default {
-  name: "Tasks",
+  name: "OnlineTasks",
   components: {
     Form
   },
@@ -121,10 +122,6 @@ export default {
           value: "count_steps"
         },
         {
-          text: "Pictogramas",
-          value: "count_pictograms"
-        },
-        {
           text: "Votos +",
           value: "likes"
         },
@@ -145,7 +142,7 @@ export default {
       search_text: "",
       pagination: {},
       dialog: false,
-      newTask: new Task(),
+      newTask: new OnlineTask(),
       showStatus: "",
       loading: false
     };
@@ -164,7 +161,7 @@ export default {
       this.$http
         .get(
           process.env.VUE_APP_API_DOMAIN +
-            "api/tasks?page=" +
+            "api/online_tasks?page=" +
             this.options.page +
             "&itemsPerPage=" +
             this.options.itemsPerPage +

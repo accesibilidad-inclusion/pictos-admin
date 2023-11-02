@@ -13,7 +13,7 @@
     "core-js": "^3.6.4",
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
-    "pictos": "^0.6.0",
+    "pictos": "https://github.com/accesibilidad-inclusion/pictogramas.git#qa",
     "tiptap-vuetify": "^2.24.0",
     "vee-validate": "^3.3.2",
     "vue": "^2.6.11",

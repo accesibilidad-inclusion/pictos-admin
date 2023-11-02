@@ -2,7 +2,7 @@
   <div class="py-6 px-12">
     <v-row>
       <v-col cols="12">
-        <h1 class="display-1 pb-2">Lugares</h1>
+        <h1 class="display-1 pb-2">Lugares presenciales</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -65,7 +65,9 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>
-                  <router-link :to="'/lugares/' + item.id">{{ item.name }}</router-link>
+                  <router-link :to="'/lugares-presenciales/' + item.id">{{
+                    item.name
+                  }}</router-link>
                 </td>
                 <td>
                   <span v-if="item.service">{{ item.service.name }}</span
@@ -87,18 +89,18 @@
 </template>
 
 <script>
-import Venue from "../../models/Venue";
+import PresentialVenue from "../../models/PresentialVenue";
 import Form from "../Utils/Form";
 
 export default {
-  name: "Venues",
+  name: "PresentialVenues",
   components: {
     Form
   },
   beforeMount() {
     if (this.$route.params.status) this.showStatus = this.$route.params.status;
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/venues/" + this.showStatus)
+      .get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/" + this.showStatus)
       .then(response => {
         this.entries = response.data;
       });
@@ -131,18 +133,18 @@ export default {
       search_text: "",
       pagination: {},
       dialog: false,
-      newVenue: new Venue(),
+      newVenue: new PresentialVenue(),
       showStatus: ""
     };
   },
   methods: {
     closeModal() {
       this.dialog = false;
-      this.newVenue = new Venue();
+      this.newVenue = new PresentialVenue();
     },
     created(service) {
-      this.$store.dispatch("setVenues");
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/venues").then(response => {
+      this.$store.dispatch("setPresentialVenues");
+      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues").then(response => {
         this.entries = response.data;
       });
       this.closeModal();
@@ -150,7 +152,7 @@ export default {
     changeStatus(status) {
       this.entries = null;
       this.showStatus = status;
-      let ruta = process.env.VUE_APP_API_DOMAIN + "api/venues/";
+      let ruta = process.env.VUE_APP_API_DOMAIN + "api/presential_venues/";
       if (this.showStatus !== "") ruta += this.showStatus + "/";
       if (this.search_text !== "") ruta += "search/" + this.search_text;
       this.$http.get(ruta).then(response => {
@@ -163,7 +165,7 @@ export default {
     },
     search() {
       this.entries = null;
-      let ruta = process.env.VUE_APP_API_DOMAIN + "api/venues/";
+      let ruta = process.env.VUE_APP_API_DOMAIN + "api/presential_venues/";
       if (this.showStatus !== "") ruta += this.showStatus + "/";
       ruta += "search/" + this.search_text;
 

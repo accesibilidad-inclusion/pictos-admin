@@ -1,12 +1,13 @@
-class Venue {
+class OnlineVenue {
   constructor() {
     this.id = null;
     this.name = "";
     this.category = null;
     this.service = null;
+    this.region = null;
+    this.commune = null;
     this.url = "";
     this.slug = "";
-    this.position = null;
     this.tags_text = "";
     this.tags = [];
     this.tasks = [];
@@ -24,10 +25,11 @@ class Venue {
     this.name = venue.name;
     this.category = venue.category
       ? {
-        id: venue.category.id,
-        name: venue.category.name,
-        slug: venue.category.slug
-      } : null;
+          id: venue.category.id,
+          name: venue.category.name,
+          slug: venue.category.slug
+        }
+      : null;
     this.service = venue.service
       ? {
           id: venue.service.id,
@@ -35,16 +37,23 @@ class Venue {
           slug: venue.service.slug
         }
       : null;
-    this.url = venue.url;
-    this.slug = venue.slug;
-    this.position = venue.position
+    this.region = venue.region
       ? {
-          lat: parseFloat(venue.position.lat),
-          lng: parseFloat(venue.position.lng)
+          id: venue.region.id,
+          name: venue.region.name
         }
       : null;
+
+    this.commune = venue.commune
+      ? {
+          id: venue.commune.id,
+          name: venue.commune.name
+        }
+      : null;
+    this.slug = venue.slug;
+    this.url = venue.url;
     this.tags_text = venue.tags ? venue.tags.join(", ") : "";
-    this.tags = venue.tags;
+    this.tags = venue.tags ?? [];
     this.tasks = venue.tasks;
     this.evaluations = venue.evaluations;
     this.evaluation = venue.evaluation;
@@ -58,11 +67,9 @@ class Venue {
   form() {
     let form = {
       title:
-        this.status == "Enviado por usuario"
-          ? "Crear nuevo lugar"
-          : this.id
-          ? "Editar lugar"
-          : "Agregar nuevo lugar",
+        this.id
+          ? "Editar lugar en internet"
+          : "Agregar nuevo lugar presencial",
       fields:
         this.form_type === "service"
           ? [
@@ -74,10 +81,30 @@ class Venue {
                 type: "text"
               },
               {
-                id: "position",
-                name: "ubicacion",
-                label: "Ubicación",
-                type: "map"
+                id: "url",
+                name: "url",
+                label: "Url",
+                rules: "required|url",
+                type: "text"
+              },
+              {
+                id: "region",
+                name: "región",
+                label: "Región donde estara habilitado el lugar",
+                rules: "",
+                type: "select",
+                data: "regions",
+                textOption: ["name"]
+              },
+              {
+                id: "commune",
+                name: "comuna",
+                label: "Comuna donde estara habilitado el lugar",
+                rules: "",
+                type: "select",
+                parent: "region",
+                data: "communes",
+                textOption: ["name"]
               },
               {
                 id: "tags_text",
@@ -105,10 +132,30 @@ class Venue {
                 textOption: ["name"]
               },
               {
-                id: "position",
-                name: "ubicacion",
-                label: "Ubicación",
-                type: "map"
+                id: "url",
+                name: "url",
+                label: "Url",
+                rules: "required|url",
+                type: "text"
+              },
+              {
+                id: "region",
+                name: "región",
+                label: "Región donde estara habilitado el lugar",
+                rules: "",
+                type: "select",
+                data: "regions",
+                textOption: ["name"]
+              },
+              {
+                id: "commune",
+                name: "comuna",
+                label: "Comuna donde estara habilitado el lugar",
+                rules: "",
+                type: "select",
+                parent: "region",
+                data: "communes",
+                textOption: ["name"]
               },
               {
                 id: "tags_text",
@@ -119,33 +166,7 @@ class Venue {
               }
             ],
       actions:
-        this.status == "Enviado por usuario"
-          ? [
-              {
-                label: "Eliminar",
-                color: "error",
-                callback: "request",
-                url: "api/venues/delete",
-                method: "post",
-                confirm: "¿Esta seguro de eliminar este lugar?",
-                emit: "updated"
-              },
-              {
-                label: "Cancelar",
-                color: "grey",
-                callback: "cancel"
-              },
-              {
-                label: "Aceptar lugar",
-                color: "primary",
-                callback: "request",
-                url: "api/venues/accept_contribution",
-                method: "put",
-                validate: true,
-                emit: "updated"
-              }
-            ]
-          : [
+        [
               {
                 label: "Cancelar",
                 color: "grey",
@@ -155,7 +176,7 @@ class Venue {
                 label: this.id ? "Actualizar lugar" : "Crear lugar",
                 color: "primary",
                 callback: "request",
-                url: this.id ? "api/venues/update" : "api/venues/store",
+                url: this.id ? "api/online_venues/update" : "api/online_venues/store",
                 method: this.id ? "put" : "post",
                 validate: true,
                 emit: "updated"
@@ -166,4 +187,4 @@ class Venue {
   }
 }
 
-export default Venue;
+export default OnlineVenue;

@@ -5,7 +5,8 @@ class Service {
     this.url = "";
     this.slug = "";
     this.category = null;
-    this.venues = [];
+    this.presential_venues = [];
+    this.online_venues = [];
     this.tags_text = "";
     this.tags = [];
     this.last_modified = null;
@@ -17,12 +18,15 @@ class Service {
     this.name = service.name;
     this.url = service.url;
     this.slug = service.slug;
-    this.category = service.category ? {
-      id: service.category.id,
-      name: service.category.name,
-      slug: service.category.slug
-    } : null;
-    this.venues = service.venues;
+    this.category = service.category
+      ? {
+          id: service.category.id,
+          name: service.category.name,
+          slug: service.category.slug
+        }
+      : null;
+    this.presential_venues = service.presential_venues;
+    this.online_venues = service.online_venues;
     this.tags_text = service.tags.join(", ");
     this.tags = service.tags;
     this.last_modified = service.last_modified;

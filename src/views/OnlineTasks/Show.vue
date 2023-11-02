@@ -5,7 +5,7 @@
   <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/tareas/" class="breadcrumbs__link"
+        <router-link to="/tareas-en-internet/" class="breadcrumbs__link"
           ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon>
           Tareas</router-link
         >{{ task.title }}
@@ -61,7 +61,9 @@
               </li>
               <li class="py-2">
                 <span class="font-weight-bold">Lugar: </span>
-                <router-link :to="'/lugares/' + task.venue.id">{{ task.venue.name }}</router-link>
+                <router-link :to="'/lugares-en-internet/' + task.online_venue.id">{{
+                  task.online_venue.name
+                }}</router-link>
               </li>
               <li v-if="task.url != ''" class="py-2">
                 <span class="font-weight-bold">Url:</span>
@@ -101,7 +103,7 @@
             <v-btn
               v-if="!task.steps.length"
               color="primary"
-              :to="'/tareas/' + task.id + '/paso/'"
+              :to="'/tareas-en-internet/' + task.id + '/paso/'"
               class="right-box__button"
             >
               <v-icon>mdi-plus</v-icon> Agregar nuevo paso
@@ -115,7 +117,7 @@
                 >
                   <div>
                     <v-icon class="icon-draggable">mdi-drag</v-icon>
-                    <router-link :to="'/tareas/' + task.id + '/paso/' + step.id"
+                    <router-link :to="'/tareas-en-internet/' + task.id + '/paso/' + step.id"
                       >{{ index + 1 }} {{ step.label }}</router-link
                     >
                   </div>
@@ -130,7 +132,7 @@
           color="primary"
           default
           text
-          :to="'/tareas/' + task.id + '/paso/'"
+          :to="'/tareas-en-internet/' + task.id + '/paso/'"
           class="text-right my-3"
         >
           <v-icon>mdi-plus</v-icon> Agregar nuevo paso
@@ -161,7 +163,7 @@
 <script>
 import draggable from "vuedraggable";
 
-import Task from "../../models/Task";
+import OnlineTask from "../../models/OnlineTask";
 import Form from "../Utils/Form";
 
 export default {
@@ -172,7 +174,7 @@ export default {
   },
   beforeMount() {
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/tasks/" + this.$route.params.id)
+      .get(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.id)
       .then(response => {
         this.task.set(response.data);
         this.editTask = _.clone(this.task);
@@ -182,7 +184,7 @@ export default {
   },
   data() {
     return {
-      task: new Task(),
+      task: new OnlineTask(),
       editTask: null,
       duplicateTask: null,
       dialog: false,
@@ -197,7 +199,7 @@ export default {
         "/" +
         this.task.service.slug +
         "/" +
-        this.task.venue.slug +
+        this.task.online_venue.slug +
         "/" +
         this.task.slug
       );
@@ -207,18 +209,18 @@ export default {
     deleteTask() {
       if (confirm("¿Esta seguro de eliminar este tarea?")) {
         this.$http
-          .post(process.env.VUE_APP_API_DOMAIN + "api/tasks/delete", {
+          .post(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/delete", {
             id: this.$route.params.id
           })
           .then(response => {
-            this.$router.push("/tareas");
+            this.$router.push("/tareas-en-internet");
           });
       }
     },
     publishTask() {
       if (confirm("¿Esta seguro de publicar este tarea?")) {
         this.$http
-          .put(process.env.VUE_APP_API_DOMAIN + "api/tasks/publish", {
+          .put(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/publish", {
             id: this.$route.params.id
           })
           .then(response => {
@@ -229,7 +231,7 @@ export default {
     draftTask() {
       if (confirm("¿Esta seguro de despublicar este tarea?")) {
         this.$http
-          .put(process.env.VUE_APP_API_DOMAIN + "api/tasks/draft", {
+          .put(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/draft", {
             id: this.$route.params.id
           })
           .then(response => {
@@ -240,7 +242,7 @@ export default {
     deleteStep(id) {
       if (confirm("¿Esta seguro de eliminar este paso?")) {
         this.$http
-          .post(process.env.VUE_APP_API_DOMAIN + "api/steps/delete", {
+          .post(process.env.VUE_APP_API_DOMAIN + "api/online_steps/delete", {
             id: id
           })
           .then(response => {
@@ -257,7 +259,7 @@ export default {
     },
     updated() {
       this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/tasks/" + this.$route.params.id)
+        .get(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.id)
         .then(response => {
           this.task.set(response.data);
           this.editTask = _.clone(this.task);
@@ -265,7 +267,7 @@ export default {
         });
     },
     setOrder() {
-      this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/steps/order", {
+      this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/online_steps/order", {
         steps: this.task.steps.map((s, i) => {
           return {
             id: s.id,

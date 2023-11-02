@@ -5,12 +5,20 @@
   <div v-else class="py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/lugares/" class="breadcrumbs__link"
+        <router-link to="/lugares-en-internet/" class="breadcrumbs__link"
           ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon>
           Lugares</router-link
         >{{ venue.name }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ venue.status }}</span>
-        <v-btn v-if="venue.service" default text color="primary" :href="clientDomain" target="_blank">Ver en App</v-btn>
+        <v-btn
+          v-if="venue.service"
+          default
+          text
+          color="primary"
+          :href="clientDomain"
+          target="_blank"
+          >Ver en App</v-btn
+        >
         <v-spacer></v-spacer>
         <v-btn text default color="error" @click="deleteVenue()">Eliminar</v-btn>
       </v-col>
@@ -42,11 +50,9 @@
                   venue.service.name
                 }}</router-link>
               </li>
-              <li v-if="venue.url != ''" class="py-2">
-                <span class="font-weight-bold">Url: </span>
-                <a target="_blank" :href="venue.url">{{ venue.url }}</a>
-              </li>
               <li class="py-2"><span class="font-weight-bold">Id: </span> {{ venue.id }}</li>
+              <li class="py-2" v-if="venue.region"><span class="font-weight-bold">Región disponible: </span> {{ venue.region.name }}</li>
+              <li class="py-2" v-if="venue.commune"><span class="font-weight-bold">Comuna disponible: </span> {{ venue.commune.name }}</li>
               <li v-if="venue.tags.length" class="py-2">
                 <span class="font-weight-bold">Sinonimos: </span> {{ venue.tags.join(", ") }}
               </li>
@@ -74,7 +80,7 @@
                 v-bind:key="index"
                 class="right-box__item px-9 py-4"
               >
-                <router-link :to="'/tareas/' + task.id"
+                <router-link :to="'/tareas-en-internet/' + task.id"
                   >{{ index + 1 }} {{ task.title }}</router-link
                 >
                 <span class="color-published mx-3 task-draft" v-if="!task.visible">Borrador</span>
@@ -101,7 +107,11 @@
             primary-title
           >
             Evaluaciones
-            <v-btn text small color="primary" :to="'/lugares/' + venue.id + '/evaluaciones'"
+            <v-btn
+              text
+              small
+              color="primary"
+              :to="'/lugares-en-internet/' + venue.id + '/evaluaciones'"
               >Ver todas</v-btn
             >
           </v-card-title>
@@ -149,22 +159,22 @@
 </template>
 
 <script>
-import Venue from "../../models/Venue";
-import Task from "../../models/Task";
+import OnlineVenue from "../../models/OnlineVenue";
+import OnlineTask from "../../models/OnlineTask";
 import Form from "../Utils/Form";
 
 export default {
-  name: "ShowVenue",
+  name: "ShowOnlineVenue",
   components: {
     Form
   },
   beforeMount() {
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/venues/" + this.$route.params.id)
+      .get(process.env.VUE_APP_API_DOMAIN + "api/online_venues/" + this.$route.params.id)
       .then(response => {
         this.venue.set(response.data);
         this.newTask.set({
-          venue: this.venue,
+          online_venue: this.venue,
           form_type: "venue"
         });
         this.editVenue = _.clone(this.venue);
@@ -172,13 +182,20 @@ export default {
   },
   computed: {
     clientDomain() {
-      return process.env.VUE_APP_CLIENT_DOMAIN + this.venue.category.slug + '/' + this.venue.service.slug + '/' + this.venue.slug;
-    } 
+      return (
+        process.env.VUE_APP_CLIENT_DOMAIN +
+        this.venue.category.slug +
+        "/" +
+        this.venue.service.slug +
+        "/" +
+        this.venue.slug
+      );
+    }
   },
   data() {
     return {
-      venue: new Venue(),
-      newTask: new Task(),
+      venue: new OnlineVenue(),
+      newTask: new OnlineTask(),
       editVenue: null,
       dialog: false,
       dialogTask: false
@@ -188,23 +205,23 @@ export default {
     deleteVenue() {
       if (confirm("¿Esta seguro de eliminar este lugar?")) {
         this.$http
-          .post(process.env.VUE_APP_API_DOMAIN + "api/venues/delete", {
+          .post(process.env.VUE_APP_API_DOMAIN + "api/online_venues/delete", {
             id: this.$route.params.id
           })
           .then(response => {
-            this.$store.dispatch("setVenues");
-            this.$router.push("/lugares");
+            this.$store.dispatch("setOnlineVenues");
+            this.$router.push("/lugares-en-internet");
           });
       }
     },
     publishVenue() {
       if (confirm("¿Esta seguro de publicar este lugar?")) {
         this.$http
-          .put(process.env.VUE_APP_API_DOMAIN + "api/venues/publish", {
+          .put(process.env.VUE_APP_API_DOMAIN + "api/online_venues/publish", {
             id: this.$route.params.id
           })
           .then(response => {
-            this.$store.dispatch("setVenues");
+            this.$store.dispatch("setOnlineVenues");
             if (response.data) this.venue.status = "Publicado";
           });
       }
@@ -212,11 +229,11 @@ export default {
     draftVenue() {
       if (confirm("¿Esta seguro de despublicar este lugar?")) {
         this.$http
-          .put(process.env.VUE_APP_API_DOMAIN + "api/venues/draft", {
+          .put(process.env.VUE_APP_API_DOMAIN + "api/online_venues/draft", {
             id: this.$route.params.id
           })
           .then(response => {
-            this.$store.dispatch("setVenues");
+            this.$store.dispatch("setOnlineVenues");
             if (response.data) this.venue.status = "Borrador";
           });
       }
@@ -230,16 +247,16 @@ export default {
     },
     updated() {
       this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/venues/" + this.$route.params.id)
+        .get(process.env.VUE_APP_API_DOMAIN + "api/online_venues/" + this.$route.params.id)
         .then(response => {
           this.venue.set(response.data);
           this.editVenue = _.clone(this.venue);
-          this.$store.dispatch("setVenues");
+          this.$store.dispatch("setOnlineVenues");
           this.closeModal();
         });
     },
     showEvaluation() {
-      this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/venues/showEvaluation", {
+      this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/online_venues/showEvaluation", {
         id: this.$route.params.id,
         show: this.venue.show_evaluation
       });

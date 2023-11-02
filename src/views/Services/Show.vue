@@ -70,36 +70,78 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Este servicio tiene {{ service.venues.length }} lugares
+            Este servicio tiene {{ service.presential_venues.length }} lugares presenciales
           </v-card-title>
           <v-card-text class="pa-0">
             <ul class="right-box">
               <li
-                v-for="(venue, index) in service.venues"
+                v-for="(venue, index) in service.presential_venues"
                 v-bind:key="index"
                 class="right-box__item px-9 py-4 d-flex justify-space-between"
               >
                 <div>
-                  <router-link :to="'/lugares/' + venue.id"
+                  <router-link :to="'/lugares-presenciales/' + venue.id"
                     >{{ index + 1 }} {{ venue.name }}</router-link
                   >
-                  <span class="color-published mx-3 venue-draft" v-if="!venue.visible">Borrador</span>
+                  <span class="color-published mx-3 venue-draft" v-if="!venue.visible"
+                    >Borrador</span
+                  >
                 </div>
                 <div class="color-published venue-draft">
-                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador: {{ venue.tasks_drafted }}
+                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador:
+                  {{ venue.tasks_drafted }}
                 </div>
               </li>
             </ul>
           </v-card-text>
         </v-card>
-        <v-dialog persistent v-model="dialogVenue" width="700">
+        <v-dialog persistent v-model="dialogPresentialVenue" width="700">
           <template v-slot:activator="{ on, attrs }">
             <v-btn text default v-bind="attrs" v-on="on" color="primary" class="text-right my-3">
-              <v-icon>mdi-plus</v-icon> Agregar nuevo lugar
+              <v-icon>mdi-plus</v-icon> Agregar nuevo lugar presencial
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newVenue"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newPresentialVenue"></Form>
+        </v-dialog>
+        <v-card>
+          <v-card-title
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
+            primary-title
+          >
+            Este servicio tiene {{ service.online_venues.length }} lugares en internet
+          </v-card-title>
+          <v-card-text class="pa-0">
+            <ul class="right-box">
+              <li
+                v-for="(venue, index) in service.online_venues"
+                v-bind:key="index"
+                class="right-box__item px-9 py-4 d-flex justify-space-between"
+              >
+                <div>
+                  <router-link :to="'/lugares-en-internet/' + venue.id"
+                    >{{ index + 1 }} {{ venue.name }}</router-link
+                  >
+                  <span class="color-published mx-3 venue-draft" v-if="!venue.visible"
+                    >Borrador</span
+                  >
+                </div>
+                <div class="color-published venue-draft">
+                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador:
+                  {{ venue.tasks_drafted }}
+                </div>
+              </li>
+            </ul>
+          </v-card-text>
+        </v-card>
+        <v-dialog persistent v-model="dialogOnlineVenue" width="700">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text default v-bind="attrs" v-on="on" color="primary" class="text-right my-3">
+              <v-icon>mdi-plus</v-icon> Agregar nuevo lugar en internet
+            </v-btn>
+          </template>
+
+          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newOnlineVenue"></Form>
         </v-dialog>
       </v-col>
     </v-row>
@@ -124,7 +166,8 @@
 
 <script>
 import Service from "../../models/Service";
-import Venue from "../../models/Venue";
+import PresentialVenue from "../../models/PresentialVenue";
+import OnlineVenue from "../../models/OnlineVenue";
 import Form from "../Utils/Form";
 
 export default {
@@ -137,7 +180,11 @@ export default {
       .get(process.env.VUE_APP_API_DOMAIN + "api/services/" + this.$route.params.id)
       .then(response => {
         this.service.set(response.data);
-        this.newVenue.set({
+        this.newPresentialVenue.set({
+          service: this.service,
+          form_type: "service"
+        });
+        this.newOnlineVenue.set({
           service: this.service,
           form_type: "service"
         });
@@ -146,22 +193,32 @@ export default {
   },
   computed: {
     clientDomain() {
-      return process.env.VUE_APP_CLIENT_DOMAIN + this.service.category.slug + '/' + this.service.slug;
+      return (
+        process.env.VUE_APP_CLIENT_DOMAIN + this.service.category.slug + "/" + this.service.slug
+      );
     },
     tasksPublished() {
-      return this.service.venues.reduce( (a, b) => b.visible ? a + b.tasks_published : a , 0 )
+      return this.service.presential_venues.reduce(
+        (a, b) => (b.visible ? a + b.tasks_published : a),
+        0
+      );
     },
     stepsPublished() {
-      return this.service.venues.reduce( (a, b) => b.visible ? a + b.steps_published : a , 0 )
+      return this.service.presential_venues.reduce(
+        (a, b) => (b.visible ? a + b.steps_published : a),
+        0
+      );
     }
   },
   data() {
     return {
       service: new Service(),
-      newVenue: new Venue(),
+      newPresentialVenue: new PresentialVenue(),
+      newOnlineVenue: new OnlineVenue(),
       editService: null,
       dialog: false,
-      dialogVenue: false
+      dialogPresentialVenue: false,
+      dialogOnlineVenue: false
     };
   },
   methods: {
@@ -204,7 +261,8 @@ export default {
     closeModal() {
       this.dialog = false;
       this.editService = _.clone(this.service);
-      this.dialogVenue = false;
+      this.dialogOnlineVenue = false;
+      this.dialogPresentialVenue = false;
     },
     updated() {
       this.$http

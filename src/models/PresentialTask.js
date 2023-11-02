@@ -1,10 +1,10 @@
-class Task {
+class PresentialTask {
   constructor() {
     this.id = null;
     this.title = "";
     this.category = null;
     this.service = null;
-    this.venue = null;
+    this.presential_venue = null;
     this.url = "";
     this.slug = "";
     this.tags_text = "";
@@ -37,10 +37,10 @@ class Task {
           slug: task.service.slug
         }
       : null;
-    this.venue = {
-      id: task.venue.id,
-      name: task.venue.name,
-      slug: task.venue.slug
+    this.presential_venue = {
+      id: task.presential_venue.id,
+      name: task.presential_venue.name,
+      slug: task.presential_venue.slug
     };
     this.url = task.url;
     this.slug = task.slug;
@@ -63,15 +63,15 @@ class Task {
         this.status === "Enviado por usuario"
           ? "Tarea propuesta por usuario"
           : this.form_type === "duplicate"
-          ? "Duplicar tarea"
+          ? "Duplicar tarea presencial"
           : this.id
-          ? "Editar tarea"
-          : "Agregar nueva tarea",
+          ? "Editar tarea presencial"
+          : "Agregar nueva tarea presencial",
       fields:
         this.status === "Enviado por usuario"
           ? [
               {
-                id: "venue",
+                id: "presential_venue",
                 value: "name",
                 label: "Nombre del lugar",
                 type: "read"
@@ -111,6 +111,20 @@ class Task {
                 label: "Sinónimos de búsqueda (Separados por coma)",
                 rules: "",
                 type: "text"
+              },
+              {
+                id: "hasPrerequisites",
+                name: "tiene prerrequisitos",
+                label: "Tiene Prerrequisitos",
+                rules: "",
+                type: "switch"
+              },
+              {
+                id: "prerequisites",
+                name: "prerrequisitos",
+                label: "Prerrequisitos",
+                rules: this.hasPrerequisites ? "required" : "",
+                type: "wysiwyg"
               }
             ]
           : [
@@ -122,7 +136,7 @@ class Task {
                 type: "text"
               },
               {
-                id: "venue",
+                id: "presential_venue",
                 name: "lugar",
                 label: "Lugar al que pertenece",
                 rules: "required",
@@ -159,7 +173,7 @@ class Task {
                 label: "Eliminar",
                 color: "error",
                 callback: "request",
-                url: "api/tasks/delete",
+                url: "api/presential_tasks/delete",
                 method: "post",
                 confirm: "¿Esta seguro de eliminar esta tarea?",
                 emit: "updated"
@@ -173,7 +187,7 @@ class Task {
                 label: "Agregar tarea",
                 color: "primary",
                 callback: "request",
-                url: "api/tasks/accept_contribution",
+                url: "api/presential_tasks/accept_contribution",
                 method: "put",
                 validate: true,
                 emit: "updated"
@@ -190,7 +204,7 @@ class Task {
                 label: "Duplicar tarea",
                 color: "primary",
                 callback: "request",
-                url: "api/tasks/duplicate",
+                url: "api/presential_tasks/duplicate",
                 method: "post",
                 validate: true,
                 emit: "updated"
@@ -206,7 +220,7 @@ class Task {
                 label: this.id ? "Actualizar tarea" : "Crear tarea",
                 color: "primary",
                 callback: "request",
-                url: this.id ? "api/tasks/update" : "api/tasks/store",
+                url: this.id ? "api/presential_tasks/update" : "api/presential_tasks/store",
                 method: this.id ? "put" : "post",
                 validate: true,
                 emit: "updated"
@@ -218,4 +232,4 @@ class Task {
   }
 }
 
-export default Task;
+export default PresentialTask;

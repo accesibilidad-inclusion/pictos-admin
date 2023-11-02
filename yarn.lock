@@ -5733,6 +5733,10 @@ pictos@^0.6.0:
   resolved "https://registry.yarnpkg.com/pictos/-/pictos-0.6.0.tgz#944ff0edbf39a24e094d9df3b118fcaf7087c923"
   integrity sha512-gxU5flgJeOnFDoS8FXUZUWiJATvl1srGNVMzCepXYibRMGYJH/UXO85YSFyEc6PWNFU3LppHZrfVGaLW6zs7Zg==
 
+"pictos@https://github.com/accesibilidad-inclusion/pictogramas.git#qa":
+  version "2.1.0"
+  resolved "https://github.com/accesibilidad-inclusion/pictogramas.git#45e5fcdafea71cabe8a4c66edd710ae2489abf47"
+
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"

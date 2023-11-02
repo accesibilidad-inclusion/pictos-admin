@@ -8,10 +8,11 @@ export default new Vuex.Store({
   state: {
     categories: [],
     services: [],
-    venues: [],
-    web_services: [],
+    presential_venues: [],
+    online_venues: [],
     roles: [],
     images: [],
+    regions: [],
     status: "",
     token: localStorage.getItem("token") || "",
     user: JSON.parse(localStorage.getItem("user")) || {}
@@ -42,14 +43,17 @@ export default new Vuex.Store({
     setServices(state, services) {
       state.services = services;
     },
-    setVenues(state, venues) {
-      state.venues = venues;
+    setPresentialVenues(state, presential_venues) {
+      state.presential_venues = presential_venues;
     },
-    setWebServices(state, web_services) {
-      state.web_services = web_services;
+    setOnlineVenues(state, online_venues) {
+      state.online_venues = online_venues;
     },
     setImages(state, images) {
       state.images = images;
+    },
+    setRegions(state, regions) {
+      state.regions = regions;
     }
   },
   actions: {
@@ -86,24 +90,24 @@ export default new Vuex.Store({
         });
       });
     },
-    setVenues({ commit }) {
+    setPresentialVenues({ commit }) {
       return new Promise((resolve, reject) => {
         axios({
-          url: process.env.VUE_APP_API_DOMAIN + "api/venues/list",
+          url: process.env.VUE_APP_API_DOMAIN + "api/presential_venues/list",
           method: "GET"
         }).then(response => {
-          commit("setVenues", response.data);
+          commit("setPresentialVenues", response.data);
           resolve();
         });
       });
     },
-    setWebServices({ commit }) {
+    setOnlineVenues({ commit }) {
       return new Promise((resolve, reject) => {
         axios({
-          url: process.env.VUE_APP_API_DOMAIN + "api/web_services/list",
+          url: process.env.VUE_APP_API_DOMAIN + "api/online_venues/list",
           method: "GET"
         }).then(response => {
-          commit("setWebServices", response.data);
+          commit("setOnlineVenues", response.data);
           resolve();
         });
       });
@@ -115,6 +119,17 @@ export default new Vuex.Store({
           method: "GET"
         }).then(response => {
           commit("setImages", response.data);
+          resolve();
+        });
+      });
+    },
+    setRegions({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios({
+          url: process.env.VUE_APP_API_DOMAIN + "api/regions/list",
+          method: "GET"
+        }).then(response => {
+          commit("setRegions", response.data);
           resolve();
         });
       });
@@ -139,8 +154,10 @@ export default new Vuex.Store({
             dispatch("setRoles");
             dispatch("setCategories");
             dispatch("setServices");
-            dispatch("setVenues");
+            dispatch("setPresentialVenues");
+            dispatch("setOnlineVenues");
             dispatch("setImages");
+            dispatch("setRegions");
             resolve(response);
           })
           .catch(err => {
@@ -169,8 +186,9 @@ export default new Vuex.Store({
     roles: state => state.roles,
     categories: state => state.categories,
     services: state => state.services,
-    venues: state => state.venues,
-    web_services: state => state.web_services,
-    images: state => state.images
+    presential_venues: state => state.presential_venues,
+    online_venues: state => state.online_venues,
+    images: state => state.images,
+    regions: state => state.regions
   }
 });
