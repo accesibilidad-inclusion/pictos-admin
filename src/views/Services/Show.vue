@@ -15,7 +15,7 @@
         <v-btn text default color="error" @click="deleteService()">Eliminar</v-btn>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="mb-10">
       <v-col cols="5">
         <v-card>
           <v-card-title
@@ -104,6 +104,10 @@
 
           <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newPresentialVenue"></Form>
         </v-dialog>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="7" offset="5">
         <v-card>
           <v-card-title
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"

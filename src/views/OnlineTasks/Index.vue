@@ -68,11 +68,9 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>
-                  <router-link :to="'/tareas-en-internet/' + item.id">{{
-                    item.title
-                  }}</router-link>
+                  <router-link :to="'/tareas-en-internet/' + item.id">{{ item.title }}</router-link>
                 </td>
-                <td>{{ item.venue }}</td>
+                <td>{{ item.venue.name }}</td>
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
                 <td>{{ item.likes }}</td>

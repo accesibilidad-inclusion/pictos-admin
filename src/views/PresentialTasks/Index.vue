@@ -72,7 +72,7 @@
                     item.title
                   }}</router-link>
                 </td>
-                <td>{{ item.venue }}</td>
+                <td>{{ item.venue.name }}</td>
                 <td>{{ item.service.name }}</td>
                 <td>{{ item.count_steps }}</td>
                 <td>{{ item.count_pictograms }}</td>
