@@ -13,6 +13,7 @@ export default new Vuex.Store({
     roles: [],
     images: [],
     regions: [],
+    communes: [],
     status: "",
     token: localStorage.getItem("token") || "",
     user: JSON.parse(localStorage.getItem("user")) || {}
@@ -54,6 +55,9 @@ export default new Vuex.Store({
     },
     setRegions(state, regions) {
       state.regions = regions;
+    },
+    setCommunes(state, communes) {
+      state.communes = communes;
     }
   },
   actions: {
@@ -130,6 +134,15 @@ export default new Vuex.Store({
           method: "GET"
         }).then(response => {
           commit("setRegions", response.data);
+          commit(
+            "setCommunes",
+            response.data
+              .map(r => r.communes)
+              .reduce((a, b) => {
+                return a.concat(b);
+              })
+              .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+          );
           resolve();
         });
       });
@@ -189,6 +202,7 @@ export default new Vuex.Store({
     presential_venues: state => state.presential_venues,
     online_venues: state => state.online_venues,
     images: state => state.images,
-    regions: state => state.regions
+    regions: state => state.regions,
+    communes: state => state.communes
   }
 });

@@ -6,8 +6,8 @@
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/lugares-en-internet/" class="breadcrumbs__link"
-          ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon>
-          Lugares</router-link
+          ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares en
+          internet</router-link
         >{{ venue.name }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ venue.status }}</span>
         <v-btn
@@ -51,8 +51,15 @@
                 }}</router-link>
               </li>
               <li class="py-2"><span class="font-weight-bold">Id: </span> {{ venue.id }}</li>
-              <li class="py-2" v-if="venue.region"><span class="font-weight-bold">Región disponible: </span> {{ venue.region.name }}</li>
-              <li class="py-2" v-if="venue.commune"><span class="font-weight-bold">Comuna disponible: </span> {{ venue.commune.name }}</li>
+              <li class="py-2" v-if="venue.regions.length">
+                <span class="font-weight-bold">Región disponible: </span>
+                {{ venue.regions.map(r => r.name).join(", ") }}
+              </li>
+              <li class="py-2" v-if="venue.communes.length">
+                <span class="font-weight-bold">Comuna disponible: </span>
+                {{ venue.communes.map(c => c.name).join(", ") }}
+              </li>
+              <li class="py-2"><span class="font-weight-bold">Url: </span> {{ venue.url }}</li>
               <li v-if="venue.tags.length" class="py-2">
                 <span class="font-weight-bold">Sinonimos: </span> {{ venue.tags.join(", ") }}
               </li>

@@ -59,9 +59,7 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>
-                  <router-link :to="'/lugares-en-internet/' + item.id">{{
-                    item.name
-                  }}</router-link>
+                  <router-link :to="'/lugares-en-internet/' + item.id">{{ item.name }}</router-link>
                 </td>
                 <td>
                   <span v-if="item.service">{{ item.service.name }}</span
@@ -143,6 +141,7 @@ export default {
     },
     created(service) {
       this.$store.dispatch("setOnlineVenues");
+      this.$store.dispatch("setRegions");
       this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/online_venues").then(response => {
         this.entries = response.data;
       });

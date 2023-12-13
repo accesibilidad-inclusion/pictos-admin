@@ -4,8 +4,8 @@ class OnlineVenue {
     this.name = "";
     this.category = null;
     this.service = null;
-    this.region = null;
-    this.commune = null;
+    this.regions = [];
+    this.communes = [];
     this.url = "";
     this.slug = "";
     this.tags_text = "";
@@ -37,19 +37,8 @@ class OnlineVenue {
           slug: venue.service.slug
         }
       : null;
-    this.region = venue.region
-      ? {
-          id: venue.region.id,
-          name: venue.region.name
-        }
-      : null;
-
-    this.commune = venue.commune
-      ? {
-          id: venue.commune.id,
-          name: venue.commune.name
-        }
-      : null;
+    this.regions = venue.regions;
+    this.communes = venue.communes;
     this.slug = venue.slug;
     this.url = venue.url;
     this.tags_text = venue.tags ? venue.tags.join(", ") : "";
@@ -66,10 +55,7 @@ class OnlineVenue {
 
   form() {
     let form = {
-      title:
-        this.id
-          ? "Editar lugar en internet"
-          : "Agregar nuevo lugar presencial",
+      title: this.id ? "Editar lugar en internet" : "Agregar nuevo lugar en internet",
       fields:
         this.form_type === "service"
           ? [
@@ -88,21 +74,22 @@ class OnlineVenue {
                 type: "text"
               },
               {
-                id: "region",
-                name: "región",
-                label: "Región donde estara habilitado el lugar",
+                id: "regions",
+                name: "regiones",
+                label: "Regiones donde estara habilitado el lugar",
                 rules: "",
-                type: "select",
+                type: "multiselect",
+                condition: true,
                 data: "regions",
                 textOption: ["name"]
               },
               {
-                id: "commune",
-                name: "comuna",
-                label: "Comuna donde estara habilitado el lugar",
+                id: "communes",
+                name: "comunas",
+                label: "Comunas donde estara habilitado el lugar",
                 rules: "",
-                type: "select",
-                parent: "region",
+                type: "multiselect",
+                condition: true,
                 data: "communes",
                 textOption: ["name"]
               },
@@ -139,21 +126,22 @@ class OnlineVenue {
                 type: "text"
               },
               {
-                id: "region",
-                name: "región",
-                label: "Región donde estara habilitado el lugar",
+                id: "regions",
+                name: "regiones",
+                label: "Regiones donde estara habilitado el lugar",
                 rules: "",
-                type: "select",
+                type: "multiselect",
+                condition: true,
                 data: "regions",
                 textOption: ["name"]
               },
               {
-                id: "commune",
-                name: "comuna",
-                label: "Comuna donde estara habilitado el lugar",
+                id: "communes",
+                name: "comunas",
+                label: "Comunas donde estara habilitado el lugar",
                 rules: "",
-                type: "select",
-                parent: "region",
+                type: "multiselect",
+                condition: true,
                 data: "communes",
                 textOption: ["name"]
               },
@@ -165,23 +153,22 @@ class OnlineVenue {
                 type: "text"
               }
             ],
-      actions:
-        [
-              {
-                label: "Cancelar",
-                color: "grey",
-                callback: "cancel"
-              },
-              {
-                label: this.id ? "Actualizar lugar" : "Crear lugar",
-                color: "primary",
-                callback: "request",
-                url: this.id ? "api/online_venues/update" : "api/online_venues/store",
-                method: this.id ? "put" : "post",
-                validate: true,
-                emit: "updated"
-              }
-            ]
+      actions: [
+        {
+          label: "Cancelar",
+          color: "grey",
+          callback: "cancel"
+        },
+        {
+          label: this.id ? "Actualizar lugar" : "Crear lugar",
+          color: "primary",
+          callback: "request",
+          url: this.id ? "api/online_venues/update" : "api/online_venues/store",
+          method: this.id ? "put" : "post",
+          validate: true,
+          emit: "updated"
+        }
+      ]
     };
     return form;
   }

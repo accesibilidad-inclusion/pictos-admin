@@ -83,7 +83,6 @@
                   :error-messages="errors"
                   :label="field.label"
                   chips
-                  label="Select"
                   item-text="name"
                   item-value="id"
                   return-object
@@ -122,11 +121,9 @@
 
     <v-card-actions class="px-5 pb-6 pt-4">
       <v-spacer></v-spacer>
-      <template v-for="(action, index) in object.form().actions">
-        <v-btn text :color="action.color" @click="handleAction(action)" v-bind:key="index">{{
-          action.label
-        }}</v-btn>
-      </template>
+      <div v-for="(action, index) in object.form().actions" :key="index">
+        <v-btn text :color="action.color" @click="handleAction(action)">{{ action.label }}</v-btn>
+      </div>
     </v-card-actions>
   </v-card>
 </template>
@@ -169,15 +166,9 @@ extend("max", {
 
 extend("url", {
   validate: str => {
-    var pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
-    ); // fragment locator
+    var expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
+
+    var pattern = new RegExp(expression);
     return !!pattern.test(str);
   },
   message: "El campo no es una URL valida"
@@ -280,7 +271,13 @@ export default {
       if (index >= 0) this.object[id].splice(index, 1);
     },
     getData(field) {
-      return field.parent ? (this.object[field.parent] ? this.$store.getters[this.object.form().fields.find( f => f.id === field.parent).data].find( p => p.id === this.object[field.parent].id)[field.data] : []) : this.$store.getters[field.data];
+      return field.parent
+        ? this.object[field.parent]
+          ? this.$store.getters[
+              this.object.form().fields.find(f => f.id === field.parent).data
+            ].find(p => p.id === this.object[field.parent].id)[field.data]
+          : []
+        : this.$store.getters[field.data];
     }
   }
 };
