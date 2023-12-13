@@ -76,6 +76,13 @@ class OnlineTask {
                 type: "text"
               },
               {
+                id: "url",
+                name: "url",
+                label: "Url",
+                rules: "required|url",
+                type: "text"
+              },
+              {
                 id: "tags_text",
                 name: "sinonimos",
                 label: "Sinónimos de búsqueda (Separados por coma)",
@@ -103,6 +110,13 @@ class OnlineTask {
                 name: "titulo",
                 label: "Titulo de la tarea",
                 rules: "required|max:500",
+                type: "text"
+              },
+              {
+                id: "url",
+                name: "url",
+                label: "Url",
+                rules: "required|url",
                 type: "text"
               },
               {

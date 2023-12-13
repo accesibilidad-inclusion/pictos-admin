@@ -1,16 +1,17 @@
 <template>
   <div>
     <v-overlay :z-index="9999" :value="loading">
-      <v-progress-circular
-        indeterminate
-        color="primary"
-        size="64"
-      ></v-progress-circular>
+      <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
     </v-overlay>
     <div v-if="!loading">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/tareas-en-internet/" class="breadcrumbs__link"><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas Web</router-link>
-        <router-link :to="'/tareas-en-internet/' + webTask.id" class="breadcrumbs__link"> {{ webTask.title }} </router-link>
+        <router-link to="/tareas-en-internet/" class="breadcrumbs__link"
+          ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas
+          Web</router-link
+        >
+        <router-link :to="'/tareas-en-internet/' + webTask.id" class="breadcrumbs__link">
+          {{ webTask.title }}
+        </router-link>
         <span v-if="!$route.params.id">Crear paso</span>
         <span v-else>Editar paso</span>
       </v-col>
@@ -18,17 +19,29 @@
         <v-col cols="6">
           <v-container class="sticky-top-2 d-flex flex-column justify-center">
             <div class="container-preview mb-12">
-              <v-row  align="center" justify="start" class="mt-3">
+              <v-row align="center" justify="start" class="mt-3">
                 <div class="container-img-preview">
-                  <img id="imgPreview" class="img-preview" :src="img_base64" alt="" :style="hasFocus ? 'opacity:0.5' : ''"/>
-                  <img id="imgPreviewFocus" :style="cssVars" class="img-preview-focus" :src="img_base64" alt="" />
+                  <img
+                    id="imgPreview"
+                    class="img-preview"
+                    :src="img_base64"
+                    alt=""
+                    :style="hasFocus ? 'opacity:0.5' : ''"
+                  />
+                  <img
+                    id="imgPreviewFocus"
+                    :style="cssVars"
+                    class="img-preview-focus"
+                    :src="img_base64"
+                    alt=""
+                  />
                 </div>
               </v-row>
-              <v-row  align="center" justify="center" class="mt-3">
+              <v-row align="center" justify="center" class="mt-3">
                 <v-col v-if="action" cols="2">
                   <img :src="action.path + '/' + action.filename" class="icon__pictogram" />
                 </v-col>
-                <v-col :cols=" action ? 8 : 12" class="headline font-weight-bold">
+                <v-col :cols="action ? 8 : 12" class="headline font-weight-bold">
                   {{ step }}
                 </v-col>
               </v-row>
@@ -66,10 +79,22 @@
                   <v-col cols="12">
                     <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
                       <v-text-field
-                          v-model="step"
-                          label="Describe el paso"
-                          :error-messages="errors"
-                          required
+                        v-model="step"
+                        label="Describe el paso"
+                        :error-messages="errors"
+                        required
+                      ></v-text-field>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <ValidationProvider v-slot="{ errors }" name="Url" rules="required|url">
+                      <v-text-field
+                        v-model="url"
+                        label="Url del paso"
+                        :error-messages="errors"
+                        required
                       ></v-text-field>
                     </ValidationProvider>
                   </v-col>
@@ -101,32 +126,30 @@
                     <v-subheader class="pl-0">
                       Tamaño del foco
                     </v-subheader>
-                    <v-slider
-                      v-model="focusSize"
-                    ></v-slider>
+                    <v-slider v-model="focusSize"></v-slider>
                   </v-col>
                   <v-col cols="4">
                     <v-subheader class="pl-0">
                       Posición horizontal
                     </v-subheader>
-                    <v-slider
-                      v-model="xPosition"
-                    ></v-slider>
+                    <v-slider v-model="xPosition"></v-slider>
                   </v-col>
                   <v-col cols="4">
                     <v-subheader class="pl-0">
                       Posición vertical
                     </v-subheader>
-                    <v-slider
-                      v-model="yPosition"
-                    ></v-slider>
+                    <v-slider v-model="yPosition"></v-slider>
                   </v-col>
                 </v-row>
                 <v-row>
                   <v-col cols="12">
                     <v-expansion-panels>
                       <v-expansion-panel>
-                        <v-expansion-panel-header v-bind:class="{'grey lighten-4': action}" expand-icon="mdi-menu-down" :disable-icon-rotate="action !== null">
+                        <v-expansion-panel-header
+                          v-bind:class="{ 'grey lighten-4': action }"
+                          expand-icon="mdi-menu-down"
+                          :disable-icon-rotate="action !== null"
+                        >
                           <template v-slot:actions v-if="action">
                             <v-icon color="teal">
                               mdi-check
@@ -148,7 +171,7 @@
                                 <v-select
                                   clearable
                                   v-model="filters.category"
-                                  :items="['Trámites','Salud','Transporte','Ocio']"
+                                  :items="['Trámites', 'Salud', 'Transporte', 'Ocio']"
                                   label="Busca por categoria"
                                   multiple
                                   persistent-hint
@@ -160,7 +183,12 @@
                             </div>
                             <v-row>
                               <v-col cols="2" v-for="image in getImages(4)" v-bind:key="image.id">
-                                <img class="image__pictogram" :src="image.path + '/' + image.filename" v-bind:class="{ 'active': action && image.id == action.id }"  @click="setImage('action', image)" />
+                                <img
+                                  class="image__pictogram"
+                                  :src="image.path + '/' + image.filename"
+                                  v-bind:class="{ active: action && image.id == action.id }"
+                                  @click="setImage('action', image)"
+                                />
                                 <span>{{ image.label }}</span>
                               </v-col>
                             </v-row>
@@ -184,19 +212,19 @@
       <v-footer fixed>
         <v-row>
           <v-col cols="12" class="d-flex justify-end">
-            <v-btn class="mr-5" text color="primary" href="https://forms.gle/QdbvD3CgSrxN9VZS6" target="_blank">Envianos tus comentarios o sugerencias</v-btn>
+            <v-btn
+              class="mr-5"
+              text
+              color="primary"
+              href="https://forms.gle/QdbvD3CgSrxN9VZS6"
+              target="_blank"
+              >Envianos tus comentarios o sugerencias</v-btn
+            >
             <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
           </v-col>
         </v-row>
       </v-footer>
-      <v-snackbar
-        v-model="saved"
-        :timeout="3000"
-        top
-        right
-        absolute
-        color="success"
-      >
+      <v-snackbar v-model="saved" :timeout="3000" top right absolute color="success">
         Paso guardado correctamente
       </v-snackbar>
     </div>
@@ -204,8 +232,8 @@
 </template>
 
 <script>
-import { required } from 'vee-validate/dist/rules';
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate';
+import { required } from "vee-validate/dist/rules";
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from "vee-validate";
 import WebTask from "../../models/WebTask";
 import {
   TiptapVuetify,
@@ -226,15 +254,15 @@ import {
   History
 } from "tiptap-vuetify";
 
-setInteractionMode('eager');
+setInteractionMode("eager");
 
-extend('required', {
+extend("required", {
   ...required,
-  message: 'El campo {_field_} es obligatorio',
+  message: "El campo {_field_} es obligatorio"
 });
 
 export default {
-  name: 'OnlineStep',
+  name: "OnlineStep",
   components: { ValidationProvider, ValidationObserver, TiptapVuetify },
   data() {
     return {
@@ -246,8 +274,9 @@ export default {
       xPosition: 50,
       yPosition: 50,
       action: null,
-      details: '',
-      step: '',
+      details: "",
+      url: "",
+      step: "",
       originalStep: null,
       filters: {
         text: null,
@@ -282,8 +311,8 @@ export default {
     };
   },
   watch: {
-    image: function (newVal, oldVal) {
-      if(newVal) {
+    image: function(newVal, oldVal) {
+      if (newVal) {
         this.createBase64Image(newVal);
       } else {
         this.img_base64 = null;
@@ -292,90 +321,97 @@ export default {
   },
   async created() {
     await this.$store.dispatch("setImages");
-    let response = await this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.online_task_id);
+    let response = await this.$http.get(
+      process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.online_task_id
+    );
 
     this.webTask.set(response.data);
-    if(this.$route.params.id) {
-      response = await this.$http.get(process.env.VUE_APP_API_DOMAIN + 'api/online_steps/' + this.$route.params.id);
+    if (this.$route.params.id) {
+      response = await this.$http.get(
+        process.env.VUE_APP_API_DOMAIN + "api/online_steps/" + this.$route.params.id
+      );
       this.originalStep = response.data;
       this.step = response.data.label;
+      this.url = response.data.url;
       this.details = response.data.details;
       this.img_base64 = response.data.screenshot;
-      if(response.data.focus_size) {
+      if (response.data.focus_size) {
         this.hasFocus = true;
         this.focusSize = response.data.focus_size;
         this.xPosition = response.data.focus_x;
         this.yPosition = response.data.focus_y;
       }
-      const picto = response.data.image_id
-      if(picto) {
-        this.setImage('action', this.$store.getters.images.filter( i => i.layout == 4).find( i => i.id == picto));
+      const picto = response.data.image_id;
+      if (picto) {
+        this.setImage(
+          "action",
+          this.$store.getters.images.filter(i => i.layout == 4).find(i => i.id == picto)
+        );
       }
     }
     this.loading = false;
   },
   computed: {
     previous() {
-      if(this.currentIndex === 0) {
+      if (this.currentIndex === 0) {
         return false;
       } else {
-        return this.webTask.steps[this.currentIndex-1].id;
+        return this.webTask.steps[this.currentIndex - 1].id;
       }
-
     },
     next() {
-      if(this.currentIndex === this.webTask.steps.length - 1) {
+      if (this.currentIndex === this.webTask.steps.length - 1) {
         return false;
       } else {
-        return this.webTask.steps[this.currentIndex+1].id;
+        return this.webTask.steps[this.currentIndex + 1].id;
       }
-
     },
     currentIndex() {
-      return this.webTask.steps.findIndex( s => s.id === this.originalStep.id );
+      return this.webTask.steps.findIndex(s => s.id === this.originalStep.id);
     },
     cssVars() {
       return {
-        '--size-clip': this.focusSize + '%',
-        '--x-position': this.xPosition + '%',
-        '--y-position': this.yPosition + '%',
-      }
+        "--size-clip": this.focusSize + "%",
+        "--x-position": this.xPosition + "%",
+        "--y-position": this.yPosition + "%"
+      };
     }
   },
   methods: {
     createBase64Image(FileObject) {
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = event => {
         this.img_base64 = event.target.result;
-      }
+      };
       reader.readAsDataURL(FileObject);
     },
     getImages(layout) {
-      let images = this.$store.getters.images.filter( i => i.layout == layout);
-      if(this.filters.category?.length) {
-        images = images.filter( i => i.categories.some( c => this.filters.category.includes(c) ) );
+      let images = this.$store.getters.images.filter(i => i.layout == layout);
+      if (this.filters.category?.length) {
+        images = images.filter(i => i.categories.some(c => this.filters.category.includes(c)));
       }
-      if(this.filters.text) {
-        images = images.filter( i => i.label.toLowerCase().includes(this.filters.text.toLowerCase()) || i.tags.some( t => t.toLowerCase().includes(this.filters.text.toLowerCase()) ) );
+      if (this.filters.text) {
+        images = images.filter(
+          i =>
+            i.label.toLowerCase().includes(this.filters.text.toLowerCase()) ||
+            i.tags.some(t => t.toLowerCase().includes(this.filters.text.toLowerCase()))
+        );
       }
       return images;
     },
     setImage(type, image) {
-      if(this[type] && this[type].id === image.id)
-        this[type] = null;
-      else
-        this[type] = image
+      if (this[type] && this[type].id === image.id) this[type] = null;
+      else this[type] = image;
     },
     move(step) {
       this.$router.push({
-        path: "/tareas-en-internet/"+this.webTask.id+"/paso/"+step
+        path: "/tareas-en-internet/" + this.webTask.id + "/paso/" + step
       });
     },
     dismiss() {
-      if(this.originalStep) {
+      if (this.originalStep) {
         this.step = this.originalStep.label;
-        if(this.originalStep.pictogram) {
+        if (this.originalStep.pictogram) {
           this.action = this.originalStep.pictogram.images.find(i => i.layout === 4);
           this.context = this.originalStep.pictogram.images.find(i => i.layout === 3);
           this.landmark = this.originalStep.pictogram.images.find(i => i.layout === 2);
@@ -389,46 +425,52 @@ export default {
       }
     },
     saveStep() {
-      this.$refs.observer.validate().then( valid => {
-        if(valid) {
-          if(this.$route.params.id) {
-            this.$http.put(process.env.VUE_APP_API_DOMAIN + 'api/online_steps/update', {
-              image: this.action?.id,
-              screenshot: this.img_base64,
-              label: this.step,
-              focus_size: this.hasFocus ? this.focusSize : null,
-              focus_x: this.hasFocus ? this.xPosition : null,
-              focus_y: this.hasFocus ? this.yPosition : null,
-              details: this.details,
-              id: this.$route.params.id
-            }).then((response) => {
-              this.originalStep = response.data;
-              this.saved = true;
-            });
-          } else {
-            this.$http.post(process.env.VUE_APP_API_DOMAIN + 'api/online_steps/store', {
-              image: this.action?.id,
-              screenshot: this.img_base64,
-              label: this.step,
-              focus_size: this.hasFocus ? this.focusSize : null,
-              focus_x: this.hasFocus ? this.xPosition : null,
-              focus_y: this.hasFocus ? this.yPosition : null,
-              details: this.details,
-              online_task_id: this.$route.params.online_task_id
-            }).then((response) => {
-              this.$router.push({
-                path: "/tareas-en-internet/"+this.webTask.id
+      this.$refs.observer.validate().then(valid => {
+        if (valid) {
+          if (this.$route.params.id) {
+            this.$http
+              .put(process.env.VUE_APP_API_DOMAIN + "api/online_steps/update", {
+                image: this.action?.id,
+                screenshot: this.img_base64,
+                label: this.step,
+                url: this.url,
+                focus_size: this.hasFocus ? this.focusSize : null,
+                focus_x: this.hasFocus ? this.xPosition : null,
+                focus_y: this.hasFocus ? this.yPosition : null,
+                details: this.details,
+                id: this.$route.params.id
+              })
+              .then(response => {
+                this.originalStep = response.data;
+                this.saved = true;
               });
-            });
+          } else {
+            this.$http
+              .post(process.env.VUE_APP_API_DOMAIN + "api/online_steps/store", {
+                image: this.action?.id,
+                screenshot: this.img_base64,
+                label: this.step,
+                url: this.url,
+                focus_size: this.hasFocus ? this.focusSize : null,
+                focus_x: this.hasFocus ? this.xPosition : null,
+                focus_y: this.hasFocus ? this.yPosition : null,
+                details: this.details,
+                online_task_id: this.$route.params.online_task_id
+              })
+              .then(response => {
+                this.$router.push({
+                  path: "/tareas-en-internet/" + this.webTask.id
+                });
+              });
           }
         }
-      } )
+      });
     },
     clearImage() {
       this.image = null;
       this.img_base64 = null;
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -437,24 +479,26 @@ export default {
   max-width: 100%;
   margin: auto;
 }
-.slider__container::v-deep .vueperslide__content-wrapper, .image__pictogram {
+.slider__container::v-deep .vueperslide__content-wrapper,
+.image__pictogram {
   border: 1px solid lightgray;
   cursor: pointer;
   max-width: 100%;
 }
 
-.slider__container::v-deep .vueperslide__content-wrapper.active, .image__pictogram.active {
+.slider__container::v-deep .vueperslide__content-wrapper.active,
+.image__pictogram.active {
   position: relative;
-  border: 2px solid rgba(25, 117, 210, .6);
+  border: 2px solid rgba(25, 117, 210, 0.6);
   transition: 0.5s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
-.slider__container::v-deep  .vueperslides__arrows--outside .vueperslides__arrow--prev {
+.slider__container::v-deep .vueperslides__arrows--outside .vueperslides__arrow--prev {
   left: -2.8em;
 }
-.slider__container::v-deep  .vueperslides__arrows--outside .vueperslides__arrow--next {
+.slider__container::v-deep .vueperslides__arrows--outside .vueperslides__arrow--next {
   right: -2.8em;
 }
-.slider__container::v-deep  .vueperslides__arrow svg {
+.slider__container::v-deep .vueperslides__arrow svg {
   width: 2em;
   padding: 0.5rem;
 }
@@ -490,23 +534,23 @@ export default {
   top: 12px;
 }
 .breadcrumbs {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 .breadcrumbs__link {
   text-decoration: none;
   &:after {
-    content: '/';
+    content: "/";
     padding: 0 0.5rem;
     color: gray;
   }
 }
 .sticky-top {
-    position: sticky;
-    top: 5rem;
+  position: sticky;
+  top: 5rem;
 }
 .sticky-top-2 {
-    position: sticky;
-    top: 9.3rem;
+  position: sticky;
+  top: 9.3rem;
 }
 .subtitle {
   font-size: 0.9rem !important;

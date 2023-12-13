@@ -65,10 +65,7 @@
                   task.online_venue.name
                 }}</router-link>
               </li>
-              <li v-if="task.url != ''" class="py-2">
-                <span class="font-weight-bold">Url:</span>
-                <a target="_blank" :href="task.url">{{ task.url }}</a>
-              </li>
+              <li class="py-2"><span class="font-weight-bold">Url: </span> {{ task.url }}</li>
               <li class="py-2"><span class="font-weight-bold">Id:</span> {{ task.id }}</li>
               <li v-if="task.tags.length" class="py-2">
                 <span class="font-weight-bold">Sinonimos:</span> {{ task.tags.join(", ") }}
