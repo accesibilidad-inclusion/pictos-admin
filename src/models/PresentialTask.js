@@ -141,7 +141,7 @@ class PresentialTask {
                 label: "Lugar al que pertenece",
                 rules: "required",
                 type: "select",
-                data: "venues",
+                data: "presential_venues",
                 textOption: ["name"]
               },
               {
