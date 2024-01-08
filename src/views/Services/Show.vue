@@ -53,12 +53,14 @@
                 {{ moment(service.last_modified.date).format("DD/MM/YYYY HH:mm") }}
               </li>
               <li class="py-2">
-                <span class="font-weight-bold">N° de tareas publicadas:</span>
-                {{ tasksPublished }}
+                <span class="font-weight-bold">N° de tareas presenciales publicadas:</span>
+                {{ presentialTasksPublished }}
+                <span v-if="presentialTasksPublished">({{ presentialStepsPublished }} pasos)</span>
               </li>
               <li class="py-2">
-                <span class="font-weight-bold">N° de pasos publicados:</span>
-                {{ stepsPublished }}
+                <span class="font-weight-bold">N° de tareas en internet publicadas:</span>
+                {{ onlineTasksPublished }}
+                <span v-if="onlineTasksPublished">({{ onlineStepsPublished }} pasos)</span>
               </li>
             </ul>
           </v-card-text>
@@ -88,8 +90,8 @@
                   >
                 </div>
                 <div class="color-published venue-draft">
-                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador:
-                  {{ venue.tasks_drafted }}
+                  Tareas publicadas: {{ venue.tasks_published_count }} / Tareas en borrador:
+                  {{ venue.tasks_drafted_count }}
                 </div>
               </li>
             </ul>
@@ -131,8 +133,8 @@
                   >
                 </div>
                 <div class="color-published venue-draft">
-                  Tareas publicadas: {{ venue.tasks_published }} / Tareas en borrador:
-                  {{ venue.tasks_drafted }}
+                  Tareas publicadas: {{ venue.tasks_published_count }} / Tareas en borrador:
+                  {{ venue.tasks_drafted_count }}
                 </div>
               </li>
             </ul>
@@ -201,14 +203,26 @@ export default {
         process.env.VUE_APP_CLIENT_DOMAIN + this.service.category.slug + "/" + this.service.slug
       );
     },
-    tasksPublished() {
+    presentialTasksPublished() {
       return this.service.presential_venues.reduce(
-        (a, b) => (b.visible ? a + b.tasks_published : a),
+        (a, b) => (b.visible ? a + b.tasks_published_count : a),
         0
       );
     },
-    stepsPublished() {
+    presentialStepsPublished() {
       return this.service.presential_venues.reduce(
+        (a, b) => (b.visible ? a + b.steps_published : a),
+        0
+      );
+    },
+    onlineTasksPublished() {
+      return this.service.online_venues.reduce(
+        (a, b) => (b.visible ? a + b.tasks_published_count : a),
+        0
+      );
+    },
+    onlineStepsPublished() {
+      return this.service.online_venues.reduce(
         (a, b) => (b.visible ? a + b.steps_published : a),
         0
       );
