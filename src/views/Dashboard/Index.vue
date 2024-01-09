@@ -12,6 +12,76 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
+            Evaluaciones presenciales
+            <router-link
+              :to="{ name: 'PresentialEvaluations' }"
+              class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
+              >Ver todos</router-link
+            >
+          </v-card-title>
+          <v-card-text class="py-5 px-6">
+            <div v-if="!presential_evaluations.length">
+              No hay evaluaciones enviadas por usuarios
+            </div>
+            <template v-else>
+              <div
+                v-for="evaluation in presential_evaluations"
+                v-bind:key="evaluation.id"
+                class="py-1"
+              >
+                <span class="grey--text lighten-2">{{
+                  moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
+                }}</span>
+                <span>
+                  -
+                  <a @click="$router.push('/lugares-presenciales/evaluacion/' + evaluation.id)">{{
+                    evaluation.presential_venue.name
+                  }}</a></span
+                >
+              </div>
+            </template>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <v-card height="100%">
+          <v-card-title
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
+            primary-title
+          >
+            Evaluaciones en internet
+            <router-link
+              :to="{ name: 'OnlineEvaluations' }"
+              class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
+              >Ver todos</router-link
+            >
+          </v-card-title>
+          <v-card-text class="py-5 px-6">
+            <div v-if="!online_evaluations.length">
+              No hay evaluaciones enviadas por usuarios
+            </div>
+            <template v-else>
+              <div v-for="evaluation in online_evaluations" v-bind:key="evaluation.id" class="py-1">
+                <span class="grey--text lighten-2">{{
+                  moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
+                }}</span>
+                <span>
+                  -
+                  <a @click="$router.push('/lugares-en-internet/evaluacion/' + evaluation.id)">{{
+                    evaluation.online_venue.name
+                  }}</a></span
+                >
+              </div>
+            </template>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
+        <v-card height="100%">
+          <v-card-title
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
+            primary-title
+          >
             Lugares
             <router-link
               :to="{ name: 'Venues', params: { status: 'contributions' } }"
@@ -42,42 +112,9 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Evaluaciones
-            <router-link
-              :to="{ name: 'Evaluations' }"
-              class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
-              >Ver todos</router-link
-            >
-          </v-card-title>
-          <v-card-text class="py-5 px-6">
-            <div v-if="!evaluations.length">
-              No hay evaluaciones enviadas por usuarios
-            </div>
-            <template v-else>
-              <div v-for="evaluation in evaluations" v-bind:key="evaluation.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  -
-                  <a @click="$router.push('/lugares/evaluacion/' + evaluation.id)">{{
-                    evaluation.venue.name
-                  }}</a></span
-                >
-              </div>
-            </template>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="6">
-        <v-card height="100%">
-          <v-card-title
-            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
-            primary-title
-          >
             Tareas
             <router-link
-              :to="{ name: 'Tasks', params: { status: 'contributions' } }"
+              :to="{ name: 'PresentialTasks', params: { status: 'contributions' } }"
               class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
               >Ver todos</router-link
             >
@@ -119,7 +156,7 @@
                 <span>
                   -
                   <a @click="setObjectEdit('proposal_tasks', proposal)">{{
-                    proposal.task.title
+                    proposal.presential_task.title
                   }}</a></span
                 >
               </div>
@@ -127,7 +164,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="6">
         <v-card height="100%">
           <v-card-title
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
@@ -146,12 +183,16 @@
                 }}</span>
                 <span>
                   - {{ report.report }} en
-                  <a v-if="report.presential_task" @click="$router.push('/tareas-presenciales/' + report.presential_task.id)">{{
-                    report.presential_task.title
-                  }}</a>
-                  <a v-if="report.online_task" @click="$router.push('/tareas-en-internet/' + report.online_task.id)">{{
-                    report.online_task.title
-                  }}</a>
+                  <a
+                    v-if="report.presential_task"
+                    @click="$router.push('/tareas-presenciales/' + report.presential_task.id)"
+                    >{{ report.presential_task.title }}</a
+                  >
+                  <a
+                    v-if="report.online_task"
+                    @click="$router.push('/tareas-en-internet/' + report.online_task.id)"
+                    >{{ report.online_task.title }}</a
+                  >
                 </span>
               </div>
             </template>
@@ -177,9 +218,11 @@ export default {
     Form
   },
   beforeMount() {
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/by_users").then(response => {
-      this.venues = response.data;
-    });
+    this.$http
+      .get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/by_users")
+      .then(response => {
+        this.venues = response.data;
+      });
     this.$http
       .get(process.env.VUE_APP_API_DOMAIN + "api/presential_tasks/by_users")
       .then(response => {
@@ -190,9 +233,16 @@ export default {
       .then(response => {
         this.proposal_tasks = response.data;
       });
-    // this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get").then(response => {
-    //   this.evaluations = response.data;
-    // });
+    this.$http
+      .get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get_presential_limit")
+      .then(response => {
+        this.presential_evaluations = response.data;
+      });
+    this.$http
+      .get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get_online_limit")
+      .then(response => {
+        this.online_evaluations = response.data;
+      });
     this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/reports").then(response => {
       this.reports = response.data;
     });
@@ -202,7 +252,8 @@ export default {
       venues: [],
       tasks: [],
       proposal_tasks: [],
-      evaluations: [],
+      presential_evaluations: [],
+      online_evaluations: [],
       reports: [],
       dialog: false,
       objectEdit: null,

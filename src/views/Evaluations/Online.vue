@@ -5,7 +5,7 @@
         <h1 class="display-1 pb-2">Evaluaciones</h1>
       </v-col>
     </v-row>
-    <v-row>
+    <!-- <v-row>
       <v-col cols="2" v-if="entries.length">
         <a
           :href="urlExport"
@@ -14,7 +14,7 @@
           >Exportar excel</a
         >
       </v-col>
-    </v-row>
+    </v-row> -->
     <v-layout v-if="!entries" justify-center class="mt-8">
       <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
     </v-layout>
@@ -31,14 +31,20 @@
                   }}</router-link>
                 </td>
                 <td>
-                  <router-link :to="'/lugares/' + item.venue.id">{{ item.venue.name }}</router-link>
+                  <router-link :to="'/lugares-en-internet/' + item.venue.id">{{
+                    item.venue.name
+                  }}</router-link>
                 </td>
                 <!-- <td>{{ item.app_user.sex }}</td>
                 <td>{{ item.app_user.impairments.join(', ') }}</td>
                 <td>{{ moment(item.app_user.birthday).format('DD/MM/YYYY') }}</td> -->
                 <td>{{ item.calification }}</td>
                 <td>{{ moment(item.created_at).format("DD/MM/YYYY \- HH:mm") }}</td>
-                <td><router-link :to="'/evaluaciones/' + item.id">Ver evaluación</router-link></td>
+                <td>
+                  <router-link :to="'/evaluaciones-en-internet/' + item.id"
+                    >Ver evaluación</router-link
+                  >
+                </td>
               </tr>
             </tbody>
           </template>
@@ -52,7 +58,7 @@
 export default {
   name: "Evaluations",
   beforeMount() {
-    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/").then(response => {
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get_online").then(response => {
       this.entries = response.data;
     });
   },

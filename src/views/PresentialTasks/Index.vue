@@ -148,7 +148,7 @@ export default {
       pagination: {},
       dialog: false,
       newTask: new PresentialTask(),
-      showStatus: "",
+      showStatus: this.$route.params.status || "",
       loading: false
     };
   },

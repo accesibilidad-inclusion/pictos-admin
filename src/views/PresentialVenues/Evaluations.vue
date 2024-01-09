@@ -5,7 +5,7 @@
         <router-link to="/lugares/" class="breadcrumbs__link">
           <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares
         </router-link>
-        <router-link :to="'/lugares/' + venue.id" class="breadcrumbs__link">
+        <router-link :to="'/lugares-presenciales/' + venue.id" class="breadcrumbs__link">
           {{ venue.name }}
         </router-link>
         Evaluaciones
@@ -37,7 +37,9 @@
                 <td>{{ item.calification }}</td>
                 <td>{{ moment(item.created_at).format("DD/MM/YYYY \- HH:mm") }}</td>
                 <td>
-                  <router-link :to="'/lugares/evaluacion/' + item.id">Ver evaluación</router-link>
+                  <router-link :to="'/lugares-presenciales/evaluacion/' + item.id"
+                    >Ver evaluación</router-link
+                  >
                 </td>
               </tr>
             </tbody>
@@ -53,13 +55,15 @@ export default {
   name: "VenueEvaluations",
   beforeMount() {
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/venues/" + this.$route.params.id)
+      .get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/" + this.$route.params.id)
       .then(response => {
         this.venue = response.data;
       });
 
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/venue/" + this.$route.params.id)
+      .get(
+        process.env.VUE_APP_API_DOMAIN + "api/evaluations/presential_venue/" + this.$route.params.id
+      )
       .then(response => {
         this.entries = response.data;
       });

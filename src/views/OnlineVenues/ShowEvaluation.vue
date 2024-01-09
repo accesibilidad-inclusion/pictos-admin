@@ -24,7 +24,7 @@
     </v-row>
     <v-row>
       <v-col cols="12" v-for="answer in evaluation.answers" v-bind:key="answer.id">
-        <b>{{ answer.question.text }}</b>
+        <div v-html="answer.question.text"></div>
         <p
           v-if="answer.question.answer_type != 'Fotografía'"
           class="pt-2 grey--text text--darken-3"
@@ -70,7 +70,7 @@ export default {
             id: this.evaluation.id
           })
           .then(response => {
-            this.$router.push("/lugares/" + this.evaluation.venue.id + "/evaluaciones");
+            this.$router.push("/lugares-en-internet/" + this.evaluation.venue.id + "/evaluaciones");
           });
       }
     }

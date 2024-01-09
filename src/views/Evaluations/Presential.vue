@@ -1,26 +1,20 @@
 <template>
   <div class="py-6 px-12">
-    <v-row class="mb-3" v-if="venue">
-      <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/lugares/" class="breadcrumbs__link">
-          <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares
-        </router-link>
-        <router-link :to="'/lugares-en-internet/' + venue.id" class="breadcrumbs__link">
-          {{ venue.name }}
-        </router-link>
-        Evaluaciones
+    <v-row>
+      <v-col cols="12">
+        <h1 class="display-1 pb-2">Evaluaciones</h1>
       </v-col>
     </v-row>
-    <!-- <v-row>
-      <v-col cols="2">
-        <v-autocomplete
-          append-icon="mdi-magnify"
-          placeholder="Buscar"
-          cache-items
+    <v-row>
+      <v-col cols="2" v-if="entries.length">
+        <a
+          :href="urlExport"
+          target="_blank"
+          class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
+          >Exportar excel</a
         >
-        </v-autocomplete>
       </v-col>
-    </v-row> -->
+    </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">
       <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
     </v-layout>
@@ -31,13 +25,23 @@
             <tbody>
               <tr v-for="item in items" :key="item.id">
                 <td>{{ item.id }}</td>
-                <td>{{ item.app_user.sex }}</td>
-                <td>{{ item.app_user.impairments.join(", ") }}</td>
-                <td>{{ moment(item.app_user.birthday).format("DD/MM/YYYY") }}</td>
+                <td>
+                  <router-link :to="'/servicios/' + item.service.id">{{
+                    item.service.name
+                  }}</router-link>
+                </td>
+                <td>
+                  <router-link :to="'/lugares-presenciales/' + item.venue.id">{{
+                    item.venue.name
+                  }}</router-link>
+                </td>
+                <!-- <td>{{ item.app_user.sex }}</td>
+                <td>{{ item.app_user.impairments.join(', ') }}</td>
+                <td>{{ moment(item.app_user.birthday).format('DD/MM/YYYY') }}</td> -->
                 <td>{{ item.calification }}</td>
                 <td>{{ moment(item.created_at).format("DD/MM/YYYY \- HH:mm") }}</td>
                 <td>
-                  <router-link :to="'/lugares-en-internet/evaluacion/' + item.id"
+                  <router-link :to="'/evaluaciones-presenciales/' + item.id"
                     >Ver evaluación</router-link
                   >
                 </td>
@@ -52,16 +56,10 @@
 
 <script>
 export default {
-  name: "VenueEvaluations",
+  name: "Evaluations",
   beforeMount() {
     this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/online_venues/" + this.$route.params.id)
-      .then(response => {
-        this.venue = response.data;
-      });
-
-    this.$http
-      .get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/online_venue/" + this.$route.params.id)
+      .get(process.env.VUE_APP_API_DOMAIN + "api/evaluations/get_presential")
       .then(response => {
         this.entries = response.data;
       });
@@ -74,17 +72,25 @@ export default {
           value: "id"
         },
         {
-          text: "Sexo",
-          value: "sex"
+          text: "Servicio",
+          value: "service.name"
         },
         {
-          text: "Discapacidad",
-          value: "impairments"
+          text: "Lugar",
+          value: "venue.name"
         },
-        {
-          text: "Nacimiento",
-          value: "birthday"
-        },
+        // {
+        //   text: 'Sexo',
+        //   value: 'sex',
+        // },
+        // {
+        //   text: 'Discapacidad',
+        //   value: 'impairments',
+        // },
+        // {
+        //   text: 'Nacimiento',
+        //   value: 'birthday',
+        // },
         {
           text: "Evaluacion",
           value: "calification"
@@ -97,10 +103,19 @@ export default {
           text: ""
         }
       ],
-      entries: null,
+      entries: [],
       venue: null,
       pagination: {}
     };
+  },
+  computed: {
+    urlExport() {
+      return (
+        process.env.VUE_APP_API_DOMAIN +
+        "evaluations/exportExcel/" +
+        this.$store.getters.user.hash_id
+      );
+    }
   },
   methods: {}
 };

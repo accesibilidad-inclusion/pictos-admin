@@ -17,8 +17,11 @@ import ShowOnlineVenue from "../views/OnlineVenues/Show.vue";
 import OnlineVenueEvaluations from "../views/OnlineVenues/Evaluations.vue";
 import ShowOnlineVenueEvaluation from "../views/OnlineVenues/ShowEvaluation.vue";
 
-import Evaluations from "../views/Evaluations/Index.vue";
-import ShowEvaluation from "../views/Evaluations/Show.vue";
+import PresentialEvaluations from "../views/Evaluations/Presential.vue";
+import OnlineEvaluations from "../views/Evaluations/Online.vue";
+import ShowPresentialEvaluation from "../views/Evaluations/ShowPresential.vue";
+import ShowOnlineEvaluation from "../views/Evaluations/ShowOnline.vue";
+
 import PresentialTasks from "../views/PresentialTasks/Index.vue";
 import ShowPresentialTask from "../views/PresentialTasks/Show.vue";
 import PresentialStep from "../views/PresentialTasks/Step.vue";
@@ -81,14 +84,24 @@ const router = new Router({
       component: ShowPresentialVenueEvaluation
     },
     {
-      path: "/evaluaciones",
-      name: "Evaluations",
-      component: Evaluations
+      path: "/evaluaciones-presenciales",
+      name: "PresentialEvaluations",
+      component: PresentialEvaluations
     },
     {
-      path: "/evaluaciones/:id",
-      name: "ShowEvaluation",
-      component: ShowEvaluation
+      path: "/evaluaciones-en-internet",
+      name: "OnlineEvaluations",
+      component: OnlineEvaluations
+    },
+    {
+      path: "/evaluaciones-presenciales/:id",
+      name: "ShowPresentialEvaluation",
+      component: ShowPresentialEvaluation
+    },
+    {
+      path: "/evaluaciones-en-internet/:id",
+      name: "ShowOnlineEvaluation",
+      component: ShowOnlineEvaluation
     },
     {
       path: "/tareas-presenciales",
@@ -124,6 +137,16 @@ const router = new Router({
       path: "/lugares-en-internet/:id",
       name: "ShowOnlineVenue",
       component: ShowOnlineVenue
+    },
+    {
+      path: "/lugares-en-internet/:id/evaluaciones",
+      name: "VenueEvaluations",
+      component: OnlineVenueEvaluations
+    },
+    {
+      path: "/lugares-en-internet/evaluacion/:id",
+      name: "ShowVenueEvaluation",
+      component: ShowOnlineVenueEvaluation
     },
     {
       path: "/tareas-en-internet",
