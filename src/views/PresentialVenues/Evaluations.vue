@@ -2,8 +2,8 @@
   <div class="py-6 px-12">
     <v-row class="mb-3" v-if="venue">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/lugares/" class="breadcrumbs__link">
-          <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares
+        <router-link to="/lugares-presenciales/" class="breadcrumbs__link">
+          <v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Lugares presenciales
         </router-link>
         <router-link :to="'/lugares-presenciales/' + venue.id" class="breadcrumbs__link">
           {{ venue.name }}
