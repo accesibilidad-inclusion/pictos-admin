@@ -224,7 +224,7 @@
           </v-col>
         </v-row>
       </v-footer>
-      <v-snackbar v-model="saved" :timeout="3000" top right absolute color="success">
+      <v-snackbar v-model="saved" :timeout="3000" top center fixed color="success">
         Paso guardado correctamente
       </v-snackbar>
     </div>
