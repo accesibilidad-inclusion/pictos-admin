@@ -249,19 +249,19 @@
       <v-footer fixed>
         <v-row>
           <v-col cols="12" class="d-flex justify-end">
-            <v-btn
+            <!--<v-btn
               class="mr-5"
               text
               color="primary"
               href="https://forms.gle/QdbvD3CgSrxN9VZS6"
               target="_blank"
               >Envianos tus comentarios o sugerencias</v-btn
-            >
+            >-->
             <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
           </v-col>
         </v-row>
       </v-footer>
-      <v-snackbar v-model="saved" :timeout="3000" top right absolute color="success">
+      <v-snackbar v-model="saved" :timeout="3000" top center fixed color="success">
         Paso guardado correctamente
       </v-snackbar>
     </div>

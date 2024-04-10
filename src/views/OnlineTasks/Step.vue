@@ -45,13 +45,13 @@
                   {{ step }}
                 </v-col>
               </v-row>
-              <!-- <v-row class="mt-3" v-if="originalStep">
+              <v-row class="mt-3" v-if="originalStep">
                 <v-col cols="12" class="d-flex justify-space-around">
                   <v-btn outlined color="primary" @click="move(previous)" :disabled="edited || !previous">Anterior</v-btn>
                   <v-btn outlined color="primary" @click="move(next)" :disabled="edited || !next">Siguiente</v-btn>
                 </v-col>
               </v-row>
-              <v-row class="mt-3" v-if="originalStep && edited">
+              <!-- <v-row class="mt-3" v-if="originalStep && edited">
                 <v-col cols="12" class="d-flex justify-center">
                   <v-alert type="warning" prominent dense text outlined>
                     <v-row align="center">
@@ -212,19 +212,19 @@
       <v-footer fixed>
         <v-row>
           <v-col cols="12" class="d-flex justify-end">
-            <v-btn
+            <!--<v-btn
               class="mr-5"
               text
               color="primary"
               href="https://forms.gle/QdbvD3CgSrxN9VZS6"
               target="_blank"
               >Envianos tus comentarios o sugerencias</v-btn
-            >
+            >-->
             <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
           </v-col>
         </v-row>
       </v-footer>
-      <v-snackbar v-model="saved" :timeout="3000" top right absolute color="success">
+      <v-snackbar v-model="saved" :timeout="3000" top center fixed color="success">
         Paso guardado correctamente
       </v-snackbar>
     </div>
@@ -324,8 +324,9 @@ export default {
     let response = await this.$http.get(
       process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.online_task_id
     );
-
-    this.webTask.set(response.data);
+    const webTask = {...response.data};
+    webTask.web_steps = webTask.steps;
+    this.webTask.set(webTask);
     if (this.$route.params.id) {
       response = await this.$http.get(
         process.env.VUE_APP_API_DOMAIN + "api/online_steps/" + this.$route.params.id
@@ -358,18 +359,18 @@ export default {
       if (this.currentIndex === 0) {
         return false;
       } else {
-        return this.webTask.steps[this.currentIndex - 1].id;
+        return this.webTask.web_steps[this.currentIndex - 1].id;
       }
     },
     next() {
-      if (this.currentIndex === this.webTask.steps.length - 1) {
+      if (this.currentIndex === this.webTask.web_steps.length - 1) {
         return false;
       } else {
-        return this.webTask.steps[this.currentIndex + 1].id;
+        return this.webTask.web_steps[this.currentIndex + 1].id;
       }
     },
     currentIndex() {
-      return this.webTask.steps.findIndex(s => s.id === this.originalStep.id);
+      return this.webTask.web_steps.findIndex(s => s.id === this.originalStep.id);
     },
     cssVars() {
       return {
@@ -377,7 +378,20 @@ export default {
         "--x-position": this.xPosition + "%",
         "--y-position": this.yPosition + "%"
       };
-    }
+    },
+    edited() {
+      if (this.originalStep) {
+        const dirtyLabel = this.originalStep.label !== this.step || ! this.step;
+        const dirtyUrl = this.originalStep.url !== this.url || ! this.url;
+        const dirtyDetails = this.originalStep.details !== this.details;
+          return (
+            dirtyLabel ||
+            dirtyUrl ||
+            dirtyDetails
+          );
+      }
+      return false;
+    },
   },
   methods: {
     createBase64Image(FileObject) {

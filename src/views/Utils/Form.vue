@@ -28,6 +28,7 @@
                   <v-col cols="6" class="preview__pictos blue lighten-5 pa-0">
                     <img
                       v-for="image in it.pictogram.images"
+                      :class="'pictogram__image pictogram__image--layer-' + image.layout"
                       :src="image.path + '/' + image.filename"
                       v-bind:key="image.id"
                     />
@@ -293,5 +294,11 @@ export default {
   right: 0;
   left: 0;
   margin: 0 auto;
+  &.pictogram__image--layer-4 {
+    max-height: 48px;
+    max-width: 48px;
+    right: unset;
+    left: calc(100% + 25px);
+  }
 }
 </style>
