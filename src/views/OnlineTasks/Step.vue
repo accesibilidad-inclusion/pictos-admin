@@ -335,7 +335,9 @@ export default {
       this.step = response.data.label;
       this.url = response.data.url;
       this.details = response.data.details;
-      this.img_base64 = response.data.screenshot;
+      this.img_base64 = response.data.screenshot_url
+        ? process.env.VUE_APP_API_DOMAIN + response.data.screenshot_url
+        : null;
       if (response.data.focus_size) {
         this.hasFocus = true;
         this.focusSize = response.data.focus_size;
