@@ -199,6 +199,36 @@
           </v-card-text>
         </v-card>
       </v-col>
+      <v-col cols="12">
+        <v-card height="100%">
+          <v-card-title
+            class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
+            primary-title
+          >
+            Comentarios de extensión
+          </v-card-title>
+          <v-card-text class="py-5 px-6">
+            <div v-if="!extension_comments.length">
+              No hay comentarios
+            </div>
+            <template v-else>
+              <div
+                v-for="extension_comment in extension_comments"
+                v-bind:key="extension_comment.id"
+                class="py-1"
+              >
+                <span class="grey--text lighten-2">{{
+                  moment(extension_comment.created_at).format("DD/MM/YYYY \- HH:mm")
+                }}</span>
+                <span>
+                  - {{ extension_comment.comment }} | Enviado desde:
+                  <a :href="extension_comment.url">{{ extension_comment.url }}</a>
+                </span>
+              </div>
+            </template>
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
     <v-dialog persistent v-model="dialog" width="700">
       <Form v-on:cancel="closeModal" v-on:updated="update" :object="objectEdit"></Form>
@@ -246,6 +276,10 @@ export default {
     this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/reports").then(response => {
       this.reports = response.data;
     });
+
+    this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/extension_comments").then(response => {
+      this.extension_comments = response.data;
+    });
   },
   data() {
     return {
@@ -255,6 +289,7 @@ export default {
       presential_evaluations: [],
       online_evaluations: [],
       reports: [],
+      extension_comments: [],
       dialog: false,
       objectEdit: null,
       typeEdit: null
