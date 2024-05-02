@@ -47,6 +47,12 @@
           class="px-3 status-filter__item"
           >Borradores</a
         >
+        <a
+          v-bind:class="{ active: this.showStatus == 'contributions' }"
+          @click="changeStatus('contributions')"
+          class="px-3 status-filter__item"
+          >Aportes de usuarios</a
+        >
       </v-col>
     </v-row>
     <v-layout v-if="!entries" justify-center class="mt-8">

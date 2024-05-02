@@ -26,9 +26,14 @@
               <tr v-for="item in items" :key="item.id">
                 <td>{{ item.id }}</td>
                 <td>
-                  <router-link :to="'/servicios/' + item.service.id">{{
-                    item.service.name
-                  }}</router-link>
+                  <template v-if="item.service">
+                    <router-link :to="'/servicios/' + item.service.id">{{
+                      item.service.name
+                    }}</router-link>
+                  </template>
+                  <template v-else>
+                    -
+                  </template>
                 </td>
                 <td>
                   <router-link :to="'/lugares-en-internet/' + item.venue.id">{{
