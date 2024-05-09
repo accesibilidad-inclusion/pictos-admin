@@ -1,8 +1,8 @@
 <template>
-  <v-layout v-if="!user.id" justify-center>
-    <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
+  <v-layout v-if="!user.id" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
   </v-layout>
-  <div v-else class="py-6 px-12">
+  <div v-else class="w-100 py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/usuarios/" class="breadcrumbs__link"
@@ -83,18 +83,8 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Usuario eliminado");
             this.$router.push("/usuarios");
-          });
-      }
-    },
-    publishUser() {
-      if (confirm("¿Esta seguro de publicar este usuario?")) {
-        this.$http
-          .put(process.env.VUE_APP_API_DOMAIN + "api/users/publish", {
-            id: this.$route.params.id
-          })
-          .then(response => {
-            if (response.data) this.user.status = "Publicado";
           });
       }
     },
@@ -102,14 +92,11 @@ export default {
       this.dialog = false;
       this.editUser = _.cloneDeep(this.user);
     },
-    updated() {
-      this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/users/" + this.$route.params.id)
-        .then(response => {
-          this.user.set(response.data);
-          this.editUser = _.cloneDeep(this.user);
-          this.closeModal();
-        });
+    updated(user, callback) {
+      this.user.set(user);
+      this.closeModal();
+      this.$toast.success("Usuario actualizado");
+      callback();
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="py-6 px-12">
+  <div class="w-100 py-6 px-12">
     <v-row>
       <v-col cols="12">
         <h1 class="display-1 pb-3">Dashboard</h1>
@@ -20,25 +20,30 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!presential_evaluations.length">
-              No hay evaluaciones enviadas por usuarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!presential_evaluations">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div
-                v-for="evaluation in presential_evaluations"
-                v-bind:key="evaluation.id"
-                class="py-1"
-              >
-                <span class="grey--text lighten-2">{{
-                  moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  -
-                  <a @click="$router.push('/lugares-presenciales/evaluacion/' + evaluation.id)">{{
-                    evaluation.presential_venue.name
-                  }}</a></span
-                >
+              <div v-if="!presential_evaluations.length">
+                No hay evaluaciones enviadas por usuarios
               </div>
+              <template v-else>
+                <div
+                  v-for="evaluation in presential_evaluations"
+                  v-bind:key="evaluation.id"
+                  class="py-1"
+                >
+                  <span class="grey--text lighten-2">{{
+                    moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    -
+                    <a @click="$router.push('/lugares-presenciales/evaluacion/' + evaluation.id)">{{
+                      evaluation.presential_venue.name
+                    }}</a></span
+                  >
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -57,21 +62,26 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!online_evaluations.length">
-              No hay evaluaciones enviadas por usuarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!online_evaluations">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div v-for="evaluation in online_evaluations" v-bind:key="evaluation.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  -
-                  <a @click="$router.push('/lugares-en-internet/evaluacion/' + evaluation.id)">{{
-                    evaluation.online_venue.name
-                  }}</a></span
-                >
+              <div v-if="!online_evaluations.length">
+                No hay evaluaciones enviadas por usuarios
               </div>
+              <template v-else>
+                <div v-for="evaluation in online_evaluations" v-bind:key="evaluation.id" class="py-1">
+                  <span class="grey--text lighten-2">{{
+                    moment(evaluation.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    -
+                    <a @click="$router.push('/lugares-en-internet/evaluacion/' + evaluation.id)">{{
+                      evaluation.online_venue.name
+                    }}</a></span
+                  >
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -82,7 +92,7 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Lugares
+            Lugares enviados por usuarios
             <router-link
               :to="{ name: 'Venues', params: { status: 'contributions' } }"
               class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
@@ -90,18 +100,23 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!venues.length">
-              No hay lugares propuestos por usuarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!venues">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div v-for="venue in venues" v-bind:key="venue.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(venue.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  - <a @click="setObjectEdit('venues', venue)">{{ venue.name }}</a></span
-                >
+              <div v-if="!venues.length">
+                No hay lugares propuestos por usuarios
               </div>
+              <template v-else>
+                <div v-for="venue in venues" v-bind:key="venue.id" class="py-1">
+                  <span class="grey--text lighten-2">{{
+                    moment(venue.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    - <a @click="setObjectEdit('venues', venue)">{{ venue.name }}</a></span
+                  >
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -112,7 +127,7 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Tareas
+            Tareas enviadas por usuarios
             <router-link
               :to="{ name: 'PresentialTasks', params: { status: 'contributions' } }"
               class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
@@ -120,18 +135,23 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!tasks.length">
-              No hay tareas propuestas por usuarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!tasks">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div v-for="task in tasks" v-bind:key="task.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(task.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  - <a @click="setObjectEdit('tasks', task)">{{ task.title }}</a></span
-                >
+              <div v-if="!tasks.length">
+                No hay tareas propuestas por usuarios
               </div>
+              <template v-else>
+                <div v-for="task in tasks" v-bind:key="task.id" class="py-1">
+                  <span class="grey--text lighten-2">{{
+                    moment(task.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    - <a @click="setObjectEdit('tasks', task)">{{ task.title }}</a></span
+                  >
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -142,24 +162,29 @@
             class="font-weight-regular grey lighten-4 ps-6 d-flex flex-no-wrap justify-space-between"
             primary-title
           >
-            Pictogramas
+            Pictogramas propuestos por usuarios
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!proposal_tasks.length">
-              No hay pictogramas propuestos por usuarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!proposal_tasks">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div v-for="proposal in proposal_tasks" v-bind:key="proposal.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(proposal.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  -
-                  <a @click="setObjectEdit('proposal_tasks', proposal)">{{
-                    proposal.presential_task.title
-                  }}</a></span
-                >
+              <div v-if="!proposal_tasks.length">
+                No hay pictogramas propuestos por usuarios
               </div>
+              <template v-else>
+                <div v-for="proposal in proposal_tasks" v-bind:key="proposal.id" class="py-1">
+                  <span class="grey--text lighten-2">{{
+                    moment(proposal.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    -
+                    <a @click="setObjectEdit('proposal_tasks', proposal)">{{
+                      proposal.presential_task.title
+                    }}</a></span
+                  >
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -173,28 +198,33 @@
             Informe de errores
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!reports.length">
-              No hay errores reportados
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!reports">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div v-for="report in reports" v-bind:key="report.id" class="py-1">
-                <span class="grey--text lighten-2">{{
-                  moment(report.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  - {{ report.report }} en
-                  <a
-                    v-if="report.presential_task"
-                    @click="$router.push('/tareas-presenciales/' + report.presential_task.id)"
-                    >{{ report.presential_task.title }}</a
-                  >
-                  <a
-                    v-if="report.online_task"
-                    @click="$router.push('/tareas-en-internet/' + report.online_task.id)"
-                    >{{ report.online_task.title }}</a
-                  >
-                </span>
+              <div v-if="!reports.length">
+                No hay errores reportados
               </div>
+              <template v-else>
+                <div v-for="report in reports" v-bind:key="report.id" class="py-1">
+                  <span class="grey--text lighten-2">{{
+                    moment(report.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    - {{ report.report }} en
+                    <a
+                      v-if="report.presential_task"
+                      @click="$router.push('/tareas-presenciales/' + report.presential_task.id)"
+                      >{{ report.presential_task.title }}</a
+                    >
+                    <a
+                      v-if="report.online_task"
+                      @click="$router.push('/tareas-en-internet/' + report.online_task.id)"
+                      >{{ report.online_task.title }}</a
+                    >
+                  </span>
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -208,23 +238,28 @@
             Comentarios de extensión
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <div v-if="!extension_comments.length">
-              No hay comentarios
-            </div>
+            <v-layout justify-center align-center fill-height v-if="!extension_comments">
+              <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
+            </v-layout>
             <template v-else>
-              <div
-                v-for="extension_comment in extension_comments"
-                v-bind:key="extension_comment.id"
-                class="py-1"
-              >
-                <span class="grey--text lighten-2">{{
-                  moment(extension_comment.created_at).format("DD/MM/YYYY \- HH:mm")
-                }}</span>
-                <span>
-                  - {{ extension_comment.comment }} | Enviado desde:
-                  <a :href="extension_comment.url">{{ extension_comment.url }}</a>
-                </span>
+              <div v-if="!extension_comments.length">
+                No hay comentarios
               </div>
+              <template v-else>
+                <div
+                  v-for="extension_comment in extension_comments"
+                  v-bind:key="extension_comment.id"
+                  class="py-1"
+                >
+                  <span class="grey--text lighten-2">{{
+                    moment(extension_comment.created_at).format("DD/MM/YYYY \- HH:mm")
+                  }}</span>
+                  <span>
+                    - {{ extension_comment.comment }} | Enviado desde:
+                    <a :href="extension_comment.url">{{ extension_comment.url }}</a>
+                  </span>
+                </div>
+              </template>
             </template>
           </v-card-text>
         </v-card>
@@ -283,13 +318,13 @@ export default {
   },
   data() {
     return {
-      venues: [],
-      tasks: [],
-      proposal_tasks: [],
-      presential_evaluations: [],
-      online_evaluations: [],
-      reports: [],
-      extension_comments: [],
+      venues: null,
+      tasks: null,
+      proposal_tasks: null,
+      presential_evaluations: null,
+      online_evaluations: null,
+      reports: null,
+      extension_comments: null,
       dialog: false,
       objectEdit: null,
       typeEdit: null

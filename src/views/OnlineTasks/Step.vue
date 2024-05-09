@@ -1,233 +1,220 @@
 <template>
-  <div>
-    <v-overlay :z-index="9999" :value="loading">
-      <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
-    </v-overlay>
-    <div v-if="!loading">
-      <v-col cols="12" class="d-flex align-center breadcrumbs">
-        <router-link to="/tareas-en-internet/" class="breadcrumbs__link"
-          ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas
-          Web</router-link
-        >
-        <router-link :to="'/tareas-en-internet/' + webTask.id" class="breadcrumbs__link">
-          {{ webTask.title }}
-        </router-link>
-        <span v-if="!$route.params.id">Crear paso</span>
-        <span v-else>Editar paso</span>
+  <v-layout v-if="loading" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div v-else>
+    <v-col cols="12" class="d-flex align-center breadcrumbs">
+      <router-link to="/tareas-en-internet/" class="breadcrumbs__link"
+        ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon> Tareas
+        Web</router-link
+      >
+      <router-link :to="'/tareas-en-internet/' + webTask.id" class="breadcrumbs__link">
+        {{ webTask.title }}
+      </router-link>
+      <span v-if="!$route.params.id">Crear paso</span>
+      <span v-else>Editar paso</span>
+    </v-col>
+    <v-row>
+      <v-col cols="6">
+        <v-container class="sticky-top-2 d-flex flex-column justify-center">
+          <div class="container-preview mb-12">
+            <v-row align="center" justify="start" class="mt-3">
+              <div class="container-img-preview">
+                <img
+                  id="imgPreview"
+                  class="img-preview"
+                  :src="img_base64"
+                  alt=""
+                  :style="hasFocus ? 'opacity:0.5' : ''"
+                />
+                <img
+                  id="imgPreviewFocus"
+                  :style="cssVars"
+                  class="img-preview-focus"
+                  :src="img_base64"
+                  alt=""
+                />
+              </div>
+            </v-row>
+            <v-row align="center" justify="center" class="mt-3">
+              <v-col v-if="action" cols="2">
+                <img :src="action.path + '/' + action.filename" class="icon__pictogram" />
+              </v-col>
+              <v-col :cols="action ? 8 : 12" class="headline font-weight-bold">
+                {{ step }}
+              </v-col>
+            </v-row>
+            <v-row class="mt-3" v-if="originalStep">
+              <v-col cols="12" class="d-flex justify-space-around">
+                <v-btn outlined color="primary" @click="move(previous)" :disabled="edited || !previous">Anterior</v-btn>
+                <v-btn outlined color="primary" @click="move(next)" :disabled="edited || !next">Siguiente</v-btn>
+              </v-col>
+            </v-row>
+            <!-- <v-row class="mt-3" v-if="originalStep && edited">
+              <v-col cols="12" class="d-flex justify-center">
+                <v-alert type="warning" prominent dense text outlined>
+                  <v-row align="center">
+                    <v-col  class="grow">
+                      Para poder ir a los otros pasos debes guardar tus cambios.
+                    </v-col>
+                    <v-col  class="shrink">
+                      <v-btn small outlined class="text-capitalize" color="warning" @click="dismiss()">Descartar cambios</v-btn>
+                    </v-col>
+                  </v-row>
+                </v-alert>
+              </v-col>
+            </v-row> -->
+          </div>
+        </v-container>
       </v-col>
+      <v-col cols="6" class="mb-12">
+        <ValidationObserver ref="observer">
+          <v-form>
+            <v-container>
+              <span class="subtitle font-weight-bold grey--text text--darken-1 text-uppercase">
+                Configuración
+              </span>
+              <v-row>
+                <v-col cols="12">
+                  <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
+                    <v-text-field
+                      v-model="step"
+                      label="Describe el paso"
+                      :error-messages="errors"
+                      required
+                    ></v-text-field>
+                  </ValidationProvider>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <ValidationProvider v-slot="{ errors }" name="Url" rules="required|url">
+                    <v-text-field
+                      v-model="url"
+                      label="Url del paso"
+                      :error-messages="errors"
+                      required
+                    ></v-text-field>
+                  </ValidationProvider>
+                </v-col>
+              </v-row>
+              <v-row class="align-center">
+                <v-col cols="6">
+                  <v-file-input
+                    accept="image/*"
+                    label="Sube una imagen"
+                    v-model="image"
+                    :clearable="false"
+                  ></v-file-input>
+                </v-col>
+                <v-col cols="3">
+                  <v-btn v-if="img_base64" small color="error" @click="clearImage()">
+                    Quitar imagen <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-col>
+                <v-col cols="3">
+                  <v-checkbox
+                    v-if="img_base64"
+                    v-model="hasFocus"
+                    label="Agregar Foco"
+                  ></v-checkbox>
+                </v-col>
+              </v-row>
+              <v-row v-if="hasFocus">
+                <v-col cols="4">
+                  <v-subheader class="pl-0">
+                    Tamaño del foco
+                  </v-subheader>
+                  <v-slider v-model="focusSize"></v-slider>
+                </v-col>
+                <v-col cols="4">
+                  <v-subheader class="pl-0">
+                    Posición horizontal
+                  </v-subheader>
+                  <v-slider v-model="xPosition"></v-slider>
+                </v-col>
+                <v-col cols="4">
+                  <v-subheader class="pl-0">
+                    Posición vertical
+                  </v-subheader>
+                  <v-slider v-model="yPosition"></v-slider>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-expansion-panels>
+                    <v-expansion-panel>
+                      <v-expansion-panel-header
+                        v-bind:class="{ 'grey lighten-4': action }"
+                        expand-icon="mdi-menu-down"
+                        :disable-icon-rotate="action !== null"
+                      >
+                        <template v-slot:actions v-if="action">
+                          <v-icon color="teal">
+                            mdi-check
+                          </v-icon>
+                        </template>
+                        Icono
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="6">
+                              <v-text-field
+                                clearable
+                                v-model="filters.text"
+                                label="Busca por texto"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                              <v-select
+                                clearable
+                                v-model="filters.category"
+                                :items="['Trámites', 'Salud', 'Transporte', 'Ocio']"
+                                label="Busca por categoria"
+                                multiple
+                                persistent-hint
+                              ></v-select>
+                            </v-col>
+                          </v-row>
+                          <div v-if="!getImages(4).length" class="mt-4">
+                            No existen coincidencias con tu búsqueda
+                          </div>
+                          <v-row>
+                            <v-col cols="2" v-for="image in getImages(4)" v-bind:key="image.id">
+                              <img
+                                class="image__pictogram"
+                                :src="image.path + '/' + image.filename"
+                                v-bind:class="{ active: action && image.id == action.id }"
+                                @click="setImage('action', image)"
+                              />
+                              <span>{{ image.label }}</span>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <div class="grey--text text--darken-2 pb-2">Detalles del paso</div>
+                  <tiptap-vuetify v-model="details" :extensions="extensions" />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </ValidationObserver>
+      </v-col>
+    </v-row>
+    <v-footer fixed>
       <v-row>
-        <v-col cols="6">
-          <v-container class="sticky-top-2 d-flex flex-column justify-center">
-            <div class="container-preview mb-12">
-              <v-row align="center" justify="start" class="mt-3">
-                <div class="container-img-preview">
-                  <img
-                    id="imgPreview"
-                    class="img-preview"
-                    :src="img_base64"
-                    alt=""
-                    :style="hasFocus ? 'opacity:0.5' : ''"
-                  />
-                  <img
-                    id="imgPreviewFocus"
-                    :style="cssVars"
-                    class="img-preview-focus"
-                    :src="img_base64"
-                    alt=""
-                  />
-                </div>
-              </v-row>
-              <v-row align="center" justify="center" class="mt-3">
-                <v-col v-if="action" cols="2">
-                  <img :src="action.path + '/' + action.filename" class="icon__pictogram" />
-                </v-col>
-                <v-col :cols="action ? 8 : 12" class="headline font-weight-bold">
-                  {{ step }}
-                </v-col>
-              </v-row>
-              <v-row class="mt-3" v-if="originalStep">
-                <v-col cols="12" class="d-flex justify-space-around">
-                  <v-btn outlined color="primary" @click="move(previous)" :disabled="edited || !previous">Anterior</v-btn>
-                  <v-btn outlined color="primary" @click="move(next)" :disabled="edited || !next">Siguiente</v-btn>
-                </v-col>
-              </v-row>
-              <!-- <v-row class="mt-3" v-if="originalStep && edited">
-                <v-col cols="12" class="d-flex justify-center">
-                  <v-alert type="warning" prominent dense text outlined>
-                    <v-row align="center">
-                      <v-col  class="grow">
-                        Para poder ir a los otros pasos debes guardar tus cambios.
-                      </v-col>
-                      <v-col  class="shrink">
-                        <v-btn small outlined class="text-capitalize" color="warning" @click="dismiss()">Descartar cambios</v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-alert>
-                </v-col>
-              </v-row> -->
-            </div>
-          </v-container>
-        </v-col>
-        <v-col cols="6" class="mb-12">
-          <ValidationObserver ref="observer">
-            <v-form>
-              <v-container>
-                <span class="subtitle font-weight-bold grey--text text--darken-1 text-uppercase">
-                  Configuración
-                </span>
-                <v-row>
-                  <v-col cols="12">
-                    <ValidationProvider v-slot="{ errors }" name="Paso" rules="required">
-                      <v-text-field
-                        v-model="step"
-                        label="Describe el paso"
-                        :error-messages="errors"
-                        required
-                      ></v-text-field>
-                    </ValidationProvider>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12">
-                    <ValidationProvider v-slot="{ errors }" name="Url" rules="required|url">
-                      <v-text-field
-                        v-model="url"
-                        label="Url del paso"
-                        :error-messages="errors"
-                        required
-                      ></v-text-field>
-                    </ValidationProvider>
-                  </v-col>
-                </v-row>
-                <v-row class="align-center">
-                  <v-col cols="6">
-                    <v-file-input
-                      accept="image/*"
-                      label="Sube una imagen"
-                      v-model="image"
-                      :clearable="false"
-                    ></v-file-input>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-btn v-if="img_base64" small color="error" @click="clearImage()">
-                      Quitar imagen <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-checkbox
-                      v-if="img_base64"
-                      v-model="hasFocus"
-                      label="Agregar Foco"
-                    ></v-checkbox>
-                  </v-col>
-                </v-row>
-                <v-row v-if="hasFocus">
-                  <v-col cols="4">
-                    <v-subheader class="pl-0">
-                      Tamaño del foco
-                    </v-subheader>
-                    <v-slider v-model="focusSize"></v-slider>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-subheader class="pl-0">
-                      Posición horizontal
-                    </v-subheader>
-                    <v-slider v-model="xPosition"></v-slider>
-                  </v-col>
-                  <v-col cols="4">
-                    <v-subheader class="pl-0">
-                      Posición vertical
-                    </v-subheader>
-                    <v-slider v-model="yPosition"></v-slider>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12">
-                    <v-expansion-panels>
-                      <v-expansion-panel>
-                        <v-expansion-panel-header
-                          v-bind:class="{ 'grey lighten-4': action }"
-                          expand-icon="mdi-menu-down"
-                          :disable-icon-rotate="action !== null"
-                        >
-                          <template v-slot:actions v-if="action">
-                            <v-icon color="teal">
-                              mdi-check
-                            </v-icon>
-                          </template>
-                          Icono
-                        </v-expansion-panel-header>
-                        <v-expansion-panel-content>
-                          <v-container>
-                            <v-row>
-                              <v-col cols="6">
-                                <v-text-field
-                                  clearable
-                                  v-model="filters.text"
-                                  label="Busca por texto"
-                                ></v-text-field>
-                              </v-col>
-                              <v-col cols="6">
-                                <v-select
-                                  clearable
-                                  v-model="filters.category"
-                                  :items="['Trámites', 'Salud', 'Transporte', 'Ocio']"
-                                  label="Busca por categoria"
-                                  multiple
-                                  persistent-hint
-                                ></v-select>
-                              </v-col>
-                            </v-row>
-                            <div v-if="!getImages(4).length" class="mt-4">
-                              No existen coincidencias con tu búsqueda
-                            </div>
-                            <v-row>
-                              <v-col cols="2" v-for="image in getImages(4)" v-bind:key="image.id">
-                                <img
-                                  class="image__pictogram"
-                                  :src="image.path + '/' + image.filename"
-                                  v-bind:class="{ active: action && image.id == action.id }"
-                                  @click="setImage('action', image)"
-                                />
-                                <span>{{ image.label }}</span>
-                              </v-col>
-                            </v-row>
-                          </v-container>
-                        </v-expansion-panel-content>
-                      </v-expansion-panel>
-                    </v-expansion-panels>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12">
-                    <div class="grey--text text--darken-2 pb-2">Detalles del paso</div>
-                    <tiptap-vuetify v-model="details" :extensions="extensions" />
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-          </ValidationObserver>
+        <v-col cols="12" class="d-flex justify-end">
+          <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
         </v-col>
       </v-row>
-      <v-footer fixed>
-        <v-row>
-          <v-col cols="12" class="d-flex justify-end">
-            <!--<v-btn
-              class="mr-5"
-              text
-              color="primary"
-              href="https://forms.gle/QdbvD3CgSrxN9VZS6"
-              target="_blank"
-              >Envianos tus comentarios o sugerencias</v-btn
-            >-->
-            <v-btn outlined color="primary" @click="saveStep">Guardar paso</v-btn>
-          </v-col>
-        </v-row>
-      </v-footer>
-      <v-snackbar v-model="saved" :timeout="3000" top center fixed color="success">
-        Paso guardado correctamente
-      </v-snackbar>
-    </div>
+    </v-footer>
   </div>
 </template>
 
@@ -283,7 +270,6 @@ export default {
         category: null
       },
       loading: true,
-      saved: false,
       extensions: [
         History,
         Blockquote,
@@ -458,7 +444,7 @@ export default {
               })
               .then(response => {
                 this.originalStep = response.data;
-                this.saved = true;
+                this.$toast.success("Este paso ha sido actualizado");
               });
           } else {
             this.$http
@@ -474,6 +460,7 @@ export default {
                 online_task_id: this.$route.params.online_task_id
               })
               .then(response => {
+                this.$toast.success("El paso ha sido creado");
                 this.$router.push({
                   path: "/tareas-en-internet/" + this.webTask.id
                 });

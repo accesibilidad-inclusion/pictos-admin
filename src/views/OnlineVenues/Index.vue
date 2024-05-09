@@ -1,5 +1,8 @@
 <template>
-  <div class="py-6 px-12">
+  <v-layout v-if="!entries" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div class="w-100 py-6 px-12" v-else>
     <v-row>
       <v-col cols="12">
         <h1 class="display-1 pb-2">Lugares en internet</h1>
@@ -55,10 +58,7 @@
         >
       </v-col>
     </v-row>
-    <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
-    </v-layout>
-    <v-row v-else>
+    <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">
@@ -145,13 +145,12 @@ export default {
       this.dialog = false;
       this.newVenue = new OnlineVenue();
     },
-    created(service) {
+    created(onlineVenue, callback) {
       this.$store.dispatch("setOnlineVenues");
-      this.$store.dispatch("setRegions");
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/online_venues").then(response => {
-        this.entries = response.data;
-      });
+      this.$toast.success("Lugar en internet creado");
+      this.changeStatus('');
       this.closeModal();
+      callback();
     },
     changeStatus(status) {
       this.entries = null;

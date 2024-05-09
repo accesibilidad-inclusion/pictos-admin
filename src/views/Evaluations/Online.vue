@@ -1,24 +1,14 @@
 <template>
-  <div class="py-6 px-12">
+  <v-layout v-if="!entries" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div class="w-100 py-6 px-12" v-else>
     <v-row>
       <v-col cols="12">
         <h1 class="display-1 pb-2">Evaluaciones</h1>
       </v-col>
     </v-row>
-    <!-- <v-row>
-      <v-col cols="2" v-if="entries.length">
-        <a
-          :href="urlExport"
-          target="_blank"
-          class="v-btn v-btn--flat v-btn--text theme--light v-size--small primary--text"
-          >Exportar excel</a
-        >
-      </v-col>
-    </v-row> -->
-    <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
-    </v-layout>
-    <v-row v-else>
+    <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">
@@ -40,9 +30,6 @@
                     item.venue.name
                   }}</router-link>
                 </td>
-                <!-- <td>{{ item.app_user.sex }}</td>
-                <td>{{ item.app_user.impairments.join(', ') }}</td>
-                <td>{{ moment(item.app_user.birthday).format('DD/MM/YYYY') }}</td> -->
                 <td>{{ item.calification }}</td>
                 <td>{{ moment(item.created_at).format("DD/MM/YYYY \- HH:mm") }}</td>
                 <td>
@@ -82,18 +69,6 @@ export default {
           text: "Lugar",
           value: "venue.name"
         },
-        // {
-        //   text: 'Sexo',
-        //   value: 'sex',
-        // },
-        // {
-        //   text: 'Discapacidad',
-        //   value: 'impairments',
-        // },
-        // {
-        //   text: 'Nacimiento',
-        //   value: 'birthday',
-        // },
         {
           text: "Evaluacion",
           value: "calification"
@@ -106,7 +81,7 @@ export default {
           text: ""
         }
       ],
-      entries: [],
+      entries: null,
       venue: null,
       pagination: {}
     };
