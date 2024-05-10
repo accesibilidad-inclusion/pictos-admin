@@ -181,20 +181,25 @@ export default {
     }
   },
   created() {
-    this.$http.interceptors.response.use(
+    /* this.$http.interceptors.response.use(
       response => response,
       error => {
         this.$toast.error('Ha ocurrido un error inesperado, vuelve a intentarlo');
         setTimeout(() => {
           this.$router.go();
         }, 4500);
-    });
+    }); */
     this.$http.interceptors.response.use(undefined, err => {
       return new Promise((resolve, reject) => {
         if (err.response.status === 401 && err.config && !err.config.__isRetryRequest) {
           this.$store.dispatch("logout").then(() => {
             this.$router.push("/login");
           });
+        } else {
+          this.$toast.error('Ha ocurrido un error inesperado, vuelve a intentarlo');
+          setTimeout(() => {
+            this.$router.go();
+          }, 4500);
         }
         throw err;
       });
