@@ -58,6 +58,22 @@
             <v-list-item-title>Usuarios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/evaluaciones-presenciales">
+          <v-list-item-action>
+            <v-icon>mdi-account-check-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Evaluaciones presenciales</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/evaluaciones-en-internet">
+          <v-list-item-action>
+            <v-icon>mdi-lan-check</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Evaluaciones en internet</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           link
           dense
@@ -170,7 +186,7 @@ export default {
       error => {
         this.$toast.error('Ha ocurrido un error inesperado, vuelve a intentarlo');
         setTimeout(() => {
-          window.location.reload();
+          this.$router.go();
         }, 4500);
     });
     this.$http.interceptors.response.use(undefined, err => {

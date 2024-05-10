@@ -50,7 +50,7 @@
                 <v-btn outlined color="primary" @click="move(next)" :disabled="edited || !next">Siguiente</v-btn>
               </v-col>
             </v-row>
-            <!-- <v-row class="mt-3" v-if="originalStep && edited">
+            <v-row class="mt-3" v-if="originalStep && edited">
               <v-col cols="12" class="d-flex justify-center">
                 <v-alert type="warning" prominent dense text outlined>
                   <v-row align="center">
@@ -63,7 +63,7 @@
                   </v-row>
                 </v-alert>
               </v-col>
-            </v-row> -->
+            </v-row>
           </div>
         </v-container>
       </v-col>
@@ -185,7 +185,7 @@
                               <img
                                 class="image__pictogram"
                                 :src="image.path + '/' + image.filename"
-                                v-bind:class="{ active: action && image.id == action.id }"
+                                v-bind:class="{ active: action && image.id === action.id }"
                                 @click="setImage('action', image)"
                               />
                               <span>{{ image.label }}</span>
@@ -367,14 +367,26 @@ export default {
     },
     edited() {
       if (this.originalStep) {
-        const dirtyLabel = this.originalStep.label !== this.step || ! this.step;
-        const dirtyUrl = this.originalStep.url !== this.url || ! this.url;
+        const dirtyLabel = this.originalStep.label !== this.step;
+        const dirtyUrl = this.originalStep.url !== this.url;
         const dirtyDetails = this.originalStep.details !== this.details;
-          return (
-            dirtyLabel ||
-            dirtyUrl ||
-            dirtyDetails
-          );
+        const dirtyImage = (!!this.originalStep.screenshot_url && process.env.VUE_APP_API_DOMAIN + this.originalStep.screenshot_url !== this.img_base64) || (!this.originalStep.screenshot_url && !!this.img_base64);
+        const dirtyFocusSize = this.originalStep.focus_size !== this.focusSize && this.hasFocus;
+        const dirtyXPosition = this.originalStep.focus_x !== this.xPosition && this.hasFocus;
+        const dirtyYPosition = this.originalStep.focus_y !== this.yPosition && this.hasFocus;
+        const dirtyHasFocus = !!this.originalStep.focus_size !== this.hasFocus;
+        const dirtyAction = (this.originalStep.image_id && (!this.action || this.originalStep.image_id !== this.action.id)) || (!this.originalStep.image_id && !!this.action);
+        return (
+          dirtyLabel ||
+          dirtyUrl ||
+          dirtyDetails ||
+          dirtyImage ||
+          dirtyFocusSize ||
+          dirtyXPosition ||
+          dirtyYPosition ||
+          dirtyHasFocus ||
+          dirtyAction
+        );
       }
       return false;
     },
@@ -413,16 +425,23 @@ export default {
     dismiss() {
       if (this.originalStep) {
         this.step = this.originalStep.label;
-        if (this.originalStep.pictogram) {
-          this.action = this.originalStep.pictogram.images.find(i => i.layout === 4);
-          this.context = this.originalStep.pictogram.images.find(i => i.layout === 3);
-          this.landmark = this.originalStep.pictogram.images.find(i => i.layout === 2);
-          this.subject = this.originalStep.pictogram.images.find(i => i.layout === 1);
-        } else {
-          this.action = null;
-          this.context = null;
-          this.landmark = null;
-          this.subject = null;
+        this.url = this.originalStep.url;
+        this.details = this.originalStep.details;
+        if(!!this.originalStep.screenshot_url && process.env.VUE_APP_API_DOMAIN + this.originalStep.screenshot_url !== this.img_base64) {
+          this.img_base64 = process.env.VUE_APP_API_DOMAIN + this.originalStep.screenshot_url;
+        }
+        if(!this.originalStep.screenshot_url && !!this.img_base64){
+          this.img_base64 = null;
+        }
+        this.focusSize = this.originalStep.focus_size ?? 50;
+        this.xPosition = this.originalStep.focus_x ?? 50;
+        this.yPosition = this.originalStep.focus_y ?? 50;
+        this.hasFocus = !!this.originalStep.focus_size;
+        if(this.originalStep.image_id && (!this.action || this.originalStep.image_id !== this.action.id)) {
+          this.setImage('action', this.$store.getters.images.filter(i => i.layout == 4).find( i => i.id === this.originalStep.image_id));
+        }
+        if(!this.originalStep.image_id && !!this.action) {
+          this.setImage('action', this.$store.getters.images.filter(i => i.layout == 4).find( i => i.id === this.action.id));
         }
       }
     },
@@ -444,6 +463,9 @@ export default {
               })
               .then(response => {
                 this.originalStep = response.data;
+                this.img_base64 = response.data.screenshot_url
+                  ? process.env.VUE_APP_API_DOMAIN + response.data.screenshot_url
+                  : null;
                 this.$toast.success("Este paso ha sido actualizado");
               });
           } else {

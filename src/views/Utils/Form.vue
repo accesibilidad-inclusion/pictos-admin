@@ -16,6 +16,16 @@
                 class="pb-2"
                 v-if="!field.hide"
               >
+                <div v-if="field.type == 'alert'">
+                  <v-alert
+                    icon="mdi-information-outline"
+                    prominent
+                    text
+                    type="info"
+                  >
+                    <span class="caption">{{ field.text }}</span>
+                  </v-alert>
+                </div>
                 <div v-if="field.type == 'read'">
                   <div class="grey--text text--darken-2">{{ field.label }}</div>
                   <div>{{ field.value ? object[field.id][field.value] : object[field.id] }}</div>
@@ -82,7 +92,7 @@
                   <v-autocomplete
                     v-if="field.type == 'multiselect'"
                     v-model="object[field.id]"
-                    :items="$store.getters[field.data]"
+                    :items="field.filter ? $store.getters[field.data].filter(field.filter) : $store.getters[field.data]"
                     :error-messages="errors"
                     :label="field.label"
                     chips
@@ -90,6 +100,7 @@
                     item-value="id"
                     return-object
                     multiple
+                    @change="field.changeFn"
                   >
                     <template v-slot:selection="data">
                       <v-chip

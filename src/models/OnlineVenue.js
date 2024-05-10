@@ -86,6 +86,12 @@ class OnlineVenue {
                 type: "switch"
               },
               {
+                id: "all_country",
+                text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la región, como 'Valparaíso', se incluirán todas sus comunas automáticamente. Sin embargo, si prefieres seleccionar comunas específicas dentro de una región, solo se aplicarán a las comunas que selecciones.",
+                type: "alert",
+                hide: this.all_country
+              },
+              {
                 id: "regions",
                 name: "regiones",
                 label: "Regiones donde estara habilitado el lugar",
@@ -93,6 +99,11 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "regions",
+                changeFn: (selecteds) => {
+                  this.communes = this.communes.filter( c => {
+                    return !selecteds.map(s => s.id).includes(c.region_id);
+                  });
+                },
                 textOption: ["name"]
               },
               {
@@ -103,6 +114,9 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "communes",
+                filter: (commune) => {
+                  return !this.regions.map(region => region.id).includes(commune.region_id)
+                },
                 textOption: ["name"]
               },
               {
@@ -148,6 +162,12 @@ class OnlineVenue {
                 type: "switch"
               },
               {
+                id: "all_country",
+                text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la región, como 'Valparaíso', se incluirán todas sus comunas automáticamente. Sin embargo, si prefieres seleccionar comunas específicas dentro de una región, solo se aplicarán a las comunas que selecciones.",
+                type: "alert",
+                hide: this.all_country
+              },
+              {
                 id: "regions",
                 name: "regiones",
                 label: "Regiones donde estara habilitado el lugar",
@@ -155,6 +175,11 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "regions",
+                changeFn: (selecteds) => {
+                  this.communes = this.communes.filter( c => {
+                    return !selecteds.map(s => s.id).includes(c.region_id);
+                  });
+                },
                 textOption: ["name"]
               },
               {
@@ -165,6 +190,9 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "communes",
+                filter: (commune) => {
+                  return !this.regions.map(region => region.id).includes(commune.region_id)
+                },
                 textOption: ["name"]
               },
               {
