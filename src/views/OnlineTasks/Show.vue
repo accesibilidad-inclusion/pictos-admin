@@ -1,13 +1,13 @@
 <template>
-  <v-layout v-if="!task.id" justify-center>
-    <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
+  <v-layout v-if="!task.id" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
   </v-layout>
-  <div v-else class="py-6 px-12">
+  <div v-else class="w-100 py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/tareas-en-internet/" class="breadcrumbs__link"
           ><v-icon large class="blue--text text--darken-2">mdi-chevron-left</v-icon>
-          Tareas</router-link
+          Tareas en internet</router-link
         >{{ task.title }}
         <span class="breadcrumbs__status color-published mx-3 px-3">{{ task.status }}</span>
         <v-btn
@@ -27,7 +27,7 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="duplicateTask"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="taskDuplicated" :object="duplicateTask"></Form>
         </v-dialog>
         | <v-btn text small color="error" @click="deleteTask()">Eliminar</v-btn>
       </v-col>
@@ -47,7 +47,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editTask"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="taskUpdated" :object="editTask"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -210,6 +210,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Tarea en internet eliminada");
             this.$router.push("/tareas-en-internet");
           });
       }
@@ -221,6 +222,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Tarea en internet publicada");
             if (response.data) this.task.status = "Publicado";
           });
       }
@@ -232,6 +234,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Tarea en internet puesta en borrador");
             if (response.data) this.task.status = "Borrador";
           });
       }
@@ -243,6 +246,7 @@ export default {
             id: id
           })
           .then(response => {
+            this.$toast.success("El paso ha sido eliminado");
             this.task.steps = this.task.steps.filter(s => s.id !== id);
           });
       }
@@ -254,14 +258,18 @@ export default {
       this.duplicateTask = _.clone(this.task);
       this.duplicateTask.form_type = "duplicate";
     },
-    updated() {
-      this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/online_tasks/" + this.$route.params.id)
-        .then(response => {
-          this.task.set(response.data);
-          this.editTask = _.clone(this.task);
-          this.closeModal();
-        });
+    taskUpdated(task, callback) {
+      this.task.set(task);
+      this.editTask = _.clone(this.task);
+      this.$toast.success("Tarea en internet actualizada");
+      this.closeModal();
+      callback();
+    },
+    taskDuplicated(newTask, callback) {
+      this.$toast.success("Tarea en internet duplicada, seras redirigido a la nueva tarea");
+      this.closeModal();
+      callback();
+      this.$router.push("/tareas-en-internet/" + newTask.id);
     },
     setOrder() {
       this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/online_steps/order", {
@@ -271,6 +279,8 @@ export default {
             order: i + 1
           };
         })
+      }).then(() => {
+        this.$toast.success("El orden de los pasos ha sido modificado");
       });
     }
   }

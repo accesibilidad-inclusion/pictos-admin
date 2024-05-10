@@ -1,8 +1,8 @@
 <template>
-  <v-layout v-if="!service.id" justify-center>
-    <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
+  <v-layout v-if="!service.id" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
   </v-layout>
-  <div v-else class="py-6 px-12">
+  <div v-else class="w-100 py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/servicios/" class="breadcrumbs__link"
@@ -30,7 +30,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editService"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="serviceUpdated" :object="editService"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -104,7 +104,7 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newPresentialVenue"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="presentialVenueUpdated" :object="newPresentialVenue"></Form>
         </v-dialog>
       </v-col>
     </v-row>
@@ -147,7 +147,7 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newOnlineVenue"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="onlineVenueUpdated" :object="newOnlineVenue"></Form>
         </v-dialog>
       </v-col>
     </v-row>
@@ -248,6 +248,7 @@ export default {
           })
           .then(response => {
             this.$store.dispatch("setServices");
+            this.$toast.success("Servicio eliminado");
             this.$router.push("/servicios");
           });
       }
@@ -260,6 +261,7 @@ export default {
           })
           .then(response => {
             this.$store.dispatch("setServices");
+            this.$toast.success("Servicio publicado");
             if (response.data) this.service.status = "Publicado";
           });
       }
@@ -272,6 +274,7 @@ export default {
           })
           .then(response => {
             this.$store.dispatch("setServices");
+            this.$toast.success("Servicio dejado en borrador");
             if (response.data) this.service.status = "Borrador";
           });
       }
@@ -282,15 +285,26 @@ export default {
       this.dialogOnlineVenue = false;
       this.dialogPresentialVenue = false;
     },
-    updated() {
-      this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/services/" + this.$route.params.id)
-        .then(response => {
-          this.service.set(response.data);
-          this.$store.dispatch("setServices");
-          this.editService = _.clone(this.service);
-          this.closeModal();
-        });
+    serviceUpdated(service, callback) {
+      this.service.set(service);
+      this.$store.dispatch("setServices");
+      this.closeModal();
+      this.$toast.success("Servicio actualizado");
+      callback();
+    },
+    presentialVenueUpdated(presentialVenue, callback) {
+      this.service.presential_venues.push(presentialVenue);
+      this.$store.dispatch("setPresentialVenues");
+      this.closeModal();
+      this.$toast.success("Lugar presencial creado");
+      callback();
+    },
+    onlineVenueUpdated(onlineVenue, callback) {
+      this.service.online_venues.push(onlineVenue);
+      this.$store.dispatch("setOnlineVenues");
+      this.closeModal();
+      this.$toast.success("Lugar en internet creado");
+      callback();
     }
   }
 };

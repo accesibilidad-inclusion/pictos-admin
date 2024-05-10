@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app v-if="isLoggedIn">
+    <v-navigation-drawer v-model="drawer" app clipped v-if="isLoggedIn">
       <v-list height="100%">
         <v-list-item link to="/">
           <v-list-item-action>
@@ -58,6 +58,22 @@
             <v-list-item-title>Usuarios</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item link to="/evaluaciones-presenciales">
+          <v-list-item-action>
+            <v-icon>mdi-account-check-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Evaluaciones presenciales</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link to="/evaluaciones-en-internet">
+          <v-list-item-action>
+            <v-icon>mdi-lan-check</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Evaluaciones en internet</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <v-list-item
           link
           dense
@@ -75,7 +91,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app dark v-if="isLoggedIn">
+    <v-app-bar clipped-left app dark v-if="isLoggedIn">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>PICTOS Admin</v-toolbar-title>
       <div class="profile">
@@ -137,7 +153,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid :fill-height="!isLoggedIn">
+      <v-container fluid fill-height :align-start="isLoggedIn">
         <router-view :key="$route.fullPath"></router-view>
       </v-container>
     </v-main>
@@ -165,6 +181,14 @@ export default {
     }
   },
   created() {
+    this.$http.interceptors.response.use(
+      response => response,
+      error => {
+        this.$toast.error('Ha ocurrido un error inesperado, vuelve a intentarlo');
+        setTimeout(() => {
+          this.$router.go();
+        }, 4500);
+    });
     this.$http.interceptors.response.use(undefined, err => {
       return new Promise((resolve, reject) => {
         if (err.response.status === 401 && err.config && !err.config.__isRetryRequest) {
@@ -337,6 +361,9 @@ export default {
 .list-item__bottom {
   position: absolute;
   bottom: 0px;
+  width: 100%;
+}
+.w-100 {
   width: 100%;
 }
 </style>

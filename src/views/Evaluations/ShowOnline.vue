@@ -1,8 +1,8 @@
 <template>
-  <v-layout v-if="!evaluation" justify-center>
-    <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
+  <v-layout v-if="!evaluation" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
   </v-layout>
-  <div v-else class="py-6 px-12">
+  <div v-else class="w-100 py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link :to="'/evaluaciones-en-internet/'" class="breadcrumbs__link">
@@ -10,7 +10,6 @@
         </router-link>
         {{ evaluation.id }}
         <v-spacer></v-spacer>
-        <!--v-btn text default  color="error" @click="deleteVenue()">Eliminar</v-btn-->
       </v-col>
     </v-row>
     <v-row>

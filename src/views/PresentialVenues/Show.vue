@@ -1,8 +1,8 @@
 <template>
-  <v-layout v-if="!venue.id" justify-center>
-    <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
+  <v-layout v-if="!venue.id" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
   </v-layout>
-  <div v-else class="py-6 px-12">
+  <div v-else class="w-100 py-6 px-12">
     <v-row class="mb-3">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/lugares-presenciales/" class="breadcrumbs__link"
@@ -38,7 +38,7 @@
                 </v-btn>
               </template>
 
-              <Form v-on:cancel="closeModal" v-on:updated="updated" :object="editVenue"></Form>
+              <Form v-on:cancel="closeModal" v-on:updated="venueUpdated" :object="editVenue"></Form>
             </v-dialog>
           </v-card-title>
           <v-card-text class="py-5 px-6">
@@ -93,7 +93,7 @@
             </v-btn>
           </template>
 
-          <Form v-on:cancel="closeModal" v-on:updated="updated" :object="newTask"></Form>
+          <Form v-on:cancel="closeModal" v-on:updated="taskCreated" :object="newTask"></Form>
         </v-dialog>
       </v-col>
     </v-row>
@@ -207,6 +207,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Lugar presencial eliminado");
             this.$store.dispatch("setPresentialVenues");
             this.$router.push("/lugares-presenciales");
           });
@@ -219,6 +220,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Lugar presencial publicado");
             this.$store.dispatch("setPresentialVenues");
             if (response.data) this.venue.status = "Publicado";
           });
@@ -231,6 +233,7 @@ export default {
             id: this.$route.params.id
           })
           .then(response => {
+            this.$toast.success("Lugar presencial puesto en borrador");
             this.$store.dispatch("setPresentialVenues");
             if (response.data) this.venue.status = "Borrador";
           });
@@ -242,21 +245,29 @@ export default {
       this.dialogTask = false;
       this.newTask.title = "";
       this.newTask.tags_text = "";
+      this.newTask.hasPrerequisites = false;
     },
-    updated() {
-      this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/" + this.$route.params.id)
-        .then(response => {
-          this.venue.set(response.data);
-          this.editVenue = _.clone(this.venue);
-          this.$store.dispatch("setPresentialVenues");
-          this.closeModal();
-        });
+    venueUpdated(venue, callback) {
+      this.venue.set(venue);
+      this.editVenue = _.clone(this.venue);
+      this.$toast.success("Lugar presencial actualizado");
+      this.$store.dispatch("setPresentialVenues");
+      this.closeModal();
+      callback();
+    },
+    taskCreated(task, callback) {
+        this.venue.tasks.push(task);
+        this.$toast.success("Tarea presencial creada");
+        this.closeModal();
+        callback();
     },
     showEvaluation() {
       this.$http.put(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/showEvaluation", {
         id: this.$route.params.id,
         show: this.venue.show_evaluation
+      })
+      .then(response => {
+        this.$toast.success("Visibilidad de evaluación modificada");
       });
     }
   }

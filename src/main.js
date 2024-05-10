@@ -10,13 +10,31 @@ import Axios from "axios";
 import moment from "moment";
 import * as VueGoogleMaps from "vue2-google-maps-withscopedautocomp";
 import { TiptapVuetifyPlugin } from "tiptap-vuetify";
-// don't forget to import CSS styles
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+
+
 import "tiptap-vuetify/dist/main.css";
-// Vuetify's CSS styles
 import "vuetify/dist/vuetify.min.css";
 
 Vue.prototype.moment = moment;
 
+Vue.use(Toast, {
+  position: "bottom-center",
+  timeout: 4500,
+  closeOnClick: true,
+  pauseOnFocusLoss: false,
+  pauseOnHover: false,
+  draggable: true,
+  draggablePercent: 0.77,
+  showCloseButtonOnHover: false,
+  hideProgressBar: true,
+  closeButton: "button",
+  icon: true,
+  rtl: false,
+  transitionDuration: 1700
+});
 Vue.use(Vuex);
 
 Vue.use(VueGoogleMaps, {
