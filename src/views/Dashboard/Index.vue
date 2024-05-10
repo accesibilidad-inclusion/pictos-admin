@@ -100,20 +100,20 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <v-layout justify-center align-center fill-height v-if="!venues">
+            <v-layout justify-center align-center fill-height v-if="!presential_venues">
               <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
             </v-layout>
             <template v-else>
-              <div v-if="!venues.length">
+              <div v-if="!presential_venues.length">
                 No hay lugares propuestos por usuarios
               </div>
               <template v-else>
-                <div v-for="venue in venues" v-bind:key="venue.id" class="py-1">
+                <div v-for="venue in presential_venues" v-bind:key="venue.id" class="py-1">
                   <span class="grey--text lighten-2">{{
                     moment(venue.created_at).format("DD/MM/YYYY \- HH:mm")
                   }}</span>
                   <span>
-                    - <a @click="setObjectEdit('venues', venue)">{{ venue.name }}</a></span
+                    - <a @click="setObjectEdit('presential_venues', venue)">{{ venue.name }}</a></span
                   >
                 </div>
               </template>
@@ -135,20 +135,20 @@
             >
           </v-card-title>
           <v-card-text class="py-5 px-6">
-            <v-layout justify-center align-center fill-height v-if="!tasks">
+            <v-layout justify-center align-center fill-height v-if="!presential_tasks">
               <v-progress-circular :size="24" color="primary" indeterminate></v-progress-circular>
             </v-layout>
             <template v-else>
-              <div v-if="!tasks.length">
+              <div v-if="!presential_tasks.length">
                 No hay tareas propuestas por usuarios
               </div>
               <template v-else>
-                <div v-for="task in tasks" v-bind:key="task.id" class="py-1">
+                <div v-for="task in presential_tasks" v-bind:key="task.id" class="py-1">
                   <span class="grey--text lighten-2">{{
                     moment(task.created_at).format("DD/MM/YYYY \- HH:mm")
                   }}</span>
                   <span>
-                    - <a @click="setObjectEdit('tasks', task)">{{ task.title }}</a></span
+                    - <a @click="setObjectEdit('presential_tasks', task)">{{ task.title }}</a></span
                   >
                 </div>
               </template>
@@ -286,12 +286,12 @@ export default {
     this.$http
       .get(process.env.VUE_APP_API_DOMAIN + "api/presential_venues/by_users")
       .then(response => {
-        this.venues = response.data;
+        this.presential_venues = response.data;
       });
     this.$http
       .get(process.env.VUE_APP_API_DOMAIN + "api/presential_tasks/by_users")
       .then(response => {
-        this.tasks = response.data;
+        this.presential_tasks = response.data;
       });
     this.$http
       .get(process.env.VUE_APP_API_DOMAIN + "api/proposal_tasks/by_users")
@@ -318,8 +318,8 @@ export default {
   },
   data() {
     return {
-      venues: null,
-      tasks: null,
+      presential_venues: null,
+      presential_tasks: null,
       proposal_tasks: null,
       presential_evaluations: null,
       online_evaluations: null,
@@ -336,20 +336,22 @@ export default {
     },
     setObjectEdit(type, obj) {
       this.typeEdit = type;
-      if (type == "venues") this.objectEdit = new PresentialVenue();
-      else if (type == "tasks") this.objectEdit = new PresentialTask();
+      if (type == "presential_venues") this.objectEdit = new PresentialVenue();
+      else if (type == "presential_tasks") this.objectEdit = new PresentialTask();
       else if (type == "proposal_tasks") this.objectEdit = new ProposalTask();
       this.objectEdit.set(obj);
       this.objectEdit.visible = 0;
       this.dialog = true;
     },
-    update() {
+    update(newObj, callback) {
       this.$http
         .get(process.env.VUE_APP_API_DOMAIN + "api/" + this.typeEdit + "/by_users")
         .then(response => {
           this[this.typeEdit] = response.data;
+          callback();
+          this.$toast.success("Contribución aceptada");
+          this.dialog = false;
         });
-      this.dialog = false;
     }
   }
 };
