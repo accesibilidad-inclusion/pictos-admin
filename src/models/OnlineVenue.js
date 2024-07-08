@@ -1,3 +1,5 @@
+import store from "@/js/store";
+
 class OnlineVenue {
   constructor() {
     this.id = null;
@@ -35,7 +37,8 @@ class OnlineVenue {
       ? {
           id: venue.service.id,
           name: venue.service.name,
-          slug: venue.service.slug
+          slug: venue.service.slug,
+          country_id: venue.service.country?.id || venue.service.country_id
         }
       : null;
     this.regions = venue.regions ?? [];
@@ -79,7 +82,7 @@ class OnlineVenue {
                 id: "all_country",
                 label: "Habilitar en todo el pais",
                 rules: "",
-                fn: (e) => { if(e) { 
+                fn: (e) => { if(e) {
                   this.regions = []
                   this.communes = []
                 } },
@@ -99,6 +102,9 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "regions",
+                filter: (region) => {
+                  return this.service?.country_id === region.country_id
+                },
                 changeFn: (selecteds) => {
                   this.communes = this.communes.filter( c => {
                     return !selecteds.map(s => s.id).includes(c.region_id);
@@ -115,7 +121,7 @@ class OnlineVenue {
                 hide: this.all_country,
                 data: "communes",
                 filter: (commune) => {
-                  return !this.regions.map(region => region.id).includes(commune.region_id)
+                  return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
                 },
                 textOption: ["name"]
               },
@@ -142,6 +148,10 @@ class OnlineVenue {
                 rules: "required",
                 type: "select",
                 data: "services",
+                changeFn: (e) => { if(e) {
+                  this.regions = []
+                  this.communes = []
+                } },
                 textOption: ["name"]
               },
               {
@@ -155,7 +165,7 @@ class OnlineVenue {
                 id: "all_country",
                 label: "Habilitar en todo el pais",
                 rules: "",
-                fn: (e) => { if(e) { 
+                fn: (e) => { if(e) {
                   this.regions = []
                   this.communes = []
                 } },
@@ -175,6 +185,9 @@ class OnlineVenue {
                 type: "multiselect",
                 hide: this.all_country,
                 data: "regions",
+                filter: (region) => {
+                  return this.service?.country_id === region.country_id
+                },
                 changeFn: (selecteds) => {
                   this.communes = this.communes.filter( c => {
                     return !selecteds.map(s => s.id).includes(c.region_id);
@@ -191,7 +204,7 @@ class OnlineVenue {
                 hide: this.all_country,
                 data: "communes",
                 filter: (commune) => {
-                  return !this.regions.map(region => region.id).includes(commune.region_id)
+                  return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
                 },
                 textOption: ["name"]
               },

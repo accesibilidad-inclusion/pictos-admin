@@ -88,6 +88,7 @@
                     item-value="id"
                     :label="field.label"
                     return-object
+                    @change="field.changeFn"
                   ></v-autocomplete>
                   <v-autocomplete
                     v-if="field.type == 'multiselect'"
