@@ -150,13 +150,14 @@ export default new Vuex.Store({
           commit(
             "setCommunes",
             response.data
-              .map(r => r.regions.map(r => r.communes).reduce((a, b) => {
+              .map(r => r.regions.map(r => r.communes.map( c => {return {...c, group: r.long_name }})).reduce((a, b) => {
                 return a.concat(b);
               }))
               .reduce((a, b) => {
                 return a.concat(b);
               })
               .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+              .sort((a, b) => (a.group > b.group ? 1 : b.group > a.group ? -1 : 0))
           );
           resolve();
         });

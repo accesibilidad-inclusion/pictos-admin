@@ -59,163 +59,174 @@ class OnlineVenue {
   }
 
   form() {
-    let form = {
+    const country = store.getters['countries'].find(country => country.id === this.service?.country_id);
+    const first_subdivision_singular = country?.first_subdivision_singular.toLowerCase()  || 'región';
+    const first_subdivision_plural = country?.first_subdivision_plural.toLowerCase()  || 'regiones';
+    const second_subdivision_plural = country?.second_subdivision_plural.toLowerCase()  || 'comunas';
+    const region = country?.regions[0].name  || 'Valparaíso';
+    return {
       title: this.id ? "Editar lugar en internet" : "Agregar nuevo lugar en internet",
       fields:
         this.form_type === "service"
           ? [
-              {
-                id: "name",
-                name: "nombre",
-                label: "Nombre del lugar",
-                rules: "required|max:100",
-                type: "text"
-              },
-              {
-                id: "url",
-                name: "url",
-                label: "Url",
-                rules: "required|url",
-                type: "text"
-              },
-              {
-                id: "all_country",
-                label: "Habilitar en todo el pais",
-                rules: "",
-                fn: (e) => { if(e) {
+            {
+              id: "name",
+              name: "nombre",
+              label: "Nombre del lugar",
+              rules: "required|max:100",
+              type: "text"
+            },
+            {
+              id: "url",
+              name: "url",
+              label: "Url",
+              rules: "required|url",
+              type: "text"
+            },
+            {
+              id: "all_country",
+              label: "Habilitar en todo el pais",
+              rules: "",
+              fn: (e) => {
+                if (e) {
                   this.regions = []
                   this.communes = []
-                } },
-                type: "switch"
+                }
               },
-              {
-                id: "all_country",
-                text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la región, como 'Valparaíso', se incluirán todas sus comunas automáticamente. Sin embargo, si prefieres seleccionar comunas específicas dentro de una región, solo se aplicarán a las comunas que selecciones.",
-                type: "alert",
-                hide: this.all_country
+              type: "switch"
+            },
+            {
+              id: "all_country",
+              text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la " + first_subdivision_singular + ", como '" + region + "', se incluirán todas sus " + second_subdivision_plural + " automáticamente. Sin embargo, si prefieres seleccionar " + second_subdivision_plural + " específicas dentro de una " + first_subdivision_singular + ", solo se aplicarán a las " + second_subdivision_plural + " que selecciones.",
+              type: "alert",
+              hide: this.all_country
+            },
+            {
+              id: "regions",
+              name: first_subdivision_plural,
+              label: (first_subdivision_plural.charAt(0).toUpperCase() + first_subdivision_plural.slice(1)) + " donde estara habilitado el lugar",
+              rules: "",
+              type: "multiselect",
+              hide: this.all_country,
+              data: "regions",
+              filter: (region) => {
+                return this.service?.country_id === region.country_id
               },
-              {
-                id: "regions",
-                name: "regiones",
-                label: "Regiones donde estara habilitado el lugar",
-                rules: "",
-                type: "multiselect",
-                hide: this.all_country,
-                data: "regions",
-                filter: (region) => {
-                  return this.service?.country_id === region.country_id
-                },
-                changeFn: (selecteds) => {
-                  this.communes = this.communes.filter( c => {
-                    return !selecteds.map(s => s.id).includes(c.region_id);
-                  });
-                },
-                textOption: ["name"]
+              changeFn: (selecteds) => {
+                this.communes = this.communes.filter(c => {
+                  return !selecteds.map(s => s.id).includes(c.region_id);
+                });
               },
-              {
-                id: "communes",
-                name: "comunas",
-                label: "Comunas donde estara habilitado el lugar",
-                rules: "",
-                type: "multiselect",
-                hide: this.all_country,
-                data: "communes",
-                filter: (commune) => {
-                  return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
-                },
-                textOption: ["name"]
+              textOption: ["name"]
+            },
+            {
+              id: "communes",
+              name: second_subdivision_plural,
+              label: (second_subdivision_plural.charAt(0).toUpperCase() + second_subdivision_plural.slice(1)) + " donde estara habilitado el lugar",
+              rules: "",
+              type: "multiselect",
+              hide: this.all_country,
+              data: "communes",
+              filter: (commune) => {
+                return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
               },
-              {
-                id: "tags_text",
-                name: "sinonimos",
-                label: "Sinónimos de búsqueda (Separados por coma)",
-                rules: "",
-                type: "text"
-              }
-            ]
+              textOption: ["name"]
+            },
+            {
+              id: "tags_text",
+              name: "sinonimos",
+              label: "Sinónimos de búsqueda (Separados por coma)",
+              rules: "",
+              type: "text"
+            }
+          ]
           : [
-              {
-                id: "name",
-                name: "nombre",
-                label: "Nombre del lugar",
-                rules: "required|max:100",
-                type: "text"
-              },
-              {
-                id: "service",
-                name: "lugar",
-                label: "Servicio al que pertenece",
-                rules: "required",
-                type: "select",
-                data: "services",
-                changeFn: (e) => { if(e) {
+            {
+              id: "name",
+              name: "nombre",
+              label: "Nombre del lugar",
+              rules: "required|max:100",
+              type: "text"
+            },
+            {
+              id: "service",
+              name: "lugar",
+              label: "Servicio al que pertenece",
+              rules: "required",
+              type: "select",
+              data: "services",
+              changeFn: (e) => {
+                if (e) {
                   this.regions = []
                   this.communes = []
-                } },
-                textOption: ["name"]
+                }
               },
-              {
-                id: "url",
-                name: "url",
-                label: "Url",
-                rules: "required|url",
-                type: "text"
-              },
-              {
-                id: "all_country",
-                label: "Habilitar en todo el pais",
-                rules: "",
-                fn: (e) => { if(e) {
+              textOption: ["name"]
+            },
+            {
+              id: "url",
+              name: "url",
+              label: "Url",
+              rules: "required|url",
+              type: "text"
+            },
+            {
+              id: "all_country",
+              label: "Habilitar en todo el pais",
+              rules: "",
+              fn: (e) => {
+                if (e) {
                   this.regions = []
                   this.communes = []
-                } },
-                type: "switch"
+                }
               },
-              {
-                id: "all_country",
-                text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la región, como 'Valparaíso', se incluirán todas sus comunas automáticamente. Sin embargo, si prefieres seleccionar comunas específicas dentro de una región, solo se aplicarán a las comunas que selecciones.",
-                type: "alert",
-                hide: this.all_country
+              type: "switch"
+            },
+            {
+              id: "all_country",
+              text: "Recuerda que la especificidad importa en tu selección. Si eliges solo la " + first_subdivision_singular + ", como '" + region + "', se incluirán todas sus " + second_subdivision_plural + " automáticamente. Sin embargo, si prefieres seleccionar " + second_subdivision_plural + " específicas dentro de una " + first_subdivision_singular + ", solo se aplicarán a las " + second_subdivision_plural + " que selecciones.",
+              type: "alert",
+              hide: this.all_country
+            },
+            {
+              id: "regions",
+              name: first_subdivision_plural,
+              label: (first_subdivision_plural.charAt(0).toUpperCase() + first_subdivision_plural.slice(1)) + " donde estara habilitado el lugar",
+              rules: "",
+              type: "multiselect",
+              hide: this.all_country,
+              data: "regions",
+              filter: (region) => {
+                return this.service?.country_id === region.country_id
               },
-              {
-                id: "regions",
-                name: "regiones",
-                label: "Regiones donde estara habilitado el lugar",
-                rules: "",
-                type: "multiselect",
-                hide: this.all_country,
-                data: "regions",
-                filter: (region) => {
-                  return this.service?.country_id === region.country_id
-                },
-                changeFn: (selecteds) => {
-                  this.communes = this.communes.filter( c => {
-                    return !selecteds.map(s => s.id).includes(c.region_id);
-                  });
-                },
-                textOption: ["name"]
+              changeFn: (selecteds) => {
+                this.communes = this.communes.filter(c => {
+                  return !selecteds.map(s => s.id).includes(c.region_id);
+                });
               },
-              {
-                id: "communes",
-                name: "comunas",
-                label: "Comunas donde estara habilitado el lugar",
-                rules: "",
-                type: "multiselect",
-                hide: this.all_country,
-                data: "communes",
-                filter: (commune) => {
-                  return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
-                },
-                textOption: ["name"]
+              textOption: ["name"]
+            },
+            {
+              id: "communes",
+              name: second_subdivision_plural,
+              label: (second_subdivision_plural.charAt(0).toUpperCase() + second_subdivision_plural.slice(1)) + " donde estara habilitado el lugar",
+              rules: "",
+              type: "multiselect",
+              hide: this.all_country,
+              data: "communes",
+              filter: (commune) => {
+                return this.service?.country_id === store.getters['regions'].find(region => region.id === commune.region_id)?.country_id && !this.regions.map(region => region.id).includes(commune.region_id)
               },
-              {
-                id: "tags_text",
-                name: "sinonimos",
-                label: "Sinónimos de búsqueda (Separados por coma)",
-                rules: "",
-                type: "text"
-              }
-            ],
+              textOption: ["name"]
+            },
+            {
+              id: "tags_text",
+              name: "sinonimos",
+              label: "Sinónimos de búsqueda (Separados por coma)",
+              rules: "",
+              type: "text"
+            }
+          ],
       actions: [
         {
           label: "Cancelar",
@@ -233,7 +244,6 @@ class OnlineVenue {
         }
       ]
     };
-    return form;
   }
 }
 
