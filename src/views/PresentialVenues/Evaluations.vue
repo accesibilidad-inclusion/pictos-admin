@@ -1,5 +1,8 @@
 <template>
-  <div class="py-6 px-12">
+  <v-layout v-if="!entries" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div class="w-100 py-6 px-12" v-else>
     <v-row class="mb-3" v-if="venue">
       <v-col cols="12" class="d-flex align-center breadcrumbs">
         <router-link to="/lugares-presenciales/" class="breadcrumbs__link">
@@ -11,20 +14,7 @@
         Evaluaciones
       </v-col>
     </v-row>
-    <!-- <v-row>
-      <v-col cols="2">
-        <v-autocomplete
-          append-icon="mdi-magnify"
-          placeholder="Buscar"
-          cache-items
-        >
-        </v-autocomplete>
-      </v-col>
-    </v-row> -->
-    <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
-    </v-layout>
-    <v-row v-else>
+    <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">

@@ -49,7 +49,7 @@ class User {
           rules: "",
           type: "multiselect",
           data: "services",
-          condition: this.role?.name === "Colaborador",
+          hide: this.role?.name !== "Colaborador",
           textOption: ["name"]
         }
       ],

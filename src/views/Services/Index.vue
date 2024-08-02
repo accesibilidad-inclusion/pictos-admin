@@ -1,5 +1,8 @@
 <template>
-  <div class="py-6 px-12">
+  <v-layout v-if="!entries" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div class="w-100 py-6 px-12" v-else>
     <v-row>
       <v-col cols="12">
         <h1 class="display-1 pb-2">Servicios</h1>
@@ -32,10 +35,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-layout v-if="!entries" justify-center class="mt-8">
-      <v-progress-circular :size="70" color="primary" indeterminate></v-progress-circular>
-    </v-layout>
-    <v-row v-else>
+    <v-row>
       <v-col cols="12">
         <v-data-table :headers="headers" :items="entries">
           <template v-slot:body="{ items }">
@@ -127,12 +127,12 @@ export default {
       this.dialog = false;
       this.newService = new Service();
     },
-    created(service) {
+    created(service, callback) {
       this.$store.dispatch("setServices");
-      this.$http.get(process.env.VUE_APP_API_DOMAIN + "api/services").then(response => {
-        this.entries = response.data;
-      });
+      this.entries.unshift(service);
+      this.$toast.success("Servicio creado");
       this.closeModal();
+      callback();
     }
   }
 };

@@ -8,111 +8,127 @@
       <v-form>
         <v-container class="px-7">
           <v-row>
-            <v-col
-              cols="12"
-              v-for="(field, index) in object.form().fields"
-              v-bind:key="index"
-              class="pb-2"
-            >
-              <div v-if="field.type == 'read'">
-                <div class="grey--text text--darken-2">{{ field.label }}</div>
-                <div>{{ field.value ? object[field.id][field.value] : object[field.id] }}</div>
-              </div>
-              <div v-if="field.type == 'iteration'">
-                <div v-for="it in object[field.id]" v-bind:key="it.id">
-                  <v-text-field v-model="it[field.value]" :label="field.label"></v-text-field>
-                </div>
-              </div>
-              <div v-if="field.type == 'pictograms'" class="pt-3">
-                <v-row v-for="it in object[field.id]" v-bind:key="it.id" class="mb-6 mx-1">
-                  <v-col cols="6" class="preview__pictos blue lighten-5 pa-0">
-                    <img
-                      v-for="image in it.pictogram.images"
-                      :src="image.path + '/' + image.filename"
-                      v-bind:key="image.id"
-                    />
-                  </v-col>
-                  <v-col cols="6" class="d-flex align-center pl-6">{{ it.step.label }}</v-col>
-                </v-row>
-              </div>
-              <GoogleMap
-                v-if="field.type == 'map'"
-                :position="object[field.id]"
-                v-on:update-position="setPosition"
-              />
-              <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
-                <v-text-field
-                  v-if="field.type == 'text'"
-                  v-model="object[field.id]"
-                  :label="field.label"
-                  :error-messages="errors"
-                  required
-                ></v-text-field>
-                <div v-if="field.type == 'switch'">
-                  <v-switch v-model="object[field.id]" :label="field.label"></v-switch>
-                </div>
-                <div v-if="field.type == 'wysiwyg' && object['hasPrerequisites']">
-                  <div class="grey--text text--darken-2 pb-2">{{ field.label }}</div>
-                  <tiptap-vuetify v-model="object[field.id]" :extensions="extensions" />
-                  <div
-                    v-if="errors.length"
-                    class="mt-3 v-messages theme--light error--text"
-                    role="alert"
+            <template>
+              <v-col
+                cols="12"
+                v-for="(field, index) in object.form().fields"
+                v-bind:key="index"
+                class="pb-2"
+                v-if="!field.hide"
+              >
+                <div v-if="field.type == 'alert'">
+                  <v-alert
+                    icon="mdi-information-outline"
+                    prominent
+                    text
+                    type="info"
                   >
-                    <div class="v-messages__wrapper">
-                      <div class="v-messages__message">{{ errors[0] }}</div>
-                    </div>
+                    <span class="caption">{{ field.text }}</span>
+                  </v-alert>
+                </div>
+                <div v-if="field.type == 'read'">
+                  <div class="grey--text text--darken-2">{{ field.label }}</div>
+                  <div>{{ field.value ? object[field.id][field.value] : object[field.id] }}</div>
+                </div>
+                <div v-if="field.type == 'iteration'">
+                  <div v-for="it in object[field.id]" v-bind:key="it.id">
+                    <v-text-field v-model="it[field.value]" :label="field.label"></v-text-field>
                   </div>
                 </div>
-                <v-autocomplete
-                  v-if="field.type == 'select'"
-                  v-model="object[field.id]"
-                  :items="getData(field)"
-                  :error-messages="errors"
-                  hide-no-data
-                  hide-selected
-                  item-text="name"
-                  item-value="id"
-                  :label="field.label"
-                  return-object
-                ></v-autocomplete>
-                <v-autocomplete
-                  v-if="field.type == 'multiselect' && field.condition"
-                  v-model="object[field.id]"
-                  :items="$store.getters[field.data]"
-                  :error-messages="errors"
-                  :label="field.label"
-                  chips
-                  item-text="name"
-                  item-value="id"
-                  return-object
-                  multiple
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      close
-                      @click="data.select"
-                      @click:close="remove(data.item, field.id)"
+                <div v-if="field.type == 'pictograms'" class="pt-3">
+                  <v-row v-for="it in object[field.id]" v-bind:key="it.id" class="mb-6 mx-1">
+                    <v-col cols="6" class="preview__pictos blue lighten-5 pa-0">
+                      <img
+                        v-for="image in it.pictogram.images"
+                        :class="'pictogram__image pictogram__image--layer-' + image.layout"
+                        :src="image.path + '/' + image.filename"
+                        v-bind:key="image.id"
+                      />
+                    </v-col>
+                    <v-col cols="6" class="d-flex align-center pl-6">{{ it.step.label }}</v-col>
+                  </v-row>
+                </div>
+                <GoogleMap
+                  v-if="field.type == 'map'"
+                  :position="object[field.id]"
+                  v-on:update-position="setPosition"
+                />
+                <ValidationProvider v-slot="{ errors }" :name="field.name" :rules="field.rules">
+                  <v-text-field
+                    v-if="field.type == 'text'"
+                    v-model="object[field.id]"
+                    :label="field.label"
+                    :error-messages="errors"
+                    required
+                  ></v-text-field>
+                  <div v-if="field.type == 'switch'">
+                    <v-switch v-model="object[field.id]" :label="field.label" @change="field.fn"></v-switch>
+                  </div>
+                  <div v-if="field.type == 'wysiwyg' && object['hasPrerequisites']">
+                    <div class="grey--text text--darken-2 pb-2">{{ field.label }}</div>
+                    <tiptap-vuetify v-model="object[field.id]" :extensions="extensions" />
+                    <div
+                      v-if="errors.length"
+                      class="mt-3 v-messages theme--light error--text"
+                      role="alert"
                     >
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                  <template v-slot:item="data">
-                    <template v-if="typeof data.item !== 'object'">
-                      <v-list-item-content v-text="data.item"></v-list-item-content>
+                      <div class="v-messages__wrapper">
+                        <div class="v-messages__message">{{ errors[0] }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <v-autocomplete
+                    v-if="field.type == 'select'"
+                    v-model="object[field.id]"
+                    :items="getData(field)"
+                    :error-messages="errors"
+                    hide-no-data
+                    hide-selected
+                    item-text="name"
+                    item-value="id"
+                    :label="field.label"
+                    return-object
+                    @change="field.changeFn"
+                  ></v-autocomplete>
+                  <v-autocomplete
+                    v-if="field.type == 'multiselect'"
+                    v-model="object[field.id]"
+                    :items="field.filter ? $store.getters[field.data].filter(field.filter) : $store.getters[field.data]"
+                    :error-messages="errors"
+                    :label="field.label"
+                    chips
+                    item-text="name"
+                    item-value="id"
+                    return-object
+                    multiple
+                    @change="field.changeFn"
+                  >
+                    <template v-slot:selection="data">
+                      <v-chip
+                        v-bind="data.attrs"
+                        :input-value="data.selected"
+                        close
+                        @click="data.select"
+                        @click:close="remove(data.item, field.id)"
+                      >
+                        {{ data.item.name }}
+                      </v-chip>
                     </template>
-                    <template v-else>
-                      <v-list-item-content>
-                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                        <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
-                      </v-list-item-content>
+                    <template v-slot:item="data">
+                      <template v-if="typeof data.item !== 'object'">
+                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                      </template>
+                      <template v-else>
+                        <v-list-item-content>
+                          <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                          <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+                        </v-list-item-content>
+                      </template>
                     </template>
-                  </template>
-                </v-autocomplete>
-              </ValidationProvider>
-            </v-col>
+                  </v-autocomplete>
+                </ValidationProvider>
+              </v-col>
+            </template>
           </v-row>
         </v-container>
       </v-form>
@@ -120,10 +136,20 @@
     <v-divider></v-divider>
 
     <v-card-actions class="px-5 pb-6 pt-4">
-      <v-spacer></v-spacer>
-      <div v-for="(action, index) in object.form().actions" :key="index">
-        <v-btn text :color="action.color" @click="handleAction(action)">{{ action.label }}</v-btn>
-      </div>
+      <template v-if="!submitting">
+        <v-spacer></v-spacer>
+        <div v-for="(action, index) in object.form().actions" :key="index">
+          <v-btn text :color="action.color" @click="handleAction(action)" :disabled="action.callback == 'request' && submitting" >{{ action.label }}</v-btn>
+        </div>
+      </template>
+      <template v-else>
+        <div class="d-flex justify-center" style="width: 100%">
+          <v-progress-circular
+            color="blue darken-2"
+            indeterminate
+          ></v-progress-circular>
+        </div>
+      </template>
     </v-card-actions>
   </v-card>
 </template>
@@ -197,6 +223,7 @@ export default {
   },
   data() {
     return {
+      submitting: false,
       extensions: [
         History,
         Blockquote,
@@ -242,19 +269,25 @@ export default {
       if (action.validate) {
         this.$refs.observer.validate().then(valid => {
           if (valid) {
+            this.submitting = true;
             this.$http[action.method](
               process.env.VUE_APP_API_DOMAIN + action.url,
               this.object
             ).then(response => {
-              this.$emit(action.emit);
-              this.$refs.observer.reset();
+              this.$emit(action.emit, response.data, () => {
+                this.$refs.observer.reset();
+                this.submitting = false;
+              });
             });
           }
         });
       } else {
+        this.submitting = true;
         this.$http[action.method](process.env.VUE_APP_API_DOMAIN + action.url, this.object).then(
           response => {
-            this.$emit(action.emit);
+            this.$emit(action.emit, () => {
+                this.submitting = false;
+              });
           }
         );
       }
@@ -293,5 +326,11 @@ export default {
   right: 0;
   left: 0;
   margin: 0 auto;
+  &.pictogram__image--layer-4 {
+    max-height: 48px;
+    max-width: 48px;
+    right: unset;
+    left: calc(100% + 25px);
+  }
 }
 </style>

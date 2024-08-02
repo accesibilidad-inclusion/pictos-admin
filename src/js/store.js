@@ -12,6 +12,7 @@ export default new Vuex.Store({
     online_venues: [],
     roles: [],
     images: [],
+    countries: [],
     regions: [],
     communes: [],
     status: "",
@@ -52,6 +53,9 @@ export default new Vuex.Store({
     },
     setImages(state, images) {
       state.images = images;
+    },
+    setCountries(state, countries) {
+      state.countries = countries;
     },
     setRegions(state, regions) {
       state.regions = regions;
@@ -130,18 +134,30 @@ export default new Vuex.Store({
     setRegions({ commit }) {
       return new Promise((resolve, reject) => {
         axios({
-          url: process.env.VUE_APP_API_DOMAIN + "api/regions/list",
+          url: process.env.VUE_APP_API_DOMAIN + "api/countries/list",
           method: "GET"
         }).then(response => {
-          commit("setRegions", response.data);
+          commit("setCountries", response.data);
           commit(
-            "setCommunes",
+            "setRegions",
             response.data
-              .map(r => r.communes)
+              .map(r => r.regions)
               .reduce((a, b) => {
                 return a.concat(b);
               })
               .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+          );
+          commit(
+            "setCommunes",
+            response.data
+              .map(r => r.regions.map(r => r.communes.map( c => {return {...c, group: r.long_name }})).reduce((a, b) => {
+                return a.concat(b);
+              }))
+              .reduce((a, b) => {
+                return a.concat(b);
+              })
+              .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))
+              .sort((a, b) => (a.group > b.group ? 1 : b.group > a.group ? -1 : 0))
           );
           resolve();
         });
@@ -202,6 +218,7 @@ export default new Vuex.Store({
     presential_venues: state => state.presential_venues,
     online_venues: state => state.online_venues,
     images: state => state.images,
+    countries: state => state.countries,
     regions: state => state.regions,
     communes: state => state.communes
   }

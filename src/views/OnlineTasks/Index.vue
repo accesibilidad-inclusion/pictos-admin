@@ -1,5 +1,8 @@
 <template>
-  <div class="py-6 px-12">
+  <v-layout v-if="!entries" justify-center align-center fill-height>
+    <v-progress-circular :size="48" color="primary" indeterminate></v-progress-circular>
+  </v-layout>
+  <div class="w-100 py-6 px-12" v-else>
     <v-row>
       <v-col cols="12">
         <h1 class="display-1 pb-2">Tareas en internet</h1>
@@ -101,7 +104,12 @@ export default {
   data() {
     return {
       totalTasks: 0,
-      options: {},
+      options: {
+        page: 1,
+        itemsPerPage: 10,
+        sortBy: ['id'],
+        sortDesc: [true]
+      },
       headers: [
         {
           text: "Tarea",
@@ -136,22 +144,29 @@ export default {
           value: "status"
         }
       ],
-      entries: [],
+      entries: null,
       search_text: "",
       pagination: {},
       dialog: false,
       newTask: new OnlineTask(),
       showStatus: "",
-      loading: false
+      loading: false,
+      firstRequest: true
     };
   },
   watch: {
     options: {
       handler() {
-        this.getDataFromApi();
+        if(this.firstRequest)
+          this.firstRequest = false;
+        else
+          this.getDataFromApi();
       },
       deep: true
     }
+  },
+  beforeMount() {
+    this.getDataFromApi();
   },
   methods: {
     getDataFromApi() {
@@ -180,11 +195,13 @@ export default {
     },
     closeModal() {
       this.dialog = false;
-      this.newTask = new Task();
+      this.newTask = new OnlineTask();
     },
-    created() {
-      this.getDataFromApi();
+    created(task, callback) {
+      this.changeStatus('');
       this.closeModal();
+      this.$toast.success("Tarea en internet creada");
+      callback();
     },
     changeStatus(status) {
       this.showStatus = status;
