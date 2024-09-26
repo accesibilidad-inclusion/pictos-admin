@@ -5,6 +5,7 @@ class Service {
     this.url = "";
     this.slug = "";
     this.category = null;
+    this.country = null;
     this.presential_venues = [];
     this.online_venues = [];
     this.tags_text = "";
@@ -18,6 +19,7 @@ class Service {
     this.name = service.name;
     this.url = service.url;
     this.slug = service.slug;
+    this.country = service.country;
     this.category = service.category
       ? {
           id: service.category.id,
@@ -51,6 +53,15 @@ class Service {
           rules: "required",
           type: "select",
           data: "categories",
+          textOption: ["name"]
+        },
+        {
+          id: "country",
+          name: "país",
+          label: "País",
+          rules: "required",
+          type: "select",
+          data: "countries",
           textOption: ["name"]
         },
         {

@@ -35,15 +35,18 @@
           </v-card-title>
           <v-card-text class="py-5 px-6">
             <ul>
+              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ service.id }}</li>
               <li class="py-2"><span class="font-weight-bold">Nombre:</span> {{ service.name }}</li>
               <li class="py-2">
                 <span class="font-weight-bold">Categoria:</span> {{ service.category.name }}
+              </li>
+              <li class="py-2">
+                <span class="font-weight-bold">País:</span> {{ service.country.name }}
               </li>
               <li v-if="service.url != ''" class="py-2">
                 <span class="font-weight-bold">Url: </span>
                 <a target="_blank" :href="service.url">{{ service.url }}</a>
               </li>
-              <li class="py-2"><span class="font-weight-bold">Id:</span> {{ service.id }}</li>
               <li v-if="service.tags.length" class="py-2">
                 <span class="font-weight-bold">Sinonimos:</span> {{ service.tags.join(", ") }}
               </li>
