@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="10">
+      <v-col cols="8">
         <v-dialog
           v-if="$store.getters.user.role.name === 'Administrador'"
           persistent
@@ -24,6 +24,14 @@
 
           <Form v-on:cancel="closeModal" v-on:updated="created" :object="newService"></Form>
         </v-dialog>
+      </v-col>
+      <v-col cols="2">
+        <v-select
+          v-model="filter_country"
+          :items="['Todos', 'Chile', 'España', 'Nueva Zelanda']"
+          label="Filtrar por país"
+          @change="search"
+        ></v-select>
       </v-col>
       <v-col cols="2">
         <v-text-field
@@ -105,6 +113,7 @@ export default {
       ],
       entries: null,
       search_text: "",
+      filter_country: "Todos",
       pagination: {},
       dialog: false,
       newService: new Service()
@@ -116,9 +125,13 @@ export default {
       this.search();
     },
     search() {
+      let filter = '';
+      if(this.filter_country !== 'Todos') {
+        filter = '?c=' + this.filter_country;
+      }
       this.entries = null;
       this.$http
-        .get(process.env.VUE_APP_API_DOMAIN + "api/services/search/" + this.search_text)
+        .get(process.env.VUE_APP_API_DOMAIN + "api/services/search/" + this.search_text + filter)
         .then(response => {
           this.entries = response.data;
         });
